@@ -24,13 +24,26 @@
 \section{Introduction}
 \label{sec:intro}
 
+The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy.
+Although the data volumes coming from GW detectors are relatively small, analyzing the data is a computationally demanding task.
+In addition, this computational cost will substatially increase when next generation detectors come online.
+
 Derivatives are ubiqitously useful throughout data analysis tasks.
-However, in the field of gravitational wave (GW) data analysis, they have historically been difficult to obtain analytically.
+However, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 Recent progress in automatic differentiation (AD) has.... \citep{Coogan:2022qxs}
 
+In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
+In addition, we present \texttt{ripple}, a small GW \texttt{python} package containing differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses.
+
 \section{Differentiable Waveforms}
 \label{sec:waveforms}
+
+A variety of waveform families have been developed to accurately model the GW emission from COs. 
+When the COs are relatively well separated, the dynamics of the system can be well approximated with post-Newtonian corrections to the... .
+However, close to merger, numerical relatively simulations are required to accurately model the GW emission.
+Unfortunately, these numerical simulations are computationally expensive and cannot be run in conjunction with data analysis.
+
 
 \subsection{Benchmarks}
 \label{subsec:benchmarks}
@@ -47,7 +60,13 @@ Recent progress in automatic differentiation (AD) has.... \citep{Coogan:2022qxs}
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
 \label{subsec:hmc}
 
+\subsection{Fitting Waveform Coefficients}
+\label{subsec:hmc}
+
 
 \bibliography{bib}
+
+\section{Appendix}
+\label{sec:appendix}
 
 \end{document}
