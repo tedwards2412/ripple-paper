@@ -2,6 +2,25 @@
 \documentclass[twocolumn]{aastex631}
 \usepackage{showyourwork}
 
+% \usepackage[dvipsnames]{xcolor}
+% \usepackage[colorlinks]{hyperref}
+% \usepackage{colortbl}
+\definecolor{pyBlue}{RGB}{31, 119, 180}
+\definecolor{pyRed}{RGB}{214, 39, 40}
+\definecolor{pyGreen}{RGB}{44, 160, 44}
+
+% Link setup
+% \newcommand\myshade{80}
+% \hypersetup{
+%   linkcolor  = pyGreen!\myshade!black,
+%   citecolor  = pyBlue!\myshade!black,
+%   urlcolor   = pyRed!\myshade!black,
+%   colorlinks = true
+% }
+
+\newcommand{\TE}[1]{{\color{pyGreen} #1}}
+\newcommand{\te}[1]{\textbf{\color{pyGreen}(TE: #1)}}
+
 % Begin!
 \begin{document}
 
@@ -51,19 +70,27 @@ In this paper, we will argue that differentiable waveforms (and more generally d
 
 Derivatives are ubiqitously useful throughout data analysis tasks.
 For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values (e.g. in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Decsent).
-This use of the gradients is particularly useful for high dimensional spaces.
+This use of gradients is particularly useful for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calcuations for gravitational waveforms~\citep{Coogan:2022qxs}.
 
-Automatic Differentiaton is a family of methods used to compute the machine precision derivatives with little computational ovearhead. 
-Its has become popular due to its requirement in NNs...
-Core idea is chain rule.
-Why JAX?
+Automatic differentiaton is a family of methods used to compute the machine precision derivatives with little computational ovearhead. 
+AD's recent ascendance is primarily driven by its use in machine learning, particularly for derivative computations of neural networks which require use gradient descent during training.
+The core idea of AD is that each any any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
+    Of course, non-differentiable functions exist and care must be taken when treating these special cases.
+    }
+The full derivative can then be contructed using the chain rule.
+There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW physics precludes there general use.
+Here we make use of \texttt{jax}~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
+\te{Do we need a longer intro to AD here?}
 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective one body, inspiral-merger-ringerdown phenom, and numerical GW....
-Unfortunately, not all are well suited for easy implementation into 
+They are generally structured into different families, the most common of which are: the effective one body, the phenomenological inspiral-merger-ringerdown (IMR), and numerical relativity surrogate.
+Of these, the phenomenological IMR family is most well suited for an AD implementation in JAX.
+In particular, its closed form expression, ... \TE{Why else?}
+\te{Do we need more of an intro for why IMRPhenom?}
 
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
@@ -72,10 +99,10 @@ The remainder of this paper is structured as follows.
 In Sec.~\ref{sec:waveforms} we discuss the differentiable waveforms implemented in \texttt{ripple} and perform some benchmarks to demonstrate the speed and accruacy of the derivative calculations. 
 In Sec.~\ref{sec:applications} we discuss four distinct applications using differentiable waveforms. 
 First, a simple demonstration of accelerated effectualness calculations using gradient descent.
-Second, we show that Fisher analyses are quickly enabled using.
-Third, we implement differnetiable detector response functions and show an illutrative example Hamiltonian Monte Carlo
+Second, we show that Fisher analyses are quickly enabled using AD.
+Third, we implement differnetiable detector response functions and show an illutrative example using Hamiltonian Monte Carlo.
 Finally, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting, enabled by a differentiable waveform. 
-The differentiable waveforms can be found at \texttt{ripple}~\cite{ripple}.
+The associated code can be found at \texttt{ripple}~\citep{ripple}.
 
 \section{Differentiable Waveforms}
 \label{sec:waveforms}
