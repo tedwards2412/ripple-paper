@@ -75,14 +75,14 @@ Unfortunately, in the field of GW data analysis, analytic derivatives of the nec
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calcuations for gravitational waveforms~\citep{Coogan:2022qxs}.
 
-Automatic differentiaton is a family of methods used to compute the machine precision derivatives with little computational ovearhead. 
-AD's recent ascendance is primarily driven by its use in machine learning, particularly for derivative computations of neural networks which require use gradient descent during training.
-The core idea of AD is that each any any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
+Automatic differentiaton is a family of methods used to compute machine precision derivatives with little computational ovearhead. 
+AD's recent ascendance is primarily driven by its use in machine learning, particularly for derivative computations of neural networks which use gradient descent during training.
+The core idea of AD is that each any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
     Of course, non-differentiable functions exist and care must be taken when treating these special cases.
     }
 The full derivative can then be contructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
-More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW physics precludes there general use.
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW physics precludes its general use.
 Here we make use of \texttt{jax}~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
 \te{Do we need a longer intro to AD here?}
 
@@ -111,6 +111,39 @@ A variety of waveform families have been developed to accurately model the GW em
 When the COs are relatively well separated, the dynamics of the system can be well approximated with post-Newtonian corrections to the... .
 However, close to merger, numerical relatively simulations are required to accurately model the GW emission.
 Unfortunately, these numerical simulations are computationally expensive and cannot be run in conjunction with data analysis.
+Approximate phenomenological waveforms have therefore been constructued to enable relatively fast waveform generation at sufficient accuracy.
+
+The three major waveform families that have been developed to date are: the Effective-one-body (EOB), numerical relativity (NR) surrogate, and phenomenological inspiral-merger-ringdown (PhenomIMR).
+Note that unlike NR surrogate, both the EOB and PhenomIMR waveforms are calibrated to NR waveforms.
+EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate where as PhenomIMR waveforms are constructed with simple closed-form expressions.
+PhenomIMR waveforms are therefore ideally suited for AD, espeically using \texttt{jax}. 
+In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, 2015jqa}.
+
+The implementation of IMRPhenomD in lalsuite is mainly in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \texttt{jax}.
+We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \texttt{jax} derivatives.
+In addition, we have restructed the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
+
+To ensure our implempation of IMRPhenomD is faithful to the lalsuite implementation, we start by defining the noise weighted inner product:
+\begin{equation}
+    \left(h_{\theta_1}|h_{\theta_2}\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h_{\theta_1}(f) h^*_{\theta_2}(f)}{S_n(f)}\, ,
+\end{equation}
+where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_{\theta_1}$ is the frequency domain waveform evaluated at the instrinsic parameter point $\theta_1$.
+We can then normalize the inner product through
+\begin{equation}
+    \left[h_{\theta_1}|h_{\theta_2}\right] = \frac{\left(h_{\theta_1}|h_{\theta_2}\right)}{\sqrt{\left(h_{\theta_1}|h_{\theta_1}\right)\left(h_{\theta_2}|h_{\theta_2}\right)}}\, .
+\end{equation}
+Now we are ready to define the \textit{match}
+
+\begin{figure}[ht!]
+    \script{random_numbers.py}
+    \begin{centering}
+        \includegraphics[width=\linewidth]{figures/random_numbers.pdf}
+        \caption{
+            This plot should show a match colour bar.
+        }
+        \label{fig:random_numbers}
+    \end{centering}
+\end{figure}
 
 
 \subsection{Benchmarks}
