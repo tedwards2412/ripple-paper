@@ -88,7 +88,7 @@ Here we make use of \texttt{jax}~\citep{jax2018github} due to its easy integrati
 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective one body, the phenomenological inspiral-merger-ringerdown (IMR), and numerical relativity surrogate.
-Of these, the phenomenological IMR family is most well suited for an AD implementation in JAX.
+Of these, the phenomenological IMR family is most well suited for an AD implementation in \texttt{jax}.
 In particular, its closed form expression, ... \TE{Why else?}
 \te{Do we need more of an intro for why IMRPhenom?}
 
@@ -132,31 +132,47 @@ We can then normalize the inner product through
 \begin{equation}
     \left[h_{\theta_1}|h_{\theta_2}\right] = \frac{\left(h_{\theta_1}|h_{\theta_2}\right)}{\sqrt{\left(h_{\theta_1}|h_{\theta_1}\right)\left(h_{\theta_2}|h_{\theta_2}\right)}}\, .
 \end{equation}
-Now we are ready to define the \textit{match}
+Now we are ready to define the \textit{match} which is given by 
+\begin{equation}
+    \mathrm{m}(h_{\theta_1}|h_{\theta_2}) \equiv \max_{t_c,\, \phi_c} \left[h_{\theta_1} \, \middle| \, h_{\theta_2} \right]\,
+\end{equation}
+where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
+Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \texttt{ripple} accurately matches the \texttt{lalsuite} implementation.
+This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})$ across the entire parameter space.\footnote{
+    Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M\_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+}
+Here, $h_{\theta_1}$ corresponds to the \texttt{ripple} waveform implementation and $h^{*}_{\theta_1}$ is the \texttt{lalsuite} implementation. 
+From Fig.~\ref{fig:match}, it is clear that the \texttt{ripple} waveform matches with the \texttt{lalsuite} waveform to numerical precision across the majority of the parameter space.
+In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[ht!]
-    \script{random_numbers.py}
+    \script{random_matches.py}
     \begin{centering}
-        \includegraphics[width=\linewidth]{figures/random_numbers.pdf}
+        \includegraphics[width=\linewidth]{figures/random_matches.pdf}
         \caption{
             This plot should show a match colour bar.
         }
-        \label{fig:random_numbers}
+        \label{fig:match}
     \end{centering}
 \end{figure}
 
+There remains some slight deviation between the two waveform implementations at higher masses. 
+This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \texttt{jax}.
+Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpret during waveform generation.
+Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
+The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
+Note however, that the differences are well below the accuracy requirements of the waveforms and will have no impact on any data analysis tasks.
 
-\subsection{Benchmarks}
-\label{subsec:benchmarks}
+In order to be usuable in most data analysis tasks, a waveform needs to be fast to evaluate.
+Fortunately, the Phenom IMR waveforms are constructed from simple closed form expressions which are therefore computationally efficient.
+The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
+
 
 \section{Applications}
 \label{sec:applications}
 
 \subsection{Effectualness Calculations}
 \label{sec:effectualness}
-
-\subsection{Fisher Analysis}
-\label{subsec:fisher}
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
 \label{subsec:hmc}
