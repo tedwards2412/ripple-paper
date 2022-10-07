@@ -18,6 +18,10 @@
 %   colorlinks = true
 % }
 
+\newcommand{\jax}{\texttt{JAX}\xspace}
+\newcommand{\ripple}{\texttt{ripple}\xspace}
+\newcommand{\lalsuite}{\texttt{lalsuite}\xspace}
+
 \newcommand{\TE}[1]{{\color{pyGreen} #1}}
 \newcommand{\te}[1]{\textbf{\color{pyGreen}(TE: #1)}}
 
@@ -25,7 +29,7 @@
 \begin{document}
 
 % Title
-\title{\texttt{ripple}: Differentiable Waveforms for Gravitational Wave Data Analysis}
+\title{\ripple: Differentiable Waveforms for Gravitational Wave Data Analysis}
 
 \newcommand{\OKC}{\affiliation{The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-106 91 Stockholm, Sweden}} 
 \newcommand{\NORDITA}{\affiliation{Nordic Institute for Theoretical Physics (NORDITA), 106 91 Stockholm, Sweden}}
@@ -83,26 +87,26 @@ The core idea of AD is that each any mathematical function can be broken down in
 The full derivative can then be contructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW physics precludes its general use.
-Here we make use of \texttt{jax}~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
+Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
 \te{Do we need a longer intro to AD here?}
 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective one body, the phenomenological inspiral-merger-ringerdown (IMR), and numerical relativity surrogate.
-Of these, the phenomenological IMR family is most well suited for an AD implementation in \texttt{jax}.
+Of these, the phenomenological IMR family is most well suited for an AD implementation in \jax.
 In particular, its closed form expression, ... \TE{Why else?}
 \te{Do we need more of an intro for why IMRPhenom?}
 
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
-In addition, we present \texttt{ripple}, a small GW \texttt{python} package containing differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
+In addition, we present \ripple, a small GW \texttt{python} package containing differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
 The remainder of this paper is structured as follows. 
-In Sec.~\ref{sec:waveforms} we discuss the differentiable waveforms implemented in \texttt{ripple} and perform some benchmarks to demonstrate the speed and accruacy of the derivative calculations. 
+In Sec.~\ref{sec:waveforms} we discuss the differentiable waveforms implemented in \ripple and perform some benchmarks to demonstrate the speed and accruacy of the derivative calculations. 
 In Sec.~\ref{sec:applications} we discuss four distinct applications using differentiable waveforms. 
 First, a simple demonstration of accelerated effectualness calculations using gradient descent.
 Second, we show that Fisher analyses are quickly enabled using AD.
 Third, we implement differnetiable detector response functions and show an illutrative example using Hamiltonian Monte Carlo.
 Finally, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting, enabled by a differentiable waveform. 
-The associated code can be found at \texttt{ripple}~\citep{ripple}.
+The associated code can be found at \ripple~\citep{ripple}.
 
 \section{Differentiable Waveforms}
 \label{sec:waveforms}
@@ -116,14 +120,14 @@ Approximate phenomenological waveforms have therefore been constructued to enabl
 The three major waveform families that have been developed to date are: the Effective-one-body (EOB), numerical relativity (NR) surrogate, and phenomenological inspiral-merger-ringdown (PhenomIMR).
 Note that unlike NR surrogate, both the EOB and PhenomIMR waveforms are calibrated to NR waveforms.
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate where as PhenomIMR waveforms are constructed with simple closed-form expressions.
-PhenomIMR waveforms are therefore ideally suited for AD, espeically using \texttt{jax}. 
+PhenomIMR waveforms are therefore ideally suited for AD, espeically using \jax. 
 In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, 2015jqa}.
 
-The implementation of IMRPhenomD in lalsuite is mainly in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \texttt{jax}.
-We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \texttt{jax} derivatives.
+The implementation of IMRPhenomD in \lalsuite is mainly in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
+We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
 In addition, we have restructed the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
 
-To ensure our implempation of IMRPhenomD is faithful to the lalsuite implementation, we start by defining the noise weighted inner product:
+To ensure our implempation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
 \begin{equation}
     \left(h_{\theta_1}|h_{\theta_2}\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h_{\theta_1}(f) h^*_{\theta_2}(f)}{S_n(f)}\, ,
 \end{equation}
@@ -138,12 +142,12 @@ Now we are ready to define the \textit{match} which is given by
 \end{equation}
 where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
-Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \texttt{ripple} accurately matches the \texttt{lalsuite} implementation.
+Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})$ across the entire parameter space.\footnote{
     Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M\_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
-Here, $h_{\theta_1}$ corresponds to the \texttt{ripple} waveform implementation and $h^{*}_{\theta_1}$ is the \texttt{lalsuite} implementation. 
-From Fig.~\ref{fig:match}, it is clear that the \texttt{ripple} waveform matches with the \texttt{lalsuite} waveform to numerical precision across the majority of the parameter space.
+Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $h^{*}_{\theta_1}$ is the \lalsuite implementation. 
+From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
 In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[ht!]
     \script{random_matches.py}
@@ -157,7 +161,7 @@ In particular, the blue points indicate parameter points where the $1-\mathrm{m}
 \end{figure}
 
 There remains some slight deviation between the two waveform implementations at higher masses. 
-This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \texttt{jax}.
+This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpret during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
@@ -165,8 +169,35 @@ Note however, that the differences are well below the accuracy requirements of t
 
 In order to be usuable in most data analysis tasks, a waveform needs to be fast to evaluate.
 Fortunately, the Phenom IMR waveforms are constructed from simple closed form expressions which are therefore computationally efficient.
-The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
+Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple.
+Benchmarking on a MacBook Pro with an $2.4$ GHz 8-Core Intel Core i9 processor, we find that a single waveform evaluation takes $\sim 1\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 38\,\mathrm{s}$ for \ripple.\footnote{
+    For this benchmark we used $32\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. In addition we used a frequency spacing of $0.25\,\mathrm{Hz}$.
+}
+Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
+Waveform calls can therefore be evaluated in parallel, massively improving performance. \te{I couldn't get these to be similar on google colab. @Kaze any ideas how to make this fast?}
 
+The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
+AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
+Firstly, the accuracy of derivatives from AD are signficantly more stable than finite difference methods.
+In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to tune the width over which the difference is taken.
+On the other hand, AD produces machine precision derivatives with no tuninig.
+Secondly, AD scales favourably with the dimensionality of the function.
+In particular, for every input dimension, $D$, added, one would need to evaluate the function at least $2D$ times to calcuate finite difference derivatives for all input parameters.
+For reverse mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimenison.\footnote{
+    Note that although the number of function calls is small, reverse mode AD does add memory overhead.
+    We've not found this to be limiting in any of the situations tested so far.
+}
+Since the parameter space of GWs in General Relativity (GR) has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
+However, this might change for waveforms in beyond GR models where many more parameters are added.
+
+% Emphasise the stability of gradients.
+% Not just a faster way of evaluating PhenomD.
+% Change plot to be q vs chieff.
+% Note that lalsuite cannot be made massively parallel on GPUs.
+% Don't need a full section on Fisher, but make sure to mention. People love Fisher.
+% Use acceptance rate as a good explanation of speed ups
+% Wall time a messy comparison. Based too much off of hardware
+% Emphasise that gradients are beneficial
 
 \section{Applications}
 \label{sec:applications}
