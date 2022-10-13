@@ -119,7 +119,7 @@ Approximate phenomenological waveforms have therefore been constructued to enabl
 
 The three major waveform families that have been developed to date are: the Effective-one-body (EOB), numerical relativity (NR) surrogate, and phenomenological inspiral-merger-ringdown (PhenomIMR).
 Note that unlike NR surrogate, both the EOB and PhenomIMR waveforms are calibrated to NR waveforms.
-EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate where as PhenomIMR waveforms are constructed with simple closed-form expressions.
+EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate whereas PhenomIMR waveforms are constructed with simple closed-form expressions.
 PhenomIMR waveforms are therefore ideally suited for AD, espeically using \jax. 
 In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, 2015jqa}.
 
@@ -144,7 +144,7 @@ where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})$ across the entire parameter space.\footnote{
-    Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M\_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+    Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $h^{*}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
@@ -162,19 +162,22 @@ In particular, the blue points indicate parameter points where the $1-\mathrm{m}
 
 There remains some slight deviation between the two waveform implementations at higher masses. 
 This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
-Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpret during waveform generation.
+Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
-Note however, that the differences are well below the accuracy requirements of the waveforms and will have no impact on any data analysis tasks.
+Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable for realistic data analysis tasks.
 
-In order to be usuable in most data analysis tasks, a waveform needs to be fast to evaluate.
+For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the Phenom IMR waveforms are constructed from simple closed form expressions which are therefore computationally efficient.
 Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple.
-Benchmarking on a MacBook Pro with an $2.4$ GHz 8-Core Intel Core i9 processor, we find that a single waveform evaluation takes $\sim 1\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 38\,\mathrm{s}$ for \ripple.\footnote{
-    For this benchmark we used $32\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. In addition we used a frequency spacing of $0.25\,\mathrm{Hz}$.
+Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 4\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 10\,\mathrm{s}$ for \ripple.\footnote{
+    For this benchmark we used $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
+    In addition, we used a frequency spacing of $0.0125\,\mathrm{Hz}$. 
+    We performed this benchmark by evaluating the waveform $5000$ times and taking the average evaluation time.
 }
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
 Waveform calls can therefore be evaluated in parallel, massively improving performance. \te{I couldn't get these to be similar on google colab. @Kaze any ideas how to make this fast?}
+Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
 The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
@@ -182,7 +185,7 @@ Firstly, the accuracy of derivatives from AD are signficantly more stable than f
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to tune the width over which the difference is taken.
 On the other hand, AD produces machine precision derivatives with no tuninig.
 Secondly, AD scales favourably with the dimensionality of the function.
-In particular, for every input dimension, $D$, added, one would need to evaluate the function at least $2D$ times to calcuate finite difference derivatives for all input parameters.
+In particular, for every input dimension, $D$, added one would need to evaluate the function at least $2D$ times to calcuate finite difference derivatives for all input parameters.
 For reverse mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimenison.\footnote{
     Note that although the number of function calls is small, reverse mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
@@ -190,10 +193,14 @@ For reverse mode AD, one only needs two function calls to evaluate the derivativ
 Since the parameter space of GWs in General Relativity (GR) has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond GR models where many more parameters are added.
 
-% Emphasise the stability of gradients.
-% Not just a faster way of evaluating PhenomD.
-% Change plot to be q vs chieff.
-% Note that lalsuite cannot be made massively parallel on GPUs.
+Overall, we have demonstrated that the PhenomIMR waveform family is ideally suited for AD.
+Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quite to evaluate.
+In the next section, we will discuss a variety of potential use cases of differentiable waveforms.
+
+% Emphasise the stability of gradients. $Done$
+% Not just a faster way of evaluating PhenomD. $Done$
+% Change plot to be q vs chieff. $Done$
+% Note that lalsuite cannot be made massively parallel on GPUs. $Done$
 % Don't need a full section on Fisher, but make sure to mention. People love Fisher.
 % Use acceptance rate as a good explanation of speed ups
 % Wall time a messy comparison. Based too much off of hardware
@@ -202,13 +209,19 @@ However, this might change for waveforms in beyond GR models where many more par
 \section{Applications}
 \label{sec:applications}
 
+Here, we will illustrate how three core tasks in GW science can be substantially improved through the use of differentiable waveforms.
+In the paper we will primarily look at toy examples, leaving a more careful analysis to future work. 
+The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to parameter estimation.
+
+\subsection{Fitting Waveform Coefficients}
+\label{subsec:hmc}
+
+
+
 \subsection{Effectualness Calculations}
 \label{sec:effectualness}
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
-\label{subsec:hmc}
-
-\subsection{Fitting Waveform Coefficients}
 \label{subsec:hmc}
 
 \section{Acknowledgments}
