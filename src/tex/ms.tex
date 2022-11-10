@@ -122,7 +122,7 @@ The three major waveform families that have been developed to date are: the Effe
 Note that unlike NR surrogate, both the EOB and PhenomIMR waveforms are calibrated to NR waveforms.
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate whereas PhenomIMR waveforms are constructed with simple closed-form expressions.
 PhenomIMR waveforms are therefore ideally suited for AD, espeically using \jax. 
-In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, 2015jqa}.
+In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
 
 The implementation of IMRPhenomD in \lalsuite is mainly in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
 We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
@@ -211,8 +211,8 @@ In the next section, we will discuss a variety of potential use cases of differe
 \label{sec:applications}
 
 Here, we will illustrate how three core tasks in GW science can be substantially improved through the use of differentiable waveforms.
-In the paper we will primarily look at toy examples, leaving a more careful analysis to future work. 
-The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to parameter estimation.
+In the paper we will primarily look at toy examples, leaving a more careful analyses to future work. 
+The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to forecasting and parameter estimation.
 
 \subsection{Fitting Waveform Coefficients}
 \label{subsec:hmc}
@@ -223,15 +223,51 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \label{subsec:hmc}
 
 Forecasting the sensitivity of future experiments is an essential task in GW science.
-Due to its theoretical simplicity and its evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well the a particular binary system's parameters can be measure.
+Due to its theoretical simplicity and its evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
-Although in practice this assumption is often violated in for real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models.
+Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models and detector configurations.
 
-Computing the Fisher matrix requires one to evaluate derivatives of the likelihhood...
+Computing the Fisher matrix requires one to evaluate derivatives of the likelihhood which in turn involves derivatives of the waveform model and detector projection functions.
+AD is therefore perfectly suited for computing Fisher matrices accurately and efficiently. 
+Forecasting with Fisher matrices for third generation detectors has already been extensively explored in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+Here we purely want to illustrate the simplicitly and speed of AD for forecasting rather than providing new physics insights.
+We therefore consider a simple, three detector setup corresponding to the two LIGO detectors in addition to Virgo.
 
+The Fisher information matrix for a single detector is typically given by 
+\begin{equation}
+    F^{k}_{ij} = (\partial_i h_0 | \partial_j h_0) \, ,
+\end{equation}
+where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h_0$ is the strain measured by the detector which is given by,
+\begin{equation}
+    h_0(\theta) = F_+(\lambda) h_{+}(\phi) + F_\times(\lambda) h_{\times}(\phi) \, .
+\end{equation}
+Here we have separated out the intrinsic ($\phi$) and extrinsic ($\lambda$) variables.
+Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
+\begin{equation}
+    F_{ij} =  F^{\mathrm{Hanford}}_{ij} + F^{\mathrm{Livingston}}_{ij} + F^{\mathrm{Virgo}}_{ij}   \, .
+\end{equation}
+Finally, we invert the Fisher matrix to calculate the covariance matrix.
+
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localtization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
+A full list of the distributions used to generate the various parameters in our population are given in Tab...
+
+The distribution of sky localization errors from a a population of $10^3$ binaries can be seen in Fig... 
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
+This demonstrates that AD can be used to accurately produce population level forecasts.
+
+Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion procress) is substantially faster.
+In particular, we find that after compilation each error calculation takes approximately one second on a single computing core.
+This can be compared to \texttt{GWbench}~\citep{Borhanian:2020ypi} where each Fisher calculation takes $\mathcal{O}$(minutes) for a similar detector setup and frequency grid.
+The factor of almost 60 speed up is despite the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
+As discussed above, performance can be further improved by utilising harware acceleration such as parallel GPU processing.
+AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
 \label{subsec:hmc}
+
+\section{Discussion}
+\label{subsec:discussion}
 
 \section{Acknowledgments}
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN).
