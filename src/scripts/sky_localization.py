@@ -33,31 +33,31 @@ params = {
 
 mpl.rcParams.update(params)
 
-data = np.loadtxt(paths.data / "ripple_phenomD_matches.txt")
-exactmatch_indices = (1.0 - data[:, -1]) <= 0.0
-other_indices = (1.0 - data[:, -1]) > 0.0
+(
+    Mc,
+    eta,
+    chi1,
+    chi2,
+    dist,
+    tc,
+    phic,
+    inclination,
+    polarization_angle,
+    ra,
+    dec,
+    sky_error_list,
+    SNR_list,
+) = np.loadtxt(paths.data / "sky_localization.txt", unpack=True)
 
-q = data[:, 1] / data[:, 0]
-chieff = (data[:, 0] * data[:, 2] + data[:, 1] * data[:, 3]) / (data[:, 0] + data[:, 1])
-Mtot = data[:, 1] + data[:, 0]
-
-# Plot and save
 plt.figure(figsize=(7, 5))
-cm = plt.cm.get_cmap("inferno")
-sc = plt.scatter(
-    Mtot[other_indices],
-    chieff[other_indices],
-    c=np.log10(1.0 - data[other_indices, -1]),
-    cmap=cm,
-)
-plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
+bins = np.geomspace(0.1, np.max(sky_error_list), 50)
+# bins = np.linspace(0.0, np.max(sky_error_list), 80)
+plt.hist(sky_error_list, bins=bins, density=True, alpha=0.3, color="C0")
+plt.hist(sky_error_list, bins=bins, density=True, histtype="step", color="C0")
 
-plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="C0")
-# plt.xlabel(r"Total Mass, $M$")
-# plt.ylabel(r"Mass Ratio, $q$")
-plt.xlabel(r"Total Mass, $M$")
-plt.ylabel(r"Effective Spin, $\chi_{\rm eff}$")
-# plt.xlim(1, 50)
-# plt.ylim(1, 50)
+plt.xscale("log")
+plt.xlim(0.1, 300)
+plt.xlabel("Sky Localization Error [deg$^2$]")
+plt.ylabel("Probability")
+plt.savefig(paths.figures / "sky_localization.pdf", bbox_inches="tight")
 
-plt.savefig(paths.figures / "random_matches.pdf", bbox_inches="tight")
