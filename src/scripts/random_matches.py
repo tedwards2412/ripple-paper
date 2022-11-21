@@ -27,6 +27,7 @@ params = {
     "font.family": "serif",
     "axes.linewidth": 1.5,
     "mathtext.fontset": "dejavuserif",
+    "text.usetex": True,
 }
 
 # mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
