@@ -224,7 +224,7 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \label{subsec:fisher}
 
 Forecasting the sensitivity of future experiments is an essential task in GW science.
-Due to its theoretical simplicity and its evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
+Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models and detector configurations.
 
@@ -305,7 +305,7 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix.
 
 To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localtization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
-A full list of the distributions used to generate the various parameters in our population are given in Tab...
+A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 \begin{figure}[ht!]
@@ -319,15 +319,15 @@ The resulting population produces binaries with signal-to-noise ratios ranging f
     \end{centering}
 \end{figure}
 
-The distribution of sky localization errors from a a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
+The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
 We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
 This demonstrates that AD can be used to accurately produce population level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion procress) is substantially faster.
-In particular, we find that after compilation each error calculation takes approximately one second on a single computing core.
-This can be compared to \texttt{GWbench}~\citep{Borhanian:2020ypi} where each Fisher calculation takes $\mathcal{O}$(minutes) for a similar detector setup and frequency grid.
-The factor of almost 60 speed up is despite the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
-As discussed above, performance can be further improved by utilising harware acceleration such as parallel GPU processing.
+In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
+\texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
+As discussed above, performance can be further improved by utilising hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
