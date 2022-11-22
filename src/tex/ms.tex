@@ -5,6 +5,7 @@
 % \usepackage[dvipsnames]{xcolor}
 % \usepackage[colorlinks]{hyperref}
 % \usepackage{colortbl}
+\usepackage{multirow}
 \definecolor{pyBlue}{RGB}{31, 119, 180}
 \definecolor{pyRed}{RGB}{214, 39, 40}
 \definecolor{pyGreen}{RGB}{44, 160, 44}
@@ -215,7 +216,7 @@ In the paper we will primarily look at toy examples, leaving a more careful anal
 The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to forecasting and parameter estimation.
 
 \subsection{Fitting Waveform Coefficients}
-\label{subsec:hmc}
+\label{subsec:coeffs}
 
 \te{Kelvin should add stuff here}
 
@@ -238,10 +239,10 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 
 
 \subsection{Fisher Forecasting}
-\label{subsec:hmc}
+\label{subsec:fisher}
 
 Forecasting the sensitivity of future experiments is an essential task in GW science.
-Due to its theoretical simplicity and its evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
+Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models and detector configurations.
 
@@ -253,32 +254,98 @@ We therefore consider a simple, three detector setup corresponding to the two LI
 
 The Fisher information matrix for a single detector is typically given by 
 \begin{equation}
-    F^{k}_{ij} = (\partial_i h_0 | \partial_j h_0) \, ,
+    \mathcal{I}^{k}_{ij} = (\partial_i h_0 | \partial_j h_0) \, ,
 \end{equation}
 where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h_0$ is the strain measured by the detector which is given by,
 \begin{equation}
     h_0(\theta) = F_+(\lambda) h_{+}(\phi) + F_\times(\lambda) h_{\times}(\phi) \, .
 \end{equation}
-Here we have separated out the intrinsic ($\phi$) and extrinsic ($\lambda$) variables.
+Note that here we have separated out the intrinsic ($\phi$) and extrinsic ($\lambda$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F_+$ and $F_\times$ respectively.
 Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
 \begin{equation}
-    F_{ij} =  F^{\mathrm{Hanford}}_{ij} + F^{\mathrm{Livingston}}_{ij} + F^{\mathrm{Virgo}}_{ij}   \, .
+    \mathcal{I}_{ij} =  \mathcal{I}^{\mathrm{Hanford}}_{ij} + \mathcal{I}^{\mathrm{Livingston}}_{ij} + \mathcal{I}^{\mathrm{Virgo}}_{ij}   \, .
 \end{equation}
 Finally, we invert the Fisher matrix to calculate the covariance matrix.
 
+% \begin{table*}[ht!]
+%     \begin{center}
+%     \begin{tabular}{c|c|c|c|c|c|c|c|c}
+%     \hline\hline
+%     \hfil $\boldsymbol{m_1, m_2}$ &
+%     \hfil $\boldsymbol{\chi_1, \chi_2}$ &
+%     \hfil $\boldsymbol{D}$ &
+%     \hfil $\boldsymbol{t_c}$ &
+%     \hfil $\boldsymbol{\phi_c}$ &
+%     \hfil $\boldsymbol{\iota}$ &
+%     \hfil $\boldsymbol{\psi}$ &
+%     \hfil $\boldsymbol{RA}$ &
+%     \hfil $\boldsymbol{DEC}$
+%     \\
+%     \hline\hline
+%     \hfil [0.1, 3] &
+%     \hfil [0, 1] &
+%     \hfil [0, 1] &
+%     \hfil [0.7, 1.3] &
+%     \hfil [-3, 0] &
+%     \hfil [0, 3] &
+%     \hfil [-3, 3] &
+%     \hfil [-3, 3] &
+%     \hfil [-3, 3]
+%     \\
+%     \hline\hline
+%     \end{tabular}
+%     \end{center}
+%     \caption{caption here}
+%     \label{tab:priors}
+% \end{table*}
+
+\begin{table}[t!]
+    % \begin{center}
+    \centering
+    \begin{tabular}{c|c}
+    \hline\hline
+    $m_1, m_2$ & $\boldsymbol{U}[1.0, 50]\, \mathrm{M}_\odot$ \\ \hline
+    $\chi_1, \chi_2$ & [-0.99, 0.99] \\ \hline
+    $D$ & [500, 1000]\, Mpc \\ \hline
+    $t_c$ & 0.0 \\ \hline
+    $\phi_c$ & 0.0 \\ \hline
+    Inclincation Angle, $\iota$ & $\boldsymbol{U}[0, 1]$ \\ \hline
+    Polarization Angle, $\psi$ & $\boldsymbol{U}[0, 1]$ \\ \hline
+    Right Ascension, $\delta$ & $\boldsymbol{U}[0, 1]$ \\ \hline
+    Declination, $\alpha$ & $\boldsymbol{U}[0, 1]$ \\ 
+    \hline\hline
+    \end{tabular}
+    % \end{center}
+    \caption{Priors for the 11 dimensional parameter space used for the Fisher forecasting population analysis in Sec.~\ref{subsec:fisher}. 
+    $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets.}
+    \label{tab:priors}
+\end{table}
+
 To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localtization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
-A full list of the distributions used to generate the various parameters in our population are given in Tab...
+A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
+The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
-The distribution of sky localization errors from a a population of $10^3$ binaries can be seen in Fig... 
+\begin{figure}[ht!]
+    \script{sky_localization.py}
+    \begin{centering}
+        \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
+        \caption{
+            This plot should show a sky localization error bar.
+        }
+        \label{fig:sky_localization}
+    \end{centering}
+\end{figure}
+
+The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
 We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
 This demonstrates that AD can be used to accurately produce population level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion procress) is substantially faster.
-In particular, we find that after compilation each error calculation takes approximately one second on a single computing core.
-This can be compared to \texttt{GWbench}~\citep{Borhanian:2020ypi} where each Fisher calculation takes $\mathcal{O}$(minutes) for a similar detector setup and frequency grid.
-The factor of almost 60 speed up is despite the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
-As discussed above, performance can be further improved by utilising harware acceleration such as parallel GPU processing.
+In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
+\texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
+As discussed above, performance can be further improved by utilising hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
