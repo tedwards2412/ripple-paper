@@ -238,26 +238,42 @@ Every waveform approximants have some fitting parameters that are fixed during
 the process of calibrating the ansatz to NR waveforms. In the case of
 IMRPhenomD, there are $\sim 220$ \kw{Kelvin check number} fitting parameters
 used to capture the behavior of the amplitude and phase as a function of the
-mass ratio and spins.
+mass ratio and spins. \kw{Say something about how the fitting parameters affect the accuracy of the waveform model}
 
+% Motivation
+\kw{Motivate the need for improving the fitting process by joint fit.}
 
+% How the fitting process is done now.
+\kw{Mention how these parameters are often hand tuned.}
+
+Since we can differentiate through the entire waveform model against the fitting
+parameters, one can use gradient descent to find the optimal fitting parameters
+all at once instead of fitting them in subsets.
+
+\kw{Describe figure loss_compare}
 
 \begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
-    \caption{ Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
-        between original Phenom waveform and NR waveform; Orange: Error between
-        optimized waveform and NR waveform. }
+\centering
+\includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
+\caption{ Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
+    between original Phenom waveform and NR waveform; Orange: Error between
+    optimized waveform and NR waveform. }
+\label{fig:loss_compare}
 \end{figure}
+
+\kw{Describe figure logdiff}
 
 \begin{figure}[t]
-    \centering
-    \includegraphics[width=\linewidth]{../static/MM_logdiff_q148.pdf}
-    \caption{ Distribution of the log difference of mismatches between optimized
-        and original model. The mean shows a 36\% decrease in mismatch. }
+\centering
+\includegraphics[width=\linewidth]{../static/MM_logdiff_q148.pdf}
+\caption{ Distribution of the log difference of mismatches between optimized
+    and original model. The mean shows a 36\% decrease in mismatch. }
+\label{fig:MM_logdiff}
 \end{figure}
 
+\kw{Describe implication}
 
+% Implication
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
