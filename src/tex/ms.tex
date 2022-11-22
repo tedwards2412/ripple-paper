@@ -25,6 +25,8 @@
 
 \newcommand{\TE}[1]{{\color{pyGreen} #1}}
 \newcommand{\te}[1]{\textbf{\color{pyGreen}(TE: #1)}}
+\definecolor{rb4}{HTML}{27408B}
+\newcommand{\kw}[1]{{\color{rb4}[KW: #1 ]}}
 
 % Begin!
 \begin{document}
@@ -220,20 +222,39 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 
 \te{Kelvin should add stuff here}
 
+Having an accurate waveform model is essential for many data analysis tasks in
+GW, such as searching for signals and estimating source parameters given data.
+While waveforms generated using numerical relativity simulations are commonly
+regarded as the most accurate, they are too computationally expensive to be used
+in any practical data analysis tasks. To create waveform models that can be used
+in data analysis, there are a number of groups creating "approximants" of the
+full numerical relativity waveforms, which are essentially simpler ansatzes that
+are not as accurate but can be evaluated much faster. There are a few families
+of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate
+model. \kw{cite and add a couple more sentences to introduce the waveform
+families.}
+
+Every waveform approximants have some fitting parameters that are fixed during
+the process of calibrating the ansatz to NR waveforms. In the case of
+IMRPhenomD, there are $\sim 220$ \kw{Kelvin check number} fitting parameters
+used to capture the behavior of the amplitude and phase as a function of the
+mass ratio and spins.
+
+
+
 \begin{figure}[t]
     \centering
     \includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
-    \caption{
-        Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error between original Phenom waveform and NR waveform; Orange: Error between optimized waveform and NR waveform.
-    }
+    \caption{ Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
+        between original Phenom waveform and NR waveform; Orange: Error between
+        optimized waveform and NR waveform. }
 \end{figure}
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\linewidth]{../static/MM_logdiff_q148.pdf.pdf}
-    \caption{
-        Distribution of the log difference of mismatches between optimized and original model. The mean shows a 36\% decrease in mismatch. 
-    }
+    \includegraphics[width=\linewidth]{../static/MM_logdiff_q148.pdf}
+    \caption{ Distribution of the log difference of mismatches between optimized
+        and original model. The mean shows a 36\% decrease in mismatch. }
 \end{figure}
 
 
