@@ -220,7 +220,7 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \subsection{Fitting Waveform Coefficients}
 \label{subsec:coeffs}
 
-\te{Kelvin should add stuff here}
+% \te{Kelvin should add stuff here}
 
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
@@ -234,11 +234,11 @@ of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate
 model. \kw{cite and add a couple more sentences to introduce the waveform
 families.}
 
-Every waveform approximants have some fitting parameters that are fixed during
-the process of calibrating the ansatz to NR waveforms. In the case of
-IMRPhenomD, there are $\sim 220$ \kw{Kelvin check number} fitting parameters
-used to capture the behavior of the amplitude and phase as a function of the
-mass ratio and spins. \kw{Say something about how the fitting parameters affect the accuracy of the waveform model}
+Every waveform approximants have some fitting coefficients that are fixed during
+the process of calibrating the ansatz to NR waveforms. In the case of 
+IMRPhenomD, there are 209 fitting coefficients used to capture the separate behavior of 
+the amplitude and phase as a function of the mass ratio and spins. 
+\kw{Say something about how the fitting parameters affect the accuracy of the waveform model}
 
 % Motivation
 \kw{Motivate the need for improving the fitting process by joint fit.}
@@ -246,34 +246,60 @@ mass ratio and spins. \kw{Say something about how the fitting parameters affect 
 % How the fitting process is done now.
 \kw{Mention how these parameters are often hand tuned.}
 
+Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform coefficients are fitted in segments with amplitude and phase separated. 
+Individual segments are then connected together such that they are differentiable. 
+Using this method, the generated waveforms are expected to be erroneous, as the connections would affect the originally fitted segments. 
+Hence, coefficients of the current IMRPhenomD implementation are often hand tuned in the final procedure. 
+The set of coefficients are both is expensive and time-costly to calculate, and not the best-fitted solution. 
+Instead, by joint fit, all coefficients are simultaneously fitted without having issues discussed above. 
+Therefore, it is essential to fit the waveform jointly. 
+
 Since we can differentiate through the entire waveform model against the fitting
 parameters, one can use gradient descent to find the optimal fitting parameters
 all at once instead of fitting them in subsets.
 
 \kw{Describe figure loss_compare}
+Here, we define the mismatch as
+\begin{equation}
+	\mathcal{M}=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}), 
+\end{equation} 
+In our optimization procedure, we took NR waveforms stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients. 
+By defining the mean of individual mismatches as the loss function for optimization, we can calibrate the set of coefficients using gradient descent. 
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
-\caption{ Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
+\caption{Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
     between original Phenom waveform and NR waveform; Orange: Error between
     optimized waveform and NR waveform. }
 \label{fig:loss_compare}
 \end{figure}
 
 \kw{Describe figure logdiff}
+As demonstration, Fig. \ref{fig:loss_compare} shows the relative error of original and optimized waveform at different frequencies. 
+In general, the error of optimized waveform is lower than that of the original waveform. 
+The error in the early inspiral region is substantially decreased by half and other regions also show good improvement in accuracy.   
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../static/MM_logdiff_q148.pdf}
-\caption{ Distribution of the log difference of mismatches between optimized
+\includegraphics[width=\linewidth]{../static/MM_logdiff_q148_LIGO.pdf}
+\caption{Distribution of the log difference of mismatches between optimized
     and original model. The mean shows a 36\% decrease in mismatch. }
 \label{fig:MM_logdiff}
 \end{figure}
 
-\kw{Describe implication}
+Instead of examining individual waveforms, we investigate the general behavior of mismatches for a set of testing waveforms. 
+In Fig. \ref{fig:logdiff_q148}, the distribution of log difference of mismatches are shown. 
+The distribution mean lies towards the negative side, which indicates a improvement in the model. 
+Despite there are testing waveforms that performed worse after optimization, it is verified that the ansatz of IMRPhenomD does not fit well with most of these waveforms, hence cannot be improved by optimization.  
+Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. 
 
+\kw{Describe implication}
 % Implication
+
+With further modifications to the optimization process, the set of waveform coefficients can be retuned to give almost an order-of-magnitude improvement. 
+Utilizing AD, differentiable waveform models can be further improved easily and quickly using similar computational schemes. 
+Moreover, in the construction of new waveform models, AD shows significant advantages during their calibrating process. 
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
