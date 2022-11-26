@@ -243,11 +243,8 @@ reproduces the NR waveform. The inaccuracy in obtaining the fitting coefficients
 means misrepresentation of the NR waveform, meaning the use of approximant will
 introduce some systematic error in downstream data analysis task. For example,
 this would mean the recovered source parameters will be biased in the case of PE.
-\kw{Say something about how the fitting parameters affect the accuracy of the waveform model}
 
 % Motivation
-\kw{Motivate the need for improving the fitting process by joint fit.}
-
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
 coefficients are fitted in segments with amplitude and phase separated.
 Individual segments are then connected together such that they are
@@ -263,6 +260,7 @@ connecting different segments can be accounted during the optimization.
 Therefore, there is potential accuracy one can gain by fitting all coefficients
 at once.
 
+\kw{Kelvin Fill}
 Since we can differentiate through the entire waveform model against the fitting
 parameters, one can use gradient descent to find the optimal fitting parameters
 all at once instead of fitting them in subsets.
@@ -307,10 +305,14 @@ Therefore, the new set of waveform coefficients can produce better waveforms for
 \kw{Describe implication}
 % Implication
 
-With further modifications to the optimization process, the set of waveform coefficients can be retuned to give almost an order-of-magnitude improvement. 
-Utilizing AD, differentiable waveform models can be further improved easily and quickly using similar computational schemes. 
-Moreover, in the construction of new waveform models, AD shows significant advantages during their calibrating process. 
-
+This fine-tuning step is rather simple and general. Given a different
+differentiable waveform model, one can apply the same procedure to optimize the
+coefficients in the new model, i.e. applying gradient descent to optimize all
+the fitting coefficients all together. This provides a more flexible control
+during the calibration process, and potentially better final result.
+With further modifications to the optimization process, the set of waveform
+coefficients can be retuned to give almost an order-of-magnitude improvement.
+\kw{Where is the proof for this?} 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
 
