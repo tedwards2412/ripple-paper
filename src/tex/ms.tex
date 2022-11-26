@@ -217,7 +217,7 @@ Here, we will illustrate how three core tasks in GW science can be substantially
 In the paper we will primarily look at toy examples, leaving a more careful analyses to future work. 
 The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to forecasting and parameter estimation.
 
-\subsection{Fitting Waveform Coefficients}
+\subsection{Finetuning Waveform Coefficients}
 \label{subsec:coeffs}
 
 % \te{Kelvin should add stuff here}
@@ -235,36 +235,46 @@ model. \kw{cite and add a couple more sentences to introduce the waveform
 families.}
 
 Every waveform approximants have some fitting coefficients that are fixed during
-the process of calibrating the ansatz to NR waveforms. In the case of 
-IMRPhenomD, there are 209 fitting coefficients used to capture the separate behavior of 
-the amplitude and phase as a function of the mass ratio and spins. 
+the process of calibrating the ansatz to NR waveforms. In the case of
+IMRPhenomD, there are 209 fitting coefficients used to capture the separate
+behavior of the amplitude and phase as a function of the mass ratio and spins.
+The accuracy of fitting coefficients determines how well the approximant
+reproduces the NR waveform. The inaccuracy in obtaining the fitting coefficients
+means misrepresentation of the NR waveform, meaning the use of approximant will
+introduce some systematic error in downstream data analysis task. For example,
+this would mean the recovered source parameters will be biased in the case of PE.
 \kw{Say something about how the fitting parameters affect the accuracy of the waveform model}
 
 % Motivation
 \kw{Motivate the need for improving the fitting process by joint fit.}
 
-% How the fitting process is done now.
-\kw{Mention how these parameters are often hand tuned.}
-
-Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform coefficients are fitted in segments with amplitude and phase separated. 
-Individual segments are then connected together such that they are differentiable. 
-Using this method, the generated waveforms are expected to be erroneous, as the connections would affect the originally fitted segments. 
-Hence, coefficients of the current IMRPhenomD implementation are often hand tuned in the final procedure. 
-The set of coefficients are both is expensive and time-costly to calculate, and not the best-fitted solution. 
-Instead, by joint fit, all coefficients are simultaneously fitted without having issues discussed above. 
-Therefore, it is essential to fit the waveform jointly. 
+Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
+coefficients are fitted in segments with amplitude and phase separated.
+Individual segments are then connected together such that they are
+differentiable. Using this method, the generated waveforms are expected to be
+erroneous, as the connections would affect the originally fitted segments. The
+coefficients of the current IMRPhenomD implementation are often hand tuned, and
+are tuned in sub-sets of parameters instead of all together. This means the
+tuning process ignore the correlation between different sub-sets of parameters,
+so the best-fitted solution obtained by fitting sub-sets of parameters may not
+be the global optimum compared to fitting all coefficients at once. Instead, by
+jointly fitting all coefficients, the inaccuracy in fitting individual and
+connecting different segments can be accounted during the optimization.
+Therefore, there is potential accuracy one can gain by fitting all coefficients
+at once.
 
 Since we can differentiate through the entire waveform model against the fitting
 parameters, one can use gradient descent to find the optimal fitting parameters
 all at once instead of fitting them in subsets.
 
-\kw{Describe figure loss_compare}
 Here, we define the mismatch as
 \begin{equation}
 	\mathcal{M}=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}), 
 \end{equation} 
 In our optimization procedure, we took NR waveforms stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients. 
 By defining the mean of individual mismatches as the loss function for optimization, we can calibrate the set of coefficients using gradient descent. 
+
+\kw{Describe figure losscompare}
 
 \begin{figure}[t]
 \centering
