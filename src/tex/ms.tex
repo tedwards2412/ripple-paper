@@ -22,6 +22,7 @@
 \newcommand{\jax}{\texttt{JAX}\xspace}
 \newcommand{\ripple}{\texttt{ripple}\xspace}
 \newcommand{\lalsuite}{\texttt{lalsuite}\xspace}
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 
 \newcommand{\TE}[1]{{\color{pyGreen} #1}}
 \newcommand{\te}[1]{\textbf{\color{pyGreen}(TE: #1)}}
@@ -34,6 +35,7 @@
 % Title
 \title{\ripple: Differentiable Waveforms for Gravitational Wave Data Analysis}
 
+\newcommand{\JHU}{\affiliation{William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore, Maryland 21218, USA}} 
 \newcommand{\OKC}{\affiliation{The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-106 91 Stockholm, Sweden}} 
 \newcommand{\NORDITA}{\affiliation{Nordic Institute for Theoretical Physics (NORDITA), 106 91 Stockholm, Sweden}}
 \newcommand{\UdeM}{\affiliation{Département de Physique, Université de Montréal, 1375 Avenue Thérèse-Lavoie-Roux, Montréal, QC H2V 0B3, Canada}} 
@@ -43,7 +45,7 @@
 
 % Author list
 \author{Adam Coogan} \UdeM \Mila
-\author{Thomas D.~P.~Edwards} \OKC \NORDITA
+\author{Thomas D.~P.~Edwards} \JHU \OKC \NORDITA
 \author{Daniel Foreman-Mackey} \CCA
 \author{Maximiliano Isi} \CCA
 \author{Kelvin Lam} \CCA
@@ -52,7 +54,19 @@
 
 % Abstract with filler text
 \begin{abstract}
-    Here we will discuss our implementation of differentiable waveforms and demonstrate their benefits for a variety of data analysis tasks.
+    Since their discovery in 2015, gravitaitonal waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
+    As more detections continue, data analysis taks are becoming increasingly computationally demanding.
+    Here we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analsyis tasks.
+    Firstly, we demonstrate that highly accurate waveforms (IMRPhenomD) can be written in \jax and demonstrate that the evaluation speed of the waveform (and its derivative) is not substantially slower than the \lalsuite implenetation in \CC.
+    We then focus on three applications where speed and differentiable waveforms are essential.
+    Firstly, we demonstrate that stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that make up the waveform. 
+    In particular, we demonstrate that the typical \textit{match} with numerical relativiely waveforms can be improved by more than 30\% without any additional overhead.
+    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ with no loss in accuracy.
+    This increased speed makes population forecasting substantially simpler, as discussed extensively in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+    Finally, we show that gradient based samplers like Hamiltonian Monte Carlo can improve acceptance rates of XXX. 
+    Since differentiable waveforms appear to have substatial advantages for a variety of tasks throughtout GW science (with little downside), we propose that waveform developers use \jax to build new waveforms moving forward.
+    Our waveform code, called \ripple, can be found at XXX, and will continue to be updated with new waveforms as they are formulated.
+
 \end{abstract}
 
 \section{Introduction}
@@ -70,7 +84,7 @@ Although the data volumes from GW detectors are relatively small, analyzing the 
 In addition, this computational cost will substatially increase when next generation detectors come online.
 The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. 
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event.
-In the most minimial example, this requires one to perform MCMC over a 15 dimensional parameter space for each event.
+In the most minimial example, this requires one to perform an MCMC on an 11 dimensional parameter space for each event.
 Beyond this simple scenario, more complex waveform models with many additional parameters may be used to test for deviations from General Relativity.
 Finally, using the results of the PE, population synthesis models are used to constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
 All of these tasks require significant compute.
@@ -78,7 +92,7 @@ In this paper, we will argue that differentiable waveforms (and more generally d
 
 Derivatives are ubiqitously useful throughout data analysis tasks.
 For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values (e.g. in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Decsent).
-This use of gradients is particularly useful for high dimensional spaces.
+Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calcuations for gravitational waveforms~\citep{Coogan:2022qxs}.
@@ -90,7 +104,7 @@ The core idea of AD is that each any mathematical function can be broken down in
     }
 The full derivative can then be contructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
-More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW physics precludes its general use.
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited support in GW physics precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
 \te{Do we need a longer intro to AD here?}
 
@@ -102,14 +116,13 @@ In particular, its closed form expression, ... \TE{Why else?}
 
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
-In addition, we present \ripple, a small GW \texttt{python} package containing differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
+In addition, we present \ripple, a small GW \texttt{python} package which can serve as a respository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
 The remainder of this paper is structured as follows. 
 In Sec.~\ref{sec:waveforms} we discuss the differentiable waveforms implemented in \ripple and perform some benchmarks to demonstrate the speed and accruacy of the derivative calculations. 
-In Sec.~\ref{sec:applications} we discuss four distinct applications using differentiable waveforms. 
-First, a simple demonstration of accelerated effectualness calculations using gradient descent.
-Second, we show that Fisher analyses are quickly enabled using AD.
-Third, we implement differnetiable detector response functions and show an illutrative example using Hamiltonian Monte Carlo.
-Finally, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting, enabled by a differentiable waveform. 
+In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
+Firstly, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting, enabled by a differentiable waveform. 
+Secondly, we implement differnetiable detector response functions and show that the speed of Fisher matrix calculations can be substantially improved using AD.
+Finally, we run an illustrative injection example using Hamiltonian Monte Carlo to demonstrate that the acceptance rate of derivative samplers is substantially larger than traditional MCMCs.
 The associated code can be found at \ripple~\citep{ripple}.
 
 \section{Differentiable Waveforms}
@@ -153,7 +166,7 @@ This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $h^{*}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
 In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
-\begin{figure}[ht!]
+\begin{figure}[t]
     \script{random_matches.py}
     \begin{centering}
         \includegraphics[width=\linewidth]{figures/random_matches.pdf}
@@ -174,13 +187,14 @@ Note however, that the differences are well below the accuracy requirements of t
 For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the Phenom IMR waveforms are constructed from simple closed form expressions which are therefore computationally efficient.
 Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple.
-Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 4\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 10\,\mathrm{s}$ for \ripple.\footnote{
+Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 2-5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 5-8\,\mathrm{ms}$ for \ripple.\footnote{
     For this benchmark we used $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
     In addition, we used a frequency spacing of $0.0125\,\mathrm{Hz}$. 
     We performed this benchmark by evaluating the waveform $5000$ times and taking the average evaluation time.
 }
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
-Waveform calls can therefore be evaluated in parallel, massively improving performance. \te{I couldn't get these to be similar on google colab. @Kaze any ideas how to make this fast?}
+Waveform calls can therefore be evaluated in parallel, massively improving performance.
+Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim 0.00005\mathrm{ms}$, nearly five orders of magnitude faster.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
 The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
@@ -232,17 +246,17 @@ full numerical relativity waveforms, which are essentially simpler ansatzes that
 are not as accurate but can be evaluated much faster. There are a few families
 of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate
 model. \kw{cite and add a couple more sentences to introduce the waveform
-families.}
+families.} \te{I think a full dicussion of the various waveform families just belongs in section 2, so don't need too much more here I'd say.}
 
-Every waveform approximants have some fitting coefficients that are fixed during
+Every waveform approximant has some fitting coefficients that are fixed during
 the process of calibrating the ansatz to NR waveforms. In the case of
 IMRPhenomD, there are 209 fitting coefficients used to capture the separate
 behavior of the amplitude and phase as a function of the mass ratio and spins.
 The accuracy of fitting coefficients determines how well the approximant
 reproduces the NR waveform. The inaccuracy in obtaining the fitting coefficients
 means misrepresentation of the NR waveform, meaning the use of approximant will
-introduce some systematic error in downstream data analysis task. For example,
-this would mean the recovered source parameters will be biased in the case of PE.
+introduce some systematic error in downstream data analysis task. For example, sufficiently large systematic errors 
+would mean cause the recovered source parameters to be biased in the case of PE.
 
 % Motivation
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
@@ -279,7 +293,7 @@ By defining the mean of individual mismatches as the loss function for optimizat
 \includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
 \caption{Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
     between original Phenom waveform and NR waveform; Orange: Error between
-    optimized waveform and NR waveform. }
+    optimized waveform and NR waveform. \te{Can you add the data and the plotting script to the repo so that we can generate the plots using the same matplotlib settings?}}
 \label{fig:loss_compare}
 \end{figure}
 
@@ -295,6 +309,7 @@ The error in the early inspiral region is substantially decreased by half and ot
     and original model. The mean shows a 36\% decrease in mismatch. }
 \label{fig:MM_logdiff}
 \end{figure}
+
 
 Instead of examining individual waveforms, we investigate the general behavior of mismatches for a set of testing waveforms. 
 In Fig. \ref{fig:logdiff_q148}, the distribution of log difference of mismatches are shown. 
@@ -313,8 +328,20 @@ during the calibration process, and potentially better final result.
 With further modifications to the optimization process, the set of waveform
 coefficients can be retuned to give almost an order-of-magnitude improvement.
 \kw{Where is the proof for this?} 
+
+
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
+
+\begin{figure}[t!]
+    \script{sky_localization.py}
+    \centering
+    \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
+    \caption{
+        This plot should show a sky localization error bar.
+    }
+    \label{fig:sky_localization}
+\end{figure}
 
 Forecasting the sensitivity of future experiments is an essential task in GW science.
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
@@ -374,7 +401,7 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix.
 %     \label{tab:priors}
 % \end{table*}
 
-\begin{table}[t!]
+\begin{table}[t]
     % \begin{center}
     \centering
     \begin{tabular}{c|c}
@@ -401,17 +428,6 @@ Since the Fisher matrix approach is known to have both theoretical issues as wel
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
-\begin{figure}[ht!]
-    \script{sky_localization.py}
-    \begin{centering}
-        \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
-        \caption{
-            This plot should show a sky localization error bar.
-        }
-        \label{fig:sky_localization}
-    \end{centering}
-\end{figure}
-
 The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
 We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
 This demonstrates that AD can be used to accurately produce population level forecasts.
@@ -430,11 +446,9 @@ AD therefore represents a fast and accurate way of performing population level a
 \label{subsec:discussion}
 
 \section{Acknowledgments}
-This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN).
+This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
+T.E. is supported by the Horizon Postdoctoral Fellowship.
 
 \bibliography{bib}
-
-\section{Appendix}
-\label{sec:appendix}
 
 \end{document}

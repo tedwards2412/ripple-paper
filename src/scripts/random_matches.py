@@ -23,12 +23,39 @@ params = {
     "ytick.minor.size": 4,
     "xtick.direction": "in",
     "ytick.direction": "in",
-    "text.usetex": True,
-    "font.family": "serif",
     "axes.linewidth": 1.5,
+    "text.usetex": False,
     "mathtext.fontset": "dejavuserif",
-    "text.usetex": True,
 }
+
+# mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
+
+# params = {
+#     "font.size": 18,
+#     "legend.fontsize": 18,
+#     "legend.frameon": False,
+#     "axes.labelsize": 18,
+#     "axes.titlesize": 18,
+#     "xtick.labelsize": 18,
+#     "ytick.labelsize": 18,
+#     "figure.figsize": (7, 5),
+#     "xtick.top": True,
+#     "ytick.right": True,
+#     "xtick.bottom": True,
+#     "ytick.left": True,
+#     "xtick.major.pad": 8,
+#     "xtick.major.size": 8,
+#     "xtick.minor.size": 4,
+#     "ytick.major.size": 8,
+#     "ytick.minor.size": 4,
+#     "xtick.direction": "in",
+#     "ytick.direction": "in",
+#     "text.usetex": True,
+#     "font.family": "serif",
+#     "axes.linewidth": 1.5,
+#     "mathtext.fontset": "dejavuserif",
+#     "text.usetex": True,
+# }
 
 # mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
 
@@ -58,7 +85,8 @@ plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="C0")
 # plt.ylabel(r"Mass Ratio, $q$")
 plt.xlabel(r"Total Mass, $M$")
 plt.ylabel(r"Effective Spin, $\chi_{\rm eff}$")
-# plt.xlim(1, 50)
+plt.xlim(0, 200)
+plt.ylim(-1, 1.0)
 # plt.ylim(1, 50)
 
 plt.savefig(paths.figures / "random_matches.pdf", bbox_inches="tight")
