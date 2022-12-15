@@ -442,8 +442,32 @@ AD therefore represents a fast and accurate way of performing population level a
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
 \label{subsec:hmc}
 
-\section{Discussion}
+After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called parameter estimation (PE).
+To do this, one typically uses a Markov Chain Monte Carlo (MCMC) sampler or nested sampler~\citep{multinest, dynesty}.
+Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
+For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$hours, whilst BNS systems can take up to weeks.
+Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to faciliate follow-up electromagnetic observations.
+Nevertheless, these do not present the whole picture; fast, general parameter estimation therefore remains a primary goal of GW data analysis.
+
+A primary issue with both MCMC and nested sampling is that neither utlizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
+Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
+Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
+In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
+In a follow up paper we will demonstrate that minute scale PE can be achieved by exploiting normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu} together with a derivative based sampler~\citep{PEpaper}.
+
+
+\section{Discussion and Conclusion}
 \label{subsec:discussion}
+
+In this paper we introduced and discussed the various benefits of differentiable waveforms in \jax for GW data analysis.
+First, we demonstrated the speed and accuracy of our implementation of the aligned spin IMRPhenomD waveform.
+In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU, making waveform calls up to five orders of magnitude faster.
+Second, we discussed three data analysis tasks which can all be substantially improved by utlizing derivative information of the waveform.
+Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task. 
+Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
+
+Currently the biggest constraint to adopting differentiable waveforms is the need to re-write the most commonly used waveforms into \jax.
+At the time of writing...
 
 \section{Acknowledgments}
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
