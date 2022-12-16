@@ -79,14 +79,14 @@
 % - Discussion of what waveforms are most ameanable to being differentiable
 % - In this paper
 
-The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy.
+The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep{LIGOScientific:2021djp}.
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substatially increase when next generation detectors come online.
 The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. 
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event.
-In the most minimial example, this requires one to perform an MCMC on an 11 dimensional parameter space for each event.
+In the most minimial example, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 Beyond this simple scenario, more complex waveform models with many additional parameters may be used to test for deviations from General Relativity.
-Finally, using the results of the PE, population synthesis models are used to constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
+Finally, using the results of the PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
 All of these tasks require significant compute.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleaviating this computational demand.
 
@@ -99,21 +99,19 @@ However, recent progress in automatic differentiation (AD) has shown promise in 
 
 Automatic differentiaton is a family of methods used to compute machine precision derivatives with little computational ovearhead. 
 AD's recent ascendance is primarily driven by its use in machine learning, particularly for derivative computations of neural networks which use gradient descent during training.
-The core idea of AD is that each any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
+The core idea of AD is that any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
     Of course, non-differentiable functions exist and care must be taken when treating these special cases.
     }
 The full derivative can then be contructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited support in GW physics precludes its general use.
-Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, ability to just-in-time compile, and ability to utilize a variety of computational resources (i.e. CPUs and GPUs) without changes to the code.
-\te{Do we need a longer intro to AD here?}
+Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e. GPUs).
 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective one body, the phenomenological inspiral-merger-ringerdown (IMR), and numerical relativity surrogate.
-Of these, the phenomenological IMR family is most well suited for an AD implementation in \jax.
-In particular, its closed form expression, ... \TE{Why else?}
-\te{Do we need more of an intro for why IMRPhenom?}
-
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
+Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
+In particular, its closed form expression and fixed size frequency grid make a \jax implementation that complies with the constraints of JIT compilation simple.
+EOB waveforms on the other hand require... \te{Max or Kaze, could one of you write something about why its hard? I don't know enough about EOB.}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
 In addition, we present \ripple, a small GW \texttt{python} package which can serve as a respository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
@@ -129,22 +127,22 @@ The associated code can be found at \ripple~\citep{ripple}.
 \label{sec:waveforms}
 
 A variety of waveform families have been developed to accurately model the GW emission from COs. 
-When the COs are relatively well separated, the dynamics of the system can be well approximated with post-Newtonian corrections to the... .
-However, close to merger, numerical relatively simulations are required to accurately model the GW emission.
+When the COs are relatively well separated, the dynamics of the system can be well approximated with post-Newtonian expansion.
+However, close to merger, numerical relatively simulations are required to accurately model the binary.
 Unfortunately, these numerical simulations are computationally expensive and cannot be run in conjunction with data analysis.
-Approximate phenomenological waveforms have therefore been constructued to enable relatively fast waveform generation at sufficient accuracy.
+Approximate, phenomenological waveforms have therefore been constructued to enable relatively fast waveform generation at sufficient accuracy.
 
-The three major waveform families that have been developed to date are: the Effective-one-body (EOB), numerical relativity (NR) surrogate, and phenomenological inspiral-merger-ringdown (PhenomIMR).
-Note that unlike NR surrogate, both the EOB and PhenomIMR waveforms are calibrated to NR waveforms.
-EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate whereas PhenomIMR waveforms are constructed with simple closed-form expressions.
-PhenomIMR waveforms are therefore ideally suited for AD, espeically using \jax. 
+As mentioned in the previous section, the three major waveform families that have been developed to date are:  EOB,  NRsurrogate, and IMRPhenom.
+Note that unlike NRsurrogate, both the EOB and PhenomIMR waveforms are calibrated to numerical relativity waveforms.
+EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate whereas IMRPhenom waveforms are constructed with simple closed-form expressions.
+IMRPhenom waveforms are therefore ideally suited for AD, espeically using \jax. 
 In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
 
-The implementation of IMRPhenomD in \lalsuite is mainly in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
+The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
 We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
 In addition, we have restructed the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
 
-To ensure our implempation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
+To demonstrate our implempation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
 \begin{equation}
     \left(h_{\theta_1}|h_{\theta_2}\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h_{\theta_1}(f) h^*_{\theta_2}(f)}{S_n(f)}\, ,
 \end{equation}
@@ -160,10 +158,10 @@ Now we are ready to define the \textit{match} which is given by
 where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
-This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})$ across the entire parameter space.\footnote{
+This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|\bar{h}_{\theta_1})$ across the entire parameter space.\footnote{
     Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
-Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $h^{*}_{\theta_1}$ is the \lalsuite implementation. 
+Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
 In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[t]
@@ -171,13 +169,14 @@ In particular, the blue points indicate parameter points where the $1-\mathrm{m}
     \begin{centering}
         \includegraphics[width=\linewidth]{figures/random_matches.pdf}
         \caption{
-            This plot should show a match colour bar.
+            Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin.
+            \te{Need to investigate more?}
         }
         \label{fig:match}
     \end{centering}
 \end{figure}
 
-There remains some slight deviation between the two waveform implementations at higher masses. 
+There remains some slight deviation between the two waveform implementations at low total mass. \te{Do I need to look more into this...? The discussion below looks odd with this plot}
 This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
@@ -185,7 +184,7 @@ The remaining error in the waveform at high masses is therefore primarily down t
 Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable for realistic data analysis tasks.
 
 For maximum utility, a waveform needs to be fast to evaluate.
-Fortunately, the Phenom IMR waveforms are constructed from simple closed form expressions which are therefore computationally efficient.
+Fortunately, the IMRPhenom waveforms are constructed from simple closed-form expressions which are computationally efficient.
 Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple.
 Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 2-5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 5-8\,\mathrm{ms}$ for \ripple.\footnote{
     For this benchmark we used $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
@@ -197,12 +196,12 @@ Waveform calls can therefore be evaluated in parallel, massively improving perfo
 Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim 0.00005\mathrm{ms}$, nearly five orders of magnitude faster.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
-The primary arguement of this paper is that waveform derivatives will also be invauable to data analysis tasks. 
+The primary arguement of this paper is that waveform derivatives will also be highly vauable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
-Firstly, the accuracy of derivatives from AD are signficantly more stable than finite difference methods.
-In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to tune the width over which the difference is taken.
+First, the accuracy of derivatives from AD are signficantly more stable than finite difference methods.
+In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
 On the other hand, AD produces machine precision derivatives with no tuninig.
-Secondly, AD scales favourably with the dimensionality of the function.
+Second, AD scales favourably with the dimensionality of the function.
 In particular, for every input dimension, $D$, added one would need to evaluate the function at least $2D$ times to calcuate finite difference derivatives for all input parameters.
 For reverse mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimenison.\footnote{
     Note that although the number of function calls is small, reverse mode AD does add memory overhead.
@@ -211,8 +210,8 @@ For reverse mode AD, one only needs two function calls to evaluate the derivativ
 Since the parameter space of GWs in General Relativity (GR) has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond GR models where many more parameters are added.
 
-Overall, we have demonstrated that the PhenomIMR waveform family is ideally suited for AD.
-Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quite to evaluate.
+Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
+Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quick to evaluate, especially when hardware acceleration is available.
 In the next section, we will discuss a variety of potential use cases of differentiable waveforms.
 
 % Emphasise the stability of gradients. $Done$
@@ -463,11 +462,22 @@ In this paper we introduced and discussed the various benefits of differentiable
 First, we demonstrated the speed and accuracy of our implementation of the aligned spin IMRPhenomD waveform.
 In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU, making waveform calls up to five orders of magnitude faster.
 Second, we discussed three data analysis tasks which can all be substantially improved by utlizing derivative information of the waveform.
-Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task. 
+Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
 
-Currently the biggest constraint to adopting differentiable waveforms is the need to re-write the most commonly used waveforms into \jax.
-At the time of writing...
+Currently the biggest constraint to adopting differentiable waveforms is the need to re-write the most commonly used waveforms into \jax (or pure python).
+In order to showcase the benefits of differentiable waveforms as quickly as possible, at the time of writing, we have only implemented an aligned spin GW model (IMRPhenomD).
+We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM.
+Ideally, future waveforms should be implemented either in pure python or using \jax directly.
+This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
+
+In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
+Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
+Some progress has been made towards the construction of a differentiable NRsurrogate, currently it seems difficult to implement EOB waveforms in \jax.
+In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax which requires fixed length arrays for its JIT compilation.
+Since EOB waveforms are often regarded as the state-of-the-art, more work is required to see if a fast, differentiable implementation is possible.
+
+\te{End on a final good thing?}
 
 \section{Acknowledgments}
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
