@@ -40,13 +40,14 @@
 \newcommand{\Mila}{\affiliation{Mila -- Quebec AI Institute, 6666 St-Urbain, \#200, Montreal, QC, H2S 3H1}} 
 \newcommand{\CGP}{\affiliation{Center for Gravitational Physics, University of Texas at Austin, Austin, TX 78712, USA}}
 \newcommand{\CCA}{\affiliation{Center for Computational Astrophysics, Flatiron Institute, New York, NY 10010, USA}}
+\newcommand{\CUHK}{\affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, N.T., Hong Kong}}
 
 % Author list
 \author{Adam Coogan} \UdeM \Mila
 \author{Thomas D.~P.~Edwards} \OKC \NORDITA
 \author{Daniel Foreman-Mackey} \CCA
 \author{Maximiliano Isi} \CCA
-\author{Kelvin Lam} \CCA
+\author{Kelvin K.~H.~Lam} \CCA \CUHK
 \author{Kaze W.~K.~Wong} \CCA
 \author{Aaron Zimmerman} \CGP
 
@@ -220,8 +221,6 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \subsection{Finetuning Waveform Coefficients}
 \label{subsec:coeffs}
 
-% \te{Kelvin should add stuff here}
-
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
 While waveforms generated using numerical relativity simulations are commonly
@@ -229,10 +228,10 @@ regarded as the most accurate, they are too computationally expensive to be used
 in any practical data analysis tasks. To create waveform models that can be used
 in data analysis, there are a number of groups creating "approximants" of the
 full numerical relativity waveforms, which are essentially simpler ansatzes that
-are not as accurate but can be evaluated much faster. There are a few families
-of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate
-model. \kw{cite and add a couple more sentences to introduce the waveform
-families.}
+are not as accurate but can be evaluated much faster. 
+There are a few families of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate model. 
+\kw{cite and add a couple more sentences to introduce the waveform families.} 
+\te{I think a full dicussion of the various waveform families just belongs in section 2, so don't need too much more here I'd say.}
 
 Every waveform approximants have some fitting coefficients that are fixed during
 the process of calibrating the ansatz to NR waveforms. In the case of
@@ -244,7 +243,6 @@ means misrepresentation of the NR waveform, meaning the use of approximant will
 introduce some systematic error in downstream data analysis task. For example,
 this would mean the recovered source parameters will be biased in the case of PE.
 
-% Motivation
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
 coefficients are fitted in segments with amplitude and phase separated.
 Individual segments are then connected together such that they are
@@ -260,59 +258,66 @@ connecting different segments can be accounted during the optimization.
 Therefore, there is potential accuracy one can gain by fitting all coefficients
 at once.
 
-\kw{Kelvin Fill}
 Since we can differentiate through the entire waveform model against the fitting
 parameters, one can use gradient descent to find the optimal fitting parameters
 all at once instead of fitting them in subsets.
 
-Here, we define the mismatch as
+Here, we define the mismatch and loss function as
 \begin{equation}
-	\mathcal{M}=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}), 
-\end{equation} 
-In our optimization procedure, we took NR waveforms stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients. 
-By defining the mean of individual mismatches as the loss function for optimization, we can calibrate the set of coefficients using gradient descent. 
-
-\kw{Describe figure losscompare}
+	\mathcal{M}&=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}).
+\end{equation}
+In the optimization procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients.  
+Then, combining individual mismatches, a loss function is constructed as follows:
+\begin{equation}
+	\mathcal{L}&=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i, 
+\end{equation}
+where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$ is the total number of training waveforms used in optimization. 
+Then, one can proceed to perform optimization on waveform coefficients. 
 
 \begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
-\caption{Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
-    between original Phenom waveform and NR waveform; Orange: Error between
-    optimized waveform and NR waveform. }
-\label{fig:loss_compare}
+	\script{loss_compare.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
+		\caption{
+			Relative error of IMRPhenomD waveform amplitudes. Blue: Error
+			between original Phenom waveform and NR waveform; Orange: Error between
+			optimized waveform and NR waveform.
+		}
+		\label{fig:loss_compare}
+	\end{centering}
 \end{figure}
 
-\kw{Describe figure logdiff}
 As demonstration, Fig. \ref{fig:loss_compare} shows the relative error of original and optimized waveform at different frequencies. 
 In general, the error of optimized waveform is lower than that of the original waveform. 
-The error in the early inspiral region is substantially decreased by half and other regions also show good improvement in accuracy.   
+The error in the early inspiral region is decreased by half while other regions also show good improvement in accuracy.   
 
 \begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{../static/MM_logdiff_q148_LIGO.pdf}
-\caption{Distribution of the log difference of mismatches between optimized
-    and original model. The mean shows a 36\% decrease in mismatch. }
-\label{fig:MM_logdiff}
+	\script{mismatch_hist.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
+		\caption{
+			Distributions of log mismatches of training waveforms. Blue: Original waveforms; Orange: Optimized waveforms.
+		}
+		\label{fig:mismatch_hist}
+	\end{centering}
 \end{figure}
 
 Instead of examining individual waveforms, we investigate the general behavior of mismatches for a set of testing waveforms. 
-In Fig. \ref{fig:logdiff_q148}, the distribution of log difference of mismatches are shown. 
-The distribution mean lies towards the negative side, which indicates a improvement in the model. 
-Despite there are testing waveforms that performed worse after optimization, it is verified that the ansatz of IMRPhenomD does not fit well with most of these waveforms, hence cannot be improved by optimization.  
+In Fig. \ref{fig:mismatch_hist}, the distribution of log mismatches are shown. 
+The entire optimized waveform distribution is slightly shifted to the negative side. 
+Waveforms originally with moderate mismatch moved down to the left end of the distribution. 
+Both indicate that the optimization procedure improved the model. 
 Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. 
-
-\kw{Describe implication}
-% Implication
 
 This fine-tuning step is rather simple and general. Given a different
 differentiable waveform model, one can apply the same procedure to optimize the
-coefficients in the new model, i.e. applying gradient descent to optimize all
+coefficients in a new model, i.e. applying gradient descent to optimize all
 the fitting coefficients all together. This provides a more flexible control
 during the calibration process, and potentially better final result.
 With further modifications to the optimization process, the set of waveform
-coefficients can be retuned to give almost an order-of-magnitude improvement.
-\kw{Where is the proof for this?} 
+coefficients can be retuned to give almost $50\%$ improvement in mismatch for well-behaved waveforms.
+%\kw{Where is the proof for this?} 
+
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
 
