@@ -264,12 +264,12 @@ all at once instead of fitting them in subsets.
 
 Here, we define the mismatch and loss function as
 \begin{equation}
-	\mathcal{M}&=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}).
+	\mathcal{M}=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}).
 \end{equation}
 In the optimization procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients.  
 Then, combining individual mismatches, a loss function is constructed as follows:
 \begin{equation}
-	\mathcal{L}&=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i, 
+	\mathcal{L}=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i, 
 \end{equation}
 where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$ is the total number of training waveforms used in optimization. 
 Then, one can proceed to perform optimization on waveform coefficients. 
@@ -304,8 +304,8 @@ The error in the early inspiral region is decreased by half while other regions 
 
 Instead of examining individual waveforms, we investigate the general behavior of mismatches for a set of testing waveforms. 
 In Fig. \ref{fig:mismatch_hist}, the distribution of log mismatches are shown. 
-The entire optimized waveform distribution is slightly shifted to the negative side. 
-Waveforms originally with moderate mismatch moved down to the left end of the distribution. 
+The entire optimized waveform distribution slightly shifted to the negative side. 
+The peak of the original waveform distribution moved to the left end of the distribution. 
 Both indicate that the optimization procedure improved the model. 
 Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. 
 
