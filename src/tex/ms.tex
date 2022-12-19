@@ -22,6 +22,7 @@
 \newcommand{\jax}{\texttt{JAX}\xspace}
 \newcommand{\ripple}{\texttt{ripple}\xspace}
 \newcommand{\lalsuite}{\texttt{lalsuite}\xspace}
+\newcommand{\flowMC}{\texttt{flowMC}\xspace}
 \newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{.4ex}{\tiny\bf +}\nolinebreak\hspace{-.10em}\raisebox{.4ex}{\tiny\bf +}}
 
 \newcommand{\TE}[1]{{\color{pyGreen} #1}}
@@ -434,7 +435,7 @@ This demonstrates that AD can be used to accurately produce population level for
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion procress) is substantially faster.
 In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
-This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is significantly slower that the \lalsuite call.
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call.
 As discussed above, performance can be further improved by utilising hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
@@ -452,9 +453,9 @@ AD therefore represents a fast and accurate way of performing population level a
 \end{figure*}
 
 After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called parameter estimation (PE).
-To do this, one typically uses a Markov Chain Monte Carlo (MCMC) sampler or nested sampler~\citep{multinest, dynesty}.
+To do this, one typically uses a Markov Chain Monte Carlo (MCMC) or nested sampler~\citep{multinest, dynesty}.
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
-For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$hours, whilst BNS systems can take up to weeks.
+For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
 Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to faciliate follow-up electromagnetic observations.
 Nevertheless, these do not present the whole picture; fast, general parameter estimation therefore remains a primary goal of GW data analysis.
 
@@ -462,8 +463,22 @@ A primary issue with both MCMC and nested sampling is that neither utlizes infor
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
 Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
 In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
-In a follow up paper we will demonstrate that minute scale PE can be achieved by exploiting normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu} together with a derivative based sampler~\citep{PEpaper}.
 
+For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
+More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.
+Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for XX steps. 
+\te{Describe more carefully what we do}
+
+In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered from our injected signal and the orange represents the injected parameters.
+From the one dimensional histograms along the diagonal, it is clear that we successfully recover all seven parameters.
+This is expected since the injected binary is relatively nearby.
+
+To illustrate the benefit of a gradient based sampler, we run the same sampling as above but instead use a Gaussian random walk (GRW) sampler. 
+We sample for the same number of steps as used in the HMC with identical initializations to explore acceptance rates of new points.
+For the HMC example, find that the mean local acceptance rate across the 15 chains is around $\sim0.28$, where as the local acceptance rate for the equivalent GRW sampler is XXX.
+Since we are running the chains from the same initialization, this enhanced acceptance for HMC can be mainly associated with use of gradient information to guide sampling.
+We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
+In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}.
 
 \section{Discussion and Conclusion}
 \label{subsec:discussion}
