@@ -235,6 +235,15 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 
 % \te{Kelvin should add stuff here}
 
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
+    \caption{Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
+        between original Phenom waveform and NR waveform; Orange: Error between
+        optimized waveform and NR waveform. \te{Can you add the data and the plotting script to the repo so that we can generate the plots using the same matplotlib settings?}}
+    \label{fig:loss_compare}
+    \end{figure}
+
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
 While waveforms generated using numerical relativity simulations are commonly
@@ -287,21 +296,12 @@ By defining the mean of individual mismatches as the loss function for optimizat
 
 \kw{Describe figure losscompare}
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=\linewidth]{../static/amplitude_loss.pdf}
-\caption{Relative error of amplitudes of IMRPhenomD waveforms. Blue: Error
-    between original Phenom waveform and NR waveform; Orange: Error between
-    optimized waveform and NR waveform. \te{Can you add the data and the plotting script to the repo so that we can generate the plots using the same matplotlib settings?}}
-\label{fig:loss_compare}
-\end{figure}
-
 \kw{Describe figure logdiff}
 As demonstration, Fig. \ref{fig:loss_compare} shows the relative error of original and optimized waveform at different frequencies. 
 In general, the error of optimized waveform is lower than that of the original waveform. 
 The error in the early inspiral region is substantially decreased by half and other regions also show good improvement in accuracy.   
 
-\begin{figure}[t]
+\begin{figure}[t!]
 \centering
 \includegraphics[width=\linewidth]{../static/MM_logdiff_q148_LIGO.pdf}
 \caption{Distribution of the log difference of mismatches between optimized
@@ -440,6 +440,16 @@ AD therefore represents a fast and accurate way of performing population level a
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
 \label{subsec:hmc}
+
+\begin{figure*}[t]
+    \script{corner_plot.py}
+    \centering
+    \includegraphics[width=\linewidth]{figures/PE.pdf}
+    \caption{
+        Corner plot
+    }
+    \label{fig:corner}
+\end{figure*}
 
 After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called parameter estimation (PE).
 To do this, one typically uses a Markov Chain Monte Carlo (MCMC) sampler or nested sampler~\citep{multinest, dynesty}.

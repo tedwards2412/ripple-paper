@@ -11,6 +11,7 @@ params = {
     "axes.titlesize": 18,
     "xtick.labelsize": 18,
     "ytick.labelsize": 18,
+    "axes.unicode_minus": False,
     "figure.figsize": (7, 5),
     "xtick.top": True,
     "ytick.right": True,
@@ -25,7 +26,10 @@ params = {
     "ytick.direction": "in",
     "axes.linewidth": 1.5,
     "text.usetex": False,
-    "mathtext.fontset": "dejavuserif",
+    "font.family": "serif",
+    "font.serif": "cmr10",
+    "mathtext.fontset": "cm",
+    "axes.formatter.use_mathtext": True,  # needed when using cm=cmr10 for normal text
 }
 
 # mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command

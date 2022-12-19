@@ -13,6 +13,7 @@ params = {
     "ytick.labelsize": 18,
     "figure.figsize": (7, 5),
     "xtick.top": True,
+    "axes.unicode_minus": False,
     "ytick.right": True,
     "xtick.bottom": True,
     "ytick.left": True,
@@ -25,7 +26,10 @@ params = {
     "ytick.direction": "in",
     "axes.linewidth": 1.5,
     "text.usetex": False,
-    "mathtext.fontset": "dejavuserif",
+    "font.family": "serif",
+    "font.serif": "cmr10",
+    "mathtext.fontset": "cm",
+    "axes.formatter.use_mathtext": True,  # needed when using cm=cmr10 for normal text
 }
 
 
