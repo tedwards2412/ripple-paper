@@ -23,11 +23,10 @@ params = {
     "ytick.minor.size": 4,
     "xtick.direction": "in",
     "ytick.direction": "in",
-    "text.usetex": True,
+    "text.usetex": False,
     "font.family": "serif",
     "axes.linewidth": 1.5,
     "mathtext.fontset": "dejavuserif",
-    "text.usetex": True,
 }
 
 # mpl.rcParams["text.latex.preamble"] = [r"\usepackage{amsmath}"]  # for \text command
