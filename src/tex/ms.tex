@@ -242,53 +242,80 @@ regarded as the most accurate, they are too computationally expensive to be used
 in any practical data analysis tasks. To create waveform models that can be used
 in data analysis, there are a number of groups creating "approximants" of the
 full numerical relativity waveforms, which are essentially simpler ansatzes that
+are only approximations but can be evaluated much faster. 
 
-are not as accurate but can be evaluated much faster. 
-There are a few families of approximants, such as the IMRPhenom family, SEOB family, and the NRSurrogate model. 
-\kw{cite and add a couple more sentences to introduce the waveform families.} 
-\te{I think a full dicussion of the various waveform families just belongs in section 2, so don't need too much more here I'd say.}
-
-
-Every waveform approximant has some fitting coefficients that are fixed during
+Every waveform approximant has some fitting coefficients that are tuned during
 the process of calibrating the ansatz to NR waveforms. In the case of
 IMRPhenomD, there are 209 fitting coefficients used to capture the separate
 behavior of the amplitude and phase as a function of the mass ratio and spins.
 The accuracy of fitting coefficients determines how well the approximant
 reproduces the NR waveform. The inaccuracy in obtaining the fitting coefficients
-means misrepresentation of the NR waveform, meaning the use of approximant will
-introduce some systematic error in downstream data analysis task. For example, sufficiently large systematic errors 
-would mean cause the recovered source parameters to be biased in the case of PE.
+means misrepresentation of the NR waveform, which can translate to systematic
+error in downstream data analysis task. For example, sufficiently large
+systematic errors in the waveform would cause the recovered source parameters to be biased
+in the case of PE.
 
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
 coefficients are fitted in segments with amplitude and phase separated.
-Individual segments are then connected together such that they are
-differentiable. Using this method, the generated waveforms are expected to be
-erroneous, as the connections would affect the originally fitted segments. The
-coefficients of the current IMRPhenomD implementation are often hand tuned, and
-are tuned in sub-sets of parameters instead of all together. This means the
-tuning process ignore the correlation between different sub-sets of parameters,
-so the best-fitted solution obtained by fitting sub-sets of parameters may not
-be the global optimum compared to fitting all coefficients at once. Instead, by
-jointly fitting all coefficients, the inaccuracy in fitting individual and
-connecting different segments can be accounted during the optimization.
-Therefore, there is potential accuracy one can gain by fitting all coefficients
-at once.
+Furthermore, IMRPhenomD is divided in three fitting segments, inpsiral, merger and ringdown.
+Each of these segments has their own set of fitting coefficients.
+After obtaining the fitting coefficient for individual segments, they are then
+"stitched" together such that they are continuous in the first derivative.
+The process of stitching introduces some addition
+inaccuracy in the waveform model, as the connections would affect the originally
+fitted segments.
+The coefficients of the current IMRPhenomD implementation are tuned in sub-sets
+of parameters instead of all together. This means the tuning process ignore the
+correlation between different sub-sets of parameters, so the best-fitted
+solution obtained by fitting sub-sets of parameters may not be the global
+optimum compared to fitting all coefficients at once. By jointly
+fitting all coefficients, the correlation in fitting individual and connecting
+different segments can be accounted during the optimization. Therefore, there is
+potential improvement of the accuracy by fitting all coefficients at once.
 
-Since we can differentiate through the entire waveform model against the fitting
-parameters, one can use gradient descent to find the optimal fitting parameters
-all at once instead of fitting them in subsets.
+In general, optimization problems in a high dimensional space benefit from
+having access to the gradient of the objective function. Since we can
+differentiate through the entire waveform model against the fitting parameters,
+one can use gradient descent to find the optimal fitting parameters all at once
+instead of fitting them in subsets.
 
-Here, we define the mismatch and loss function as
+
+
+
+The first step in fitting all coefficients is to define a loss function that
+measures the goodness-of-fit of the optimization procedure, which we choose it
+to be the mismatch between the NR waveform and the approximant waveform.
 \begin{equation}
-	\mathcal{M}=1-\mathrm{m}(h_{\mathrm{IMR}}|h_{\mathrm{NR}}).
+	\mathcal{M}(\lambda)=1-\mathrm{m}(h_{\mathrm{IMR}}(\lambda)|h_{\mathrm{NR}(\lambda)}),
 \end{equation}
-In the optimization procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa} as training waveforms to fit waveform coefficients.  
-Then, combining individual mismatches, a loss function is constructed as follows:
+where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
+the waveform generated by the IMRPhenomD and $h_{\mathrm{NR}}$ is the waveform
+generated by the numerical relativity simulation. 
+Given the loss function, we use gradient descent to find the optimal fitting
+coefficients.
+% Add description of the optimization procedure.
+
+As a demonstration, Fig. \ref{fig:loss_compare} shows the relative error of
+original and optimized waveform at different frequencies. In this optimization
+procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa}
+as training waveforms to fit waveform coefficients.   
+We can see the error of optimized waveform is lower than that of the original waveform for most of the domain.
+In particular, the error in the early inspiral region is decreased by half while other regions also show good improvement in accuracy. 
+
+We can generalize the fitting procedure described above to a collection of waveforms.
+In that case, the loss function is defined as the average of the mismatch of
+individual waveforms, given by
 \begin{equation}
-	\mathcal{L}=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i, 
+	\mathcal{L}=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i,
+    \label{eq:multi_loss}
 \end{equation}
-where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$ is the total number of training waveforms used in optimization. 
-Then, one can proceed to perform optimization on waveform coefficients. 
+where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$
+is the total number of training waveforms used in optimization. This
+optimization is more difficult since we are applying the same set of
+coefficients to waveforms with different intrinsic parameters, such as mass
+ratio and spins. From eq. \ref{eq:multi_loss}, we can see the averaging between
+waveforms with different intrinsic parameters implies there are trade-off in
+performance in different regions of the intrinsic parameter space.
 
 \begin{figure}[t]
 	\script{loss_compare.py}
@@ -303,11 +330,6 @@ Then, one can proceed to perform optimization on waveform coefficients.
 	\end{centering}
 \end{figure}
 
-
-As demonstration, Fig. \ref{fig:loss_compare} shows the relative error of original and optimized waveform at different frequencies. 
-In general, the error of optimized waveform is lower than that of the original waveform. 
-The error in the early inspiral region is decreased by half while other regions also show good improvement in accuracy.   
-
 \begin{figure}[t]
 	\script{mismatch_hist.py}
 	\begin{centering}
@@ -318,24 +340,14 @@ The error in the early inspiral region is decreased by half while other regions 
 		\label{fig:mismatch_hist}
 	\end{centering}
 \end{figure}
-
-
-Instead of examining individual waveforms, we investigate the general behavior of mismatches for a set of testing waveforms. 
-In Fig. \ref{fig:mismatch_hist}, the distribution of log mismatches are shown. 
-The entire optimized waveform distribution slightly shifted to the negative side. 
+ 
+In Fig. \ref{fig:mismatch_hist}, we show the distribution of log mismatches.
+One can see the distribution of mismatch after optimization has smaller mismatch compared to before optimization,
+showing the optimization improves the accuracy of the waveform model.
+% However, it is not improving for every waveforms. Say why briefly, and say there is another paper coming out.
 The peak of the original waveform distribution moved to the left end of the distribution. 
 Both indicate that the optimization procedure improved the model. 
 Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. 
-
-This fine-tuning step is rather simple and general. Given a different
-differentiable waveform model, one can apply the same procedure to optimize the
-coefficients in a new model, i.e. applying gradient descent to optimize all
-the fitting coefficients all together. This provides a more flexible control
-during the calibration process, and potentially better final result.
-With further modifications to the optimization process, the set of waveform
-
-coefficients can be retuned to give almost $50\%$ improvement in mismatch for well-behaved waveforms.
-%\kw{Where is the proof for this?} 
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
@@ -355,7 +367,7 @@ Due to its theoretical simplicity and evaluation speed, the Fisher matrix formal
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models and detector configurations.
 
-Computing the Fisher matrix requires one to evaluate derivatives of the likelihhood which in turn involves derivatives of the waveform model and detector projection functions.
+Computing the Fisher matrix requires one to evaluate derivatives of the likelihood which in turn involves derivatives of the waveform model and detector projection functions.
 AD is therefore perfectly suited for computing Fisher matrices accurately and efficiently. 
 Forecasting with Fisher matrices for third generation detectors has already been extensively explored in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Here we purely want to illustrate the simplicitly and speed of AD for forecasting rather than providing new physics insights.
