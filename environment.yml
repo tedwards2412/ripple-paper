@@ -6,6 +6,6 @@ dependencies:
   - pip=21.0.1
   - python=3.9
   - pip:
-      - matplotlib==3.4.3
+      - matplotlib==3.6.2
       - corner==2.2.1
       - arviz==0.14.0
