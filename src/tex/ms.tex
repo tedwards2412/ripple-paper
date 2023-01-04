@@ -485,16 +485,31 @@ Nevertheless, these do not present the whole picture; fast, general parameter es
 A primary issue with both MCMC and nested sampling is that neither utlizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
 Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
-In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
+% In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
+In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm.
 
 For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
-More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.
-Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for XX steps. 
+More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.\footnote{
+    The remaining parameters are set to $\pi/3$.
+}
+Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for 200000 steps and the Gaussian random walk sampler for 1500000 steps (each with four randomly initialized independent chains). 
+The number of steps and and mass matrix used for each example was hand tuned to give good performance for the specific sampler.
 \te{Describe more carefully what we do}
 
 In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered from our injected signal and the orange represents the injected parameters.
 From the one dimensional histograms along the diagonal, it is clear that we successfully recover all seven parameters.
 This is expected since the injected binary is relatively nearby.
+
+\begin{figure}[t]
+	\script{autocorrelation.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/autocorrelation.pdf}
+		\caption{
+			Autocorrelation
+		}
+		\label{fig:autocorrelation}
+	\end{centering}
+\end{figure}
 
 To illustrate the benefit of a gradient based sampler, we run the same sampling as above but instead use a Gaussian random walk (GRW) sampler. 
 We sample for the same number of steps as used in the HMC with identical initializations to explore acceptance rates of new points.
@@ -502,6 +517,8 @@ For the HMC example, find that the mean local acceptance rate across the 15 chai
 Since we are running the chains from the same initialization, this enhanced acceptance for HMC can be mainly associated with use of gradient information to guide sampling.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
 In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}.
+
+
 
 \section{Discussion and Conclusion}
 \label{subsec:discussion}

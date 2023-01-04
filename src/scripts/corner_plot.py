@@ -35,7 +35,10 @@ params = {
 
 
 mpl.rcParams.update(params)
-file = np.load(paths.data / "ripple_flowMC_results.npz")
+
+# file = np.load(paths.data / "ripple_flowMC_results.npz")
+data_HMC = np.load(paths.data / "chains_HMC.npz")
+HMC_bestchain = data_HMC["chains"][np.argmax(data_HMC["log_prob"][:, -1])]
 
 
 def ms_to_Mc_eta(m):
@@ -64,7 +67,7 @@ true_params = np.array(
 )
 
 # Plot all chains
-figure = corner.corner(file["chains"].reshape(-1, n_dim), labels=labels, labelpad=0.1)
+figure = corner.corner(HMC_bestchain, labels=labels, labelpad=0.1)
 
 # Extract the axes
 axes = np.array(figure.axes).reshape((n_dim, n_dim))

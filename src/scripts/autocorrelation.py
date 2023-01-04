@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import paths
+import arviz as az
 
 params = {
     "font.size": 18,
@@ -11,9 +12,9 @@ params = {
     "axes.titlesize": 18,
     "xtick.labelsize": 18,
     "ytick.labelsize": 18,
-    "axes.unicode_minus": False,
     "figure.figsize": (7, 5),
     "xtick.top": True,
+    "axes.unicode_minus": False,
     "ytick.right": True,
     "xtick.bottom": True,
     "ytick.left": True,
@@ -35,17 +36,22 @@ params = {
 
 mpl.rcParams.update(params)
 
-(freq, ori_error, opt_error) = np.loadtxt(paths.data / "loss_compare.txt", unpack=True)
+data_HMC = np.load(paths.data / "chains_HMC.npz")
+data_gaussian = np.load(paths.data / "chains_gaussian.npz")
 
+HMC_bestchain = data_HMC["chains"][np.argmax(data_HMC["log_prob"][:, -1])]
+gaussian_bestchain = data_gaussian["chains"][
+    np.argmax(data_gaussian["log_prob"][:, -1])
+]
 
-plt.axvline(x=0.018, color="k", alpha=0.5, ls="--")
-# fRD =
-# 0.5fRD
-plt.axvline(x=0.08, color="k", alpha=0.4, ls="--")
-plt.plot(freq, ori_error, label="Original")
-plt.plot(freq, opt_error, label="Optimized")
+acl_HMC = az.autocorr(HMC_bestchain.T).T
+acl_gaussian = az.autocorr(gaussian_bestchain.T).T
+
+plt.plot(acl_HMC[:, 0], label="HMC")
+plt.plot(acl_gaussian[:, 0], label="Gaussian")
+plt.xlim(0, 1000)
+plt.ylim(-0.1, 1.0)
+plt.xlabel("Lag")
+plt.ylabel("Autocorrelation")
 plt.legend()
-plt.xlabel(r"$Mf$")
-plt.ylabel(r"$\Delta|\tilde{h}(f)|$")
-plt.xlim(0.01, 0.1)
-plt.savefig(paths.figures / "loss_compare.pdf", bbox_inches="tight")
+plt.savefig(paths.figures / "autocorrelation.pdf", bbox_inches="tight")
