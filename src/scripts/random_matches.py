@@ -84,7 +84,7 @@ sc = plt.scatter(
 )
 plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
 
-plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="C0")
+# plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="C0")
 # plt.xlabel(r"Total Mass, $M$")
 # plt.ylabel(r"Mass Ratio, $q$")
 plt.xlabel(r"Total Mass, $M$")

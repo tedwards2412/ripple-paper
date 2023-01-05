@@ -12,8 +12,8 @@ params = {
     "axes.titlesize": 18,
     # "axes.labelpad": 30,
     "axes.unicode_minus": False,
-    "xtick.labelsize": 10,
-    "ytick.labelsize": 10,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
     "xtick.top": True,
     "ytick.right": True,
     "xtick.bottom": True,
@@ -75,15 +75,15 @@ axes = np.array(figure.axes).reshape((n_dim, n_dim))
 # Loop over the diagonal
 for i in range(n_dim):
     ax = axes[i, i]
-    ax.axvline(true_params[i], color="C1", alpha=0.5)
+    ax.axvline(true_params[i], color="C1", alpha=0.8)
 
 # Loop over the histograms
 for yi in range(n_dim):
     for xi in range(yi):
         ax = axes[yi, xi]
-        ax.axvline(true_params[xi], color="C1", alpha=0.5)
-        ax.axhline(true_params[yi], color="C1", alpha=0.5)
-        ax.plot(true_params[xi], true_params[yi], "s", color="C1", alpha=0.5)
+        ax.axvline(true_params[xi], color="C1", alpha=0.8)
+        ax.axhline(true_params[yi], color="C1", alpha=0.8)
+        ax.plot(true_params[xi], true_params[yi], "s", color="C1", alpha=0.8)
 
 figure.set_size_inches(10, 10)
 plt.savefig(paths.figures / "PE.pdf", bbox_inches="tight")

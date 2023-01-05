@@ -48,7 +48,7 @@ acl_HMC = az.autocorr(HMC_bestchain.T).T
 acl_gaussian = az.autocorr(gaussian_bestchain.T).T
 
 plt.plot(acl_HMC[:, 0], label="HMC")
-plt.plot(acl_gaussian[:, 0], label="Gaussian")
+plt.plot(acl_gaussian[:, 0], label="GRW")
 plt.xlim(0, 1000)
 plt.ylim(-0.1, 1.0)
 plt.xlabel("Lag")

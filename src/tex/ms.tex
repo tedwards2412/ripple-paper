@@ -58,18 +58,27 @@
 \begin{abstract}
     Since their discovery in 2015, gravitaitonal waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
     As more detections continue, data analysis taks are becoming increasingly computationally demanding.
-    Here we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analsyis tasks.
-    Firstly, we demonstrate that highly accurate waveforms (IMRPhenomD) can be written in \jax and demonstrate that the evaluation speed of the waveform (and its derivative) is not substantially slower than the \lalsuite implenetation in \CC.
-    We then focus on three applications where speed and differentiable waveforms are essential.
-    Firstly, we demonstrate that stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that make up the waveform. 
-    In particular, we demonstrate that the typical \textit{match} with numerical relativiely waveforms can be improved by more than 30\% without any additional overhead.
-    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ with no loss in accuracy.
+    Here, we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analsyis tasks.
+    Firstly, we demonstrate that highly accurate waveforms (IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
+    Moreover, \jax allows for GPU accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
+    We then focus on three applications where efficient and differentiable waveforms are essential.
+    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that make up the waveform. 
+    In particular, we demonstrate that the typical \textit{match} with numerical relativiely waveforms can be improved by more than 10\% without any additional overhead.
+    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on CPU) with no loss in accuracy.
     This increased speed makes population forecasting substantially simpler, as discussed extensively in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
-    Finally, we show that gradient based samplers like Hamiltonian Monte Carlo can improve acceptance rates of XXX. 
-    Since differentiable waveforms appear to have substatial advantages for a variety of tasks throughtout GW science (with little downside), we propose that waveform developers use \jax to build new waveforms moving forward.
-    Our waveform code, called \ripple, can be found at XXX, and will continue to be updated with new waveforms as they are formulated.
+    Finally, we show that gradient based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to tradiaitional Monte Carlo methods.
+    Since differentiable waveforms appear to have substantial advantages for a variety of tasks throughtout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
+    Our waveform code, \ripple, can be found at \href{https://github.com/tedwards2412/ripple}{github.com/tedwards2412/ripple}, and will continue to be updated with new waveforms as they are formulated.
 
 \end{abstract}
+
+% \section{Todo}
+% \begin{itemize}
+%     \item Finish intro \te{Done}
+%     \item Finish section 2 
+%     \item Write captions for all plots \te{Done}
+%     \item Finish discussion
+% \end{itemize}
 
 \section{Introduction}
 \label{sec:intro}
@@ -84,11 +93,12 @@
 The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep{LIGOScientific:2021djp}.
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substatially increase when next generation detectors come online.
+
 The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. 
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event.
 In the most minimial example, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 Beyond this simple scenario, more complex waveform models with many additional parameters may be used to test for deviations from General Relativity.
-Finally, using the results of the PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
+Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
 All of these tasks require significant compute.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleaviating this computational demand.
 
@@ -104,7 +114,7 @@ AD's recent ascendance is primarily driven by its use in machine learning, parti
 The core idea of AD is that any mathematical function can be broken down into a small set of basic operations, each with a known differentiation rule.\footnote{
     Of course, non-differentiable functions exist and care must be taken when treating these special cases.
     }
-The full derivative can then be contructed using the chain rule.
+The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited support in GW physics precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e. GPUs).
@@ -112,17 +122,19 @@ Here we make use of \jax~\citep{jax2018github} due to its easy integration with 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
 Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
-In particular, its closed form expression and fixed size frequency grid make a \jax implementation that complies with the constraints of JIT compilation simple.
-EOB waveforms on the other hand require... \te{Max or Kaze, could one of you write something about why its hard? I don't know enough about EOB.}
+In particular, their closed form expressions and fixed size frequency grids make a \jax implementation that complies with the constraints of JIT compilation simple.
+EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax. 
+In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
+NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cubersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
 In addition, we present \ripple, a small GW \texttt{python} package which can serve as a respository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
 The remainder of this paper is structured as follows. 
-In Sec.~\ref{sec:waveforms} we discuss the differentiable waveforms implemented in \ripple and perform some benchmarks to demonstrate the speed and accruacy of the derivative calculations. 
+In Sec.~\ref{sec:waveforms} we discuss the differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accruacy. 
 In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
-Firstly, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting, enabled by a differentiable waveform. 
+Firstly, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting enabled by a differentiable waveform. 
 Secondly, we implement differnetiable detector response functions and show that the speed of Fisher matrix calculations can be substantially improved using AD.
-Finally, we run an illustrative injection example using Hamiltonian Monte Carlo to demonstrate that the acceptance rate of derivative samplers is substantially larger than traditional MCMCs.
+Finally, we run an illustrative injection example using Hamiltonian Monte Carlo to demonstrate that the autocorrelation of derivative samplers is substantially smaller than that of traditional MCMCs.
 The associated code can be found at \ripple~\citep{ripple}.
 
 \section{Differentiable Waveforms}
@@ -161,7 +173,7 @@ where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|\bar{h}_{\theta_1})$ across the entire parameter space.\footnote{
-    Specifically, we use 2000 points in the ranges $m_{1,2} = (1,50)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+    Specifically, we use $10^3$ points in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
@@ -171,8 +183,9 @@ In particular, the blue points indicate parameter points where the $1-\mathrm{m}
     \begin{centering}
         \includegraphics[width=\linewidth]{figures/random_matches.pdf}
         \caption{
-            Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin.
-            \te{Need to investigate more?}
+            Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin. 
+            % The blue points indicate where the match is exactly 1.0 and would therefore not appear in the log scale. 
+            It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
         }
         \label{fig:match}
     \end{centering}
@@ -240,7 +253,7 @@ GW, such as searching for signals and estimating source parameters given data.
 While waveforms generated using numerical relativity simulations are commonly
 regarded as the most accurate, they are too computationally expensive to be used
 in any practical data analysis tasks. To create waveform models that can be used
-in data analysis, there are a number of groups creating "approximants" of the
+in data analysis, there are a number of groups creating ``approximants'' of the
 full numerical relativity waveforms, which are essentially simpler ansatzes that
 are only approximations but can be evaluated much faster. 
 
@@ -286,6 +299,7 @@ The first step in fitting all coefficients is to define a loss function that
 measures the goodness-of-fit of the optimization procedure, which we choose it
 to be the mismatch between the NR waveform and the approximant waveform.
 \begin{equation}
+    \label{eq:mismatch}
 	\mathcal{M}(\lambda)=1-\mathrm{m}(h_{\mathrm{IMR}}(\lambda)|h_{\mathrm{NR}(\lambda)}),
 \end{equation}
 where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
@@ -326,9 +340,9 @@ performance in different regions of the intrinsic parameter space.
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
 		\caption{
-			Relative error of IMRPhenomD waveform amplitudes. Blue: Error
-			between original Phenom waveform and NR waveform; Orange: Error between
-			optimized waveform and NR waveform.
+			Relative error between the numerical relatively and IMRPhenomD waveform amplitudes. 
+            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using stochastic gradient descent.
+            Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
 		}
 		\label{fig:loss_compare}
 	\end{centering}
@@ -339,7 +353,9 @@ performance in different regions of the intrinsic parameter space.
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
 		\caption{
-			Distributions of log mismatches of testing waveforms. Blue: Original waveforms; Orange: Optimized waveforms.
+			Distribution of 536 log mismatches (see Eq.~\ref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
+            Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
+            More quantitatively, the mean mismatch (shown as vertical dashed lines) is reduced by $\sim11$\%.
 		}
 		\label{fig:mismatch_hist}
 	\end{centering}
@@ -361,7 +377,9 @@ Therefore, the new set of waveform coefficients can produce better waveforms for
     \centering
     \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
     \caption{
-        This plot should show a sky localization error bar.
+        Distribution of Fisher information sky localization error for a population of nearby binaries.
+        Automatic differentiation (AD) was used to compute the derivatives in Eq.~\ref{eq:fisher}.
+        As empahsized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
     }
     \label{fig:sky_localization}
 \end{figure}
@@ -379,6 +397,7 @@ We therefore consider a simple, three detector setup corresponding to the two LI
 
 The Fisher information matrix for a single detector is typically given by 
 \begin{equation}
+    \label{eq:fisher}
     \mathcal{I}^{k}_{ij} = (\partial_i h_0 | \partial_j h_0) \, ,
 \end{equation}
 where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h_0$ is the strain measured by the detector which is given by,
@@ -470,7 +489,9 @@ AD therefore represents a fast and accurate way of performing population level a
     \centering
     \includegraphics[width=\linewidth]{figures/PE.pdf}
     \caption{
-        Corner plot
+        Corner plot for the posteriors from an HMC (see text for details) on simulated noise with injected signal. 
+        Orange lines indicate the true values of the injection. 
+        Although not fully converged, it is clear that we find posteriors consistent with the injected parameters. 
     }
     \label{fig:corner}
 \end{figure*}
@@ -492,12 +513,13 @@ For our basic example we perform an injection recovery test on a seven dimension
 More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.\footnote{
     The remaining parameters are set to $\pi/3$.
 }
-Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for 200000 steps and the Gaussian random walk sampler for 1500000 steps (each with four randomly initialized independent chains). 
+Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for 200000 steps and the Gaussian random walk (GRW) sampler for 1500000 steps (each with four randomly initialized independent chains). 
 The number of steps and and mass matrix used for each example was hand tuned to give good performance for the specific sampler.
-\te{Describe more carefully what we do}
+The additional steps for the GRW sampler were required to achieve a similarly converged posterior.
 
-In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered from our injected signal and the orange represents the injected parameters.
-From the one dimensional histograms along the diagonal, it is clear that we successfully recover all seven parameters.
+In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered using the best chain (i.e. one that reached the highest log-likelihood values).
+The orange shows the true parameters of the injected signal.
+From the one dimensional histograms along the diagonal, it is clear that we consistently recover all seven parameters apart from $\phi_c$.
 This is expected since the injected binary is relatively nearby.
 
 \begin{figure}[t]
@@ -505,18 +527,24 @@ This is expected since the injected binary is relatively nearby.
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/autocorrelation.pdf}
 		\caption{
-			Autocorrelation
+			Autocorrelation as a function of lag for HMC and GRW on the same simulated data as discussed in Fig.~\ref{fig:corner}.
+            The smaller autocorrelation of the HMC leads to a larger number of independent samples and therefore a faster converging Monte Carlo.
 		}
 		\label{fig:autocorrelation}
 	\end{centering}
 \end{figure}
 
-To illustrate the benefit of a gradient based sampler, we run the same sampling as above but instead use a Gaussian random walk (GRW) sampler. 
-We sample for the same number of steps as used in the HMC with identical initializations to explore acceptance rates of new points.
-For the HMC example, find that the mean local acceptance rate across the 15 chains is around $\sim0.28$, where as the local acceptance rate for the equivalent GRW sampler is XXX.
-Since we are running the chains from the same initialization, this enhanced acceptance for HMC can be mainly associated with use of gradient information to guide sampling.
+% To illustrate the benefit of a gradient based sampler (such as HMC), we run the same sampling as above but instead use a Gaussian random walk (GRW) sampler. 
+% We sample for the same number of steps as used in the HMC with identical initializations to explore acceptance rates of new points.
+% For the HMC example, find that the mean local acceptance rate across the 15 chains is around $\sim0.28$, where as the local acceptance rate for the equivalent GRW sampler is XXX.
+% Since we are running the chains from the same initialization, this enhanced acceptance for HMC can be mainly associated with use of gradient information to guide sampling.
+Although further steps would be required to achieve a fully converged posterior, these chains are sufficient to illustrate the increased efficiency associated with HMC. 
+To illustrate this, in Fig.~\ref{fig:autocorrelation} we plot the autocorrelation as a function of lag for both the HMC and GRW samplers.
+The HMC autocorrelation is substantially lower than that of the GRW.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
-In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}.
+In addition, we found that the effictive number of samples (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
+
+In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. We therefore expect \jax waveforms to be crucial to future PE efforts in GW astronomy, especially for low-latency pipelines.
 
 
 
