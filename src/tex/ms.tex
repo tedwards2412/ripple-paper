@@ -565,19 +565,18 @@ Second, we discussed three data analysis tasks which can all be substantially im
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
 
+In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
+Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
+Some progress has been made towards the construction of a differentiable NRsurrogate, but currently it seems difficult to implement EOB waveforms in \jax.
+In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax which requires fixed length arrays for its JIT compilation.
+Since EOB waveforms are often regarded as the state-of-the-art, more work is required to see if a fast, differentiable implementation is possible.
+
 Currently the biggest constraint to adopting differentiable waveforms is the need to re-write the most commonly used waveforms into \jax (or pure python).
 In order to showcase the benefits of differentiable waveforms as quickly as possible, at the time of writing, we have only implemented an aligned spin GW model (IMRPhenomD).
 We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM.
 Ideally, future waveforms should be implemented either in pure python or using \jax directly.
 This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
 
-In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
-Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
-Some progress has been made towards the construction of a differentiable NRsurrogate, currently it seems difficult to implement EOB waveforms in \jax.
-In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax which requires fixed length arrays for its JIT compilation.
-Since EOB waveforms are often regarded as the state-of-the-art, more work is required to see if a fast, differentiable implementation is possible.
-
-\te{End on a final good thing?}
 
 \section{Acknowledgments}
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
