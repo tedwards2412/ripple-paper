@@ -75,7 +75,7 @@
 % \section{Todo}
 % \begin{itemize}
 %     \item Finish intro \te{Done}
-%     \item Finish section 2 
+%     \item Finish section 2 \te{Done}
 %     \item Write captions for all plots \te{Done}
 %     \item Finish discussion
 % \end{itemize}
@@ -141,7 +141,7 @@ The associated code can be found at \ripple~\citep{ripple}.
 \label{sec:waveforms}
 
 A variety of waveform families have been developed to accurately model the GW emission from COs. 
-When the COs are relatively well separated, the dynamics of the system can be well approximated with post-Newtonian expansion.
+When the COs are relatively well separated, the dynamics of the system can be well approximated by a post-Newtonian expansion.
 However, close to merger, numerical relatively simulations are required to accurately model the binary.
 Unfortunately, these numerical simulations are computationally expensive and cannot be run in conjunction with data analysis.
 Approximate, phenomenological waveforms have therefore been constructued to enable relatively fast waveform generation at sufficient accuracy.
@@ -150,7 +150,7 @@ As mentioned in the previous section, the three major waveform families that hav
 Note that unlike NRsurrogate, both the EOB and PhenomIMR waveforms are calibrated to numerical relativity waveforms.
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate whereas IMRPhenom waveforms are constructed with simple closed-form expressions.
 IMRPhenom waveforms are therefore ideally suited for AD, espeically using \jax. 
-In this paper we focus mainly on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
+In this paper we focus on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
 
 The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
 We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
@@ -158,6 +158,7 @@ In addition, we have restructed the code for readability and evaluation speed as
 
 To demonstrate our implempation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
 \begin{equation}
+    \label{eq:inner_prod}
     \left(h_{\theta_1}|h_{\theta_2}\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h_{\theta_1}(f) h^*_{\theta_2}(f)}{S_n(f)}\, ,
 \end{equation}
 where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_{\theta_1}$ is the frequency domain waveform evaluated at the instrinsic parameter point $\theta_1$.
@@ -173,29 +174,34 @@ where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|\bar{h}_{\theta_1})$ across the entire parameter space.\footnote{
-    Specifically, we use $10^3$ points in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+    Specifically, we use $10^4$ points in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
-From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform to numerical precision across the majority of the parameter space.
-In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
+From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
+In particular, the reduced density of points at low masses is where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ causing points to not appear in the log scale colorbar.
+% In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[t]
     \script{random_matches.py}
     \begin{centering}
         \includegraphics[width=\linewidth]{figures/random_matches.pdf}
         \caption{
             Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin. 
-            % The blue points indicate where the match is exactly 1.0 and would therefore not appear in the log scale. 
+            The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
         }
         \label{fig:match}
     \end{centering}
 \end{figure}
 
-There remains some slight deviation between the two waveform implementations at low total mass. \te{Do I need to look more into this...? The discussion below looks odd with this plot}
-This is likely due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
-Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of XXX values, which we then linearly interpolate during waveform generation.
+Note that in General Relativity (GR) the total mass of the system is simply an overall scaling of the waveforms frequency evolution and is therefore not a truly independent parameter.
+If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and scale the frequency grid to correctly, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
+This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
+
+There remains some slight deviation between the two waveform implementations at high total mass. 
+This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
+Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
-The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
+% The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
 Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable for realistic data analysis tasks.
 
 For maximum utility, a waveform needs to be fast to evaluate.
@@ -222,7 +228,7 @@ For reverse mode AD, one only needs two function calls to evaluate the derivativ
     Note that although the number of function calls is small, reverse mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
 }
-Since the parameter space of GWs in General Relativity (GR) has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
+Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond GR models where many more parameters are added.
 
 Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
@@ -553,7 +559,8 @@ In a follow up paper we will demonstrate that minute scale PE can be achieved by
 
 In this paper we introduced and discussed the various benefits of differentiable waveforms in \jax for GW data analysis.
 First, we demonstrated the speed and accuracy of our implementation of the aligned spin IMRPhenomD waveform.
-In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU, making waveform calls up to five orders of magnitude faster.
+In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU.
+Parallization on a GPU provides substantial speed increases; on a free google colab GPU we found that waveform evaluations are nearly 5 orders of magnitude faster than serial CPU evaluations.
 Second, we discussed three data analysis tasks which can all be substantially improved by utlizing derivative information of the waveform.
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
