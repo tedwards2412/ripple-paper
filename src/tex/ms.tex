@@ -238,7 +238,12 @@ Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find th
 }
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
 Waveform calls can therefore be evaluated in parallel, massively improving performance.
+<<<<<<< HEAD
 Performing the same benchmark as above on a Google Colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
+=======
+Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim 0.00005\mathrm{ms}$, nearly five orders of magnitude faster.
+\kw{We should add some more detail related to this comparison. We should be clear that each individual waveform sample evaluation doesn't get us the performance by putting it on GPU (Jitting helps with that, not the GPU part). The GPU comes into play by allowing parallel evaluation of waveform sample, so for a tiny amount of time/frequency samples, we should expect GPU to lose to a CPU, but on any reasonable amount of time/frequency samples, GPU win a lot.}
+>>>>>>> b8f213e (Update ms.tex)
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
 The primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
@@ -252,9 +257,15 @@ For reverse mode AD, one only needs two function calls to evaluate the derivativ
     Note that although the number of function calls is small, reverse mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
 }
+<<<<<<< HEAD
 Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond-GR models, \AZ{waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
 In these cases} many more parameters \AZ{can be} added.
+=======
+\kw{Maybe a bit more background on AD, the way we phrase it here sounds a bit too magical too me now.}
+Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
+However, this might change for waveforms in beyond GR models where many more parameters are added.
+>>>>>>> b8f213e (Update ms.tex)
 
 Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
 Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quick to evaluate, especially when hardware acceleration is available.
@@ -440,7 +451,7 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
     \label{fig:sky_localization}
 \end{figure}
 
-Forecasting the sensitivity of future experiments is an essential task in GW science.
+Forecasting the sensitivity of future experiments is an essential task in GW science. \kw{LOL I won't say it is essential.}
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
@@ -537,8 +548,14 @@ This demonstrates that AD can be used to accurately produce population-level for
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
 In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
+<<<<<<< HEAD
 This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call \AZ{used by \texttt{GWbench}}.
 As discussed above, performance can be further improved by utilizing hardware acceleration such as parallel GPU processing.
+=======
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call.
+\kw{Want to pull a number on the total time it took on generating the population result? I imagine this should turn the theorists on and send them into a fishing frenzy.}
+As discussed above, performance can be further improved by utilising hardware acceleration such as parallel GPU processing.
+>>>>>>> b8f213e (Update ms.tex)
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
@@ -605,8 +622,7 @@ The HMC autocorrelation is substantially lower than that of the GRW.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
 In addition, we found that the effictive number of samples (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
-In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. We therefore expect \jax waveforms to be crucial to future PE efforts in GW astronomy, especially for low-latency pipelines.
-
+In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. We therefore expect \jax waveforms to be crucial to future PE efforts in GW astronomy, especially for low-latency pipelines. \kw{Not just low latency, but also high dimensional analysis, such as testing GR and lensing.}
 
 
 \section{Discussion and Conclusion}
