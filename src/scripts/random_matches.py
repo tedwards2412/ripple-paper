@@ -90,7 +90,7 @@ plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
 plt.xlabel(r"Total Mass, $M$")
 plt.ylabel(r"Effective Spin, $\chi_{\rm eff}$")
 plt.xlim(0, 200)
-plt.ylim(-1, 1.0)
+plt.ylim(-1, 1.)
 # plt.ylim(1, 50)
 
 plt.savefig(paths.figures / "random_matches.pdf", bbox_inches="tight")
