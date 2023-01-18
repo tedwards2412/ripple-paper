@@ -109,13 +109,15 @@ There are now a variety of AD implementations, most notably in deep learning fra
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited \sout{support} \AZ{use} in GW \sout{physics} \AZ{analysis software} precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e.~GPUs).
 
+\AZ{Add refs here:}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
 Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
 In particular, their closed form expressions and fixed size frequency grids make a \jax implementation that complies with the constraints of JIT compilation simple.
-EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax.
+\AZ{to fix:} EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax.
 \AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
 In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
+\AZ{rephrase this in a more positive fashion:}
 NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cumbersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
@@ -147,14 +149,14 @@ In this paper we focus on the aligned spin circular orbit model IMRPhenomD~\cite
 
 The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
 We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
-In addition, we have restructed the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
+In addition, we have restructured the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
 
-To demonstrate our implempation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
+To demonstrate our implementation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
 \begin{equation}
     \label{eq:inner_prod}
-    \left(h_{\theta_1}|h_{\theta_2}\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h_{\theta_1}(f) h^*_{\theta_2}(f)}{S_n(f)}\, ,
+    \left(h_1|h_2\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h^*_1(f) h_2(f)}{S_n(f)}\, ,
 \end{equation}
-where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_{\theta_1}$ is the frequency domain waveform evaluated at the instrinsic parameter point $\theta_1$.
+where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_{\theta_1}$ is the frequency domain waveform evaluated at the intrinsic parameter point $\theta_1$.
 We can then normalize the inner product through
 \begin{equation}
     \left[h_{\theta_1}|h_{\theta_2}\right] = \frac{\left(h_{\theta_1}|h_{\theta_2}\right)}{\sqrt{\left(h_{\theta_1}|h_{\theta_1}\right)\left(h_{\theta_2}|h_{\theta_2}\right)}}\, .
@@ -253,6 +255,15 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \subsection{Finetuning Waveform Coefficients}
 \label{subsec:coeffs}
 
+\AZ{Broad comments: need to cite which catalog the waveforms came from if any.
+The number of waveforms used seems much larger than the number originally used
+to calibrate PhenomD. 
+If that is true, we can't make a big deal about having a better mismatch compared to
+the original version, because of course optimizing over another set will improve 
+performance.
+Say how many waveforms we use to optimize, how many we compare to, where they came
+from.}
+
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
 While waveforms generated using numerical relativity simulations are commonly
@@ -290,6 +301,9 @@ optimum compared to fitting all coefficients at once. By jointly
 fitting all coefficients, the correlation in fitting individual and connecting
 different segments can be accounted during the optimization. Therefore, there is
 potential improvement of the accuracy by fitting all coefficients at once.
+
+\AZ{Maybe comment on optimization method used for EOB waveforms?
+I think they do interesting Monte Carlo etc}
 
 In general, optimization problems in a high dimensional space benefit from
 having access to the gradient of the objective function. Since we can
@@ -466,7 +480,9 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix.
     \end{tabular}
     % \end{center}
     \caption{Priors for the 11 dimensional parameter space used for the Fisher forecasting population analysis in Sec.~\ref{subsec:fisher}. 
-    $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets.}
+    $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets.
+    \AZ{$\cos \iota \in (-1,1)$, $\psi \in (0,2 \pi)$ (or $\pi$), RA is $\alpha \in (0, 2\pi)$, Dec is $\cos \delta \in (-1,1)$ }
+    }
     \label{tab:priors}
 \end{table}
 
