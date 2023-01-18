@@ -112,8 +112,12 @@ Here we make use of \jax~\citep{jax2018github} due to its easy integration with 
 \AZ{Add refs here:}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
-Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
-In particular, their closed form expressions and fixed size frequency grids make a \jax implementation that complies with the constraints of JIT compilation simple.
+%Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
+\AZ{Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
+Models like the non-precessing IMRPhenomD model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{} are written in frequency domain using closed-form expressions.
+This makes a}
+\sout{In particular, their closed form expressions and fixed size frequency grids make a }
+\jax implementation that complies with the constraints of JIT compilation simple.
 \AZ{to fix:} EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax.
 \AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
 In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
@@ -193,7 +197,8 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1
 
 Note that in General Relativity (GR) the total mass $M$ of \AZ{a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
 The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.}
-\sout{the system is simply an overall scaling of the waveforms frequency evolution and is therefore not a truly independent parameter.}
+\sout{the system is simply an overall scaling of the waveforms} 
+\sout{frequency evolution and is therefore not a} \sout{truly independent parameter.}
 If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and \AZ{rescale the frequency grid to units of $Mf$}, \sout{correctly,} all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
 \AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
@@ -218,18 +223,18 @@ Waveform calls can therefore be evaluated in parallel, massively improving perfo
 Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
-The primary arguement of this paper is that waveform derivatives will also be highly vauable to data analysis tasks. 
+The primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
-First, the accuracy of derivatives from AD are signficantly more stable than finite difference methods.
+First, the accuracy of derivatives from AD are significantly more stable than finite difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
-On the other hand, AD produces machine precision derivatives with no tuninig.
-Second, AD scales favourably with the dimensionality of the function.
-In particular, for every input dimension, $D$, added one would need to evaluate the function at least $2D$ times to calcuate finite difference derivatives for all input parameters.
+On the other hand, AD produces machine precision derivatives with no tuning.
+Second, AD scales favorably with the dimensionality of the function.
+In particular, for every input dimension, $D$, added one would need to evaluate the function at least $2D$ times to calculate finite difference derivatives for all input parameters.
 For reverse mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimenison.\footnote{
     Note that although the number of function calls is small, reverse mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
 }
-Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensons, the speed of derivative evaluation is less crucial than the stability.
+Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond GR models where many more parameters are added.
 
 Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
@@ -286,7 +291,7 @@ in the case of PE.
 
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
 coefficients are fitted in segments with amplitude and phase separated.
-Furthermore, IMRPhenomD is divided in three fitting segments, inpsiral, merger and ringdown.
+Furthermore, IMRPhenomD is divided in three fitting segments, inspiral, merger and ringdown.
 Each of these segments has their own set of fitting coefficients.
 After obtaining the fitting coefficient for individual segments, they are then
 "stitched" together such that they are continuous in the first derivative.
@@ -495,7 +500,7 @@ The distribution of sky localization errors from a population of $10^3$ binaries
 We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
 This demonstrates that AD can be used to accurately produce population level forecasts.
 
-Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion procress) is substantially faster.
+Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
 In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
 This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call.
