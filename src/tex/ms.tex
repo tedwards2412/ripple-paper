@@ -93,7 +93,7 @@ All of these tasks require significant computation.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleviating this computational demand.
 
 Derivatives are ubiquitously useful throughout data analysis tasks.
-For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values (e.g. in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Decsent).
+For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
@@ -106,24 +106,27 @@ The core idea of AD is that any mathematical function can be broken down into a 
     }
 The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
-More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited support in GW physics precludes its general use.
-Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e. GPUs).
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited \sout{support} \AZ{use} in GW \sout{physics} \AZ{analysis software} precludes its general use.
+Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e.~GPUs).
 
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
 Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
 In particular, their closed form expressions and fixed size frequency grids make a \jax implementation that complies with the constraints of JIT compilation simple.
-EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax. 
+EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax.
+\AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
 In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
-NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cubersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
+NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cumbersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
-In addition, we present \ripple, a small GW \texttt{python} package which can serve as a respository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
+\AZ{I prefer to describe what is rather than what could be; can we say what elements exist, e.g.~
+we present \ripple... which includes \jax implementations of GW antenna patterns, the IMRPhenomD waveform, and...}
+In addition, we present \ripple, a small GW \texttt{python} package which can serve as a repository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
 The remainder of this paper is structured as follows. 
-In Sec.~\ref{sec:waveforms} we discuss the differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accruacy. 
+In Sec.~\ref{sec:waveforms} we discuss the differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accuracy. 
 In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
 Firstly, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting enabled by a differentiable waveform. 
-Secondly, we implement differnetiable detector response functions and show that the speed of Fisher matrix calculations can be substantially improved using AD.
+Secondly, we implement differentiable detector response functions and show that the speed of Fisher matrix calculations can be substantially improved using AD.
 Finally, we run an illustrative injection example using Hamiltonian Monte Carlo to demonstrate that the autocorrelation of derivative samplers is substantially smaller than that of traditional MCMCs.
 The associated code can be found at \ripple~\citep{ripple}.
 
