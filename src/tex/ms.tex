@@ -72,33 +72,18 @@
 
 \end{abstract}
 
-% \section{Todo}
-% \begin{itemize}
-%     \item Finish intro \te{Done}
-%     \item Finish section 2 \te{Done}
-%     \item Write captions for all plots \te{Done}
-%     \item Finish discussion
-% \end{itemize}
-
 \section{Introduction}
 \label{sec:intro}
 
-% Intro outline
-% - What are gravitational waves and what are data analysis tasks?
-% - What are derivatives, and how can they be used?
-% - What is automatic differentiation, and why has it become particularly useful now? JAX?
-% - Discussion of what waveforms are most ameanable to being differentiable
-% - In this paper
-
 The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep{LIGOScientific:2021djp}.
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
-In addition, this computational cost will substatially increase when next generation detectors come online.
+In addition, this computational cost will substatially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox}.
 
 The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. 
-Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event.
+Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
 In the most minimial example, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
-Beyond this simple scenario, more complex waveform models with many additional parameters may be used to test for deviations from General Relativity.
-Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{Wong:2022flg}.
+Beyond this simple scenario, more complex waveform models with many additional parameters may be used to test for deviations from General Relativity~\citep{Krishnendu:2021fga, LIGOScientific:2020tif, LIGOScientific:2016lio}.
+Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, Wong:2022flg}.
 All of these tasks require significant compute.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleaviating this computational demand.
 
