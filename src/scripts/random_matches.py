@@ -66,6 +66,9 @@ params = {
 mpl.rcParams.update(params)
 
 data = np.loadtxt(paths.data / "ripple_phenomD_matches.txt")
+data = data[data[:, -1].argsort()]
+data = data[::-1]
+
 exactmatch_indices = (1.0 - data[:, -1]) <= 0.0
 other_indices = (1.0 - data[:, -1]) > 0.0
 
@@ -75,6 +78,8 @@ Mtot = data[:, 1] + data[:, 0]
 
 # Plot and save
 plt.figure(figsize=(7, 5))
+plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="gray", alpha=0.3)
+
 cm = plt.cm.get_cmap("inferno")
 sc = plt.scatter(
     Mtot[other_indices],
@@ -84,7 +89,6 @@ sc = plt.scatter(
 )
 plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
 
-# plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="C0")
 # plt.xlabel(r"Total Mass, $M$")
 # plt.ylabel(r"Mass Ratio, $q$")
 plt.xlabel(r"Total Mass, $M$")

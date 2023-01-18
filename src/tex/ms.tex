@@ -163,7 +163,7 @@ This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(
 }
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
-In particular, the reduced density of points at low masses is where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ causing points to not appear in the log scale colorbar.
+In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ causing points to not appear in the log scale colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[t]
     \script{random_matches.py}
@@ -171,7 +171,8 @@ In particular, the reduced density of points at low masses is where the $1-\math
         \includegraphics[width=\linewidth]{figures/random_matches.pdf}
         \caption{
             Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin. 
-            The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
+            % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
+            The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
         }
         \label{fig:match}
