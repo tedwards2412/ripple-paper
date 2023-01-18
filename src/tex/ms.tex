@@ -9,6 +9,7 @@
 \definecolor{pyBlue}{RGB}{31, 119, 180}
 \definecolor{pyRed}{RGB}{214, 39, 40}
 \definecolor{pyGreen}{RGB}{44, 160, 44}
+\definecolor{Burnt}{RGB}{203,96,21}
 
 % Link setup
 % \newcommand\myshade{80}
@@ -29,6 +30,7 @@
 \newcommand{\te}[1]{\textbf{\color{pyGreen}(TE: #1)}}
 \definecolor{rb4}{HTML}{27408B}
 \newcommand{\kw}[1]{{\color{rb4}[KW: #1 ]}}
+\newcommand{\AZ}[1]{{\color{Burnt}[AZ: #1]}}
 
 % Begin!
 \begin{document}
@@ -56,18 +58,18 @@
 
 % Abstract with filler text
 \begin{abstract}
-    Since their discovery in 2015, gravitaitonal waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
-    As more detections continue, data analysis taks are becoming increasingly computationally demanding.
-    Here, we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analsyis tasks.
-    Firstly, we demonstrate that highly accurate waveforms (IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
-    Moreover, \jax allows for GPU accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
+    Since their discovery in 2015, gravitational waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
+    As more detections continue, data analysis tasks are becoming increasingly computationally demanding.
+    Here, we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analysis tasks.
+    Firstly, we demonstrate that \sout{highly accurate waveforms  (IMRPhenomD)} \AZ{complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD)} can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
+    Moreover, \jax allows for GPU-accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
     We then focus on three applications where efficient and differentiable waveforms are essential.
-    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that make up the waveform. 
-    In particular, we demonstrate that the typical \textit{match} with numerical relativiely waveforms can be improved by more than 10\% without any additional overhead.
-    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on CPU) with no loss in accuracy.
-    This increased speed makes population forecasting substantially simpler, as discussed extensively in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
-    Finally, we show that gradient based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to tradiaitional Monte Carlo methods.
-    Since differentiable waveforms appear to have substantial advantages for a variety of tasks throughtout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
+    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that \sout{make up the waveform} \AZ{are used to calibrate the waveform model}. 
+    In particular, we demonstrate that the typical \textit{match} with numerical relatively waveforms can be improved by more than 10\% without any additional overhead.
+    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
+    This increased speed makes population forecasting substantially simpler, as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+    Finally, we show that gradient-based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to traditional Monte Carlo methods.
+    Since differentiable waveforms appear to have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
     Our waveform code, \ripple, can be found at \href{https://github.com/tedwards2412/ripple}{github.com/tedwards2412/ripple}, and will continue to be updated with new waveforms as they are formulated.
 
 \end{abstract}
@@ -75,7 +77,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-The discovery of gravitational waves (GWs) from inspiraling and mergering compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep{LIGOScientific:2021djp}.
+The discovery of gravitational waves (GWs) from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep{LIGOScientific:2021djp}.
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substatially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox}.
 
