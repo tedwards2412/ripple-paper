@@ -118,11 +118,15 @@ Models like the non-precessing IMRPhenomD model studied here and the precessing,
 This makes a}
 \sout{In particular, their closed form expressions and fixed size frequency grids make a }
 \jax implementation that complies with the constraints of JIT compilation simple.
-\AZ{to fix:} EOB waveforms on the other hand require dynamic frequency grids and are therefore tricky to implement in \jax.
-\AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
-In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
-\AZ{rephrase this in a more positive fashion:}
-NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cumbersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
+NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity simulations, are in principle also straightfoward to implement in \jax.
+EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
+For EOB waveforms, frequency-domain reduced-order models may be a convenient target.
+% to produce a waveform
+%require dynamic frequency grids and are therefore tricky to implement in \jax.
+%\AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
+%In addition, EOB waveforms use hypergeometric functions which have limited support in \jax.
+%\AZ{rephrase this in a more positive fashion:}
+%NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cumbersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
 \AZ{I prefer to describe what is rather than what could be; can we say what elements exist, e.g.~
