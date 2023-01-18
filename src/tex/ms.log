@@ -1,33 +1,1305 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/W32TeX) (preloaded format=pdflatex 2021.1.13)  17 NOV 2022 17:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2021) (preloaded format=pdflatex 2022.3.25)  18 JAN 2023 12:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/kelvi/Desktop/ripple-paper/src/tex/ms.tex
-(c:/Users/kelvi/Desktop/ripple-paper/src/tex/ms.tex
+**ms.tex
+(./ms.tex
 LaTeX2e <2020-10-01> patch level 4
-L3 programming layer <2021-01-09> xparse <2020-03-03>
-
-! LaTeX Error: File `aastex631.cls' not found.
-
-Type X to quit or <RETURN> to proceed,
-or enter new name. (Default extension: cls)
-
-Enter file name: 
-c:/Users/kelvi/Desktop/ripple-paper/src/tex/ms.tex:3: Emergency stop.
-<read *> 
-         
-l.3 \usepackage
-               {showyourwork}^^M
-*** (cannot \read from terminal in nonstop modes)
-
+L3 programming layer <2021-02-18> (/usr/local/texlive/2021/texmf-dist/tex/latex/aastex/aastex631.cls
+Document Class: aastex631 2020/12/20 Version 6.3.1d/AAS markup document class
+Class aastex Info: 
  
+ Original \LaTeX2.09 style by Chris Biemesderfer (chris@seagoat.com). 
+ Adapted to \LaTeXe by A. Ogawa (ogawa@teleport.com)
+ emulateapj.cls included, Copyright 2000-2015 Alexey Vikhlinin 
+ Rewrite and update of emulateapj.cls, revised and enhanced with table macros, gridlines, draft watermark,
+ track changes, new `modern' style and much more, by Amy Hendrickson,
+ (amyh@texnology.com, http://www.texnology.com) 
+ 
+  on input line 106.
+\bibbaselineskip=\skip47
+(/usr/local/texlive/2021/texmf-dist/tex/latex/revtex4-1/revtex4-1.cls
+Document Class: revtex4-1 2020/09/30 4.1s (http://publish.aps.org/revtex4/ for documentation)
+ Copyright (c) 2009 The American Physical Society.
+ mailto:revtex@aps.org
+ Licensed under the LPPL:
+http://www.ctan.org/tex-archive/macros/latex/base/lppl.txt
+ Arthur Ogawa <arthur_ogawa at sbcglobal dot net>
+ Based on work by David Carlisle <david at dcarlisle.demon.co.uk>.
+ltxutil[2020/09/30 4.1s utilities package (portions licensed from W. E. Baxter web at superscript.com)]
+LaTeX Info: Redefining \@centercr on input line 346.
+Class revtex4-1 Info: Repairing broken LaTeX eqnarray on input line 396.
+\eqncolsep=\skip48
+Class revtex4-1 Info: Repairing hyperref-unfriendly LaTeX definition of \mpfootnote on input line 471.
+Class revtex4-1 Info: Repairing broken LateX \@sect on input line 793.
+\intertabularlinepenalty=\count179
+\@tbpen=\count180
+\@arstrutbox@hline=\box47
+Class revtex4-1 Info: Repairing broken LaTeX \@xbitor on input line 1824.
+Class revtex4-1 Info: Making \typeout \long on input line 2089.
+ltxfront[2020/09/30 4.1s frontmatter package (AO,DPC)]
+\c@affil=\count181
+\c@collab=\count182
+\absbox=\box48
+ltxgrid[2020/09/30 4.1s page grid package (portions licensed from W. E. Baxter web at superscript.com)]
+\c@linecount=\count183
+\output@latex=\toks15
+\box@size@1=\box49
+\box@size@2=\box50
+\@protection@box=\box51
+\@topmark@saved=\toks16
+\footins@saved=\box52
+\footins@recovered=\box53
+\column@recovered=\box54
+\pagesofar=\box55
+\footsofar=\box56
+\pagegrid@col=\count184
+Class revtex4-1 Info: Overriding \@vspace, \@vspacer, \@no@pgbk, \@newline, and \\  on input line 5655.
+\c@part=\count185
+\c@section=\count186
+\c@subsection=\count187
+\c@subsubsection=\count188
+\c@paragraph=\count189
+\c@subparagraph=\count190
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\c@figure=\count191
+\fbox@1=\box57
+\c@table=\count192
+\fbox@2=\box58
+\c@video=\count193
+\fbox@4=\box59
+\@bibdataout=\write3
+\widetext@top=\box60
+\widetext@bot=\box61
+Class revtex4-1 Info: Selecting society aps on input line 7616.
+(/usr/local/texlive/2021/texmf-dist/tex/latex/revtex4-1/aps4-1.rtx
+File: aps4-1 2020/09/30 4.1s (http://publish.aps.org/revtex4/ for documentation)
+Class revtex4-1 Info: RevTeX society APS selected on input line 31.
+)
+Class revtex4-1 Info: Selecting journal pra on input line 7618.
+Class revtex4-1 Info: APS journal PRA selected on input line 7619.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/revtex4-1/aps10pt4-1.rtx
+File: aps10pt4-1 2020/09/30 4.1s (http://publish.aps.org/revtex4/ for documentation)
+Class revtex4-1 Info: RevTeX pointsize 10pt selected on input line 30.
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/textcase/textcase.sty
+Package: textcase 2019/09/14 v1.00 Text only upper/lower case changing (DPC)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip16
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/natbib/natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip51
+\bibsep=\skip52
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count194
+)
+Class revtex4-1 Info: Repairing natbib's \BibitemShut on input line 7623.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/revtex4-1/revsymb4-1.sty
+Package: revsymb4-1 2020/09/30 4.1s (http://publish.aps.org/revtex4/ for documentation)
+LaTeX Info: Redefining \REV@mathfrak on input line 119.
+)) (/usr/local/texlive/2021/texmf-dist/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup4
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2020/09/09 v1.2b Enhanced LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks17
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2020/08/30 v1.4c Standard LaTeX Graphics (DPC,SPQR)
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2016/01/03 v1.10 sin cos tan (DPC)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 105.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2020/10/05 v1.2a Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen138
+\Gin@req@width=\dimen139
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\@emptytoks=\toks18
+\symAMSa=\mathgroup5
+\symAMSb=\mathgroup6
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+LaTeX Info: Redefining \frak on input line 111.
+LaTeX Info: Redefining \Bbb on input line 113.
+)) (/usr/local/texlive/2021/texmf-dist/tex/generic/epsf/epsf.sty
+This is `epsf.tex' v2.7.4 <14 February 2011>
+\epsffilein=\read2
+\epsfframemargin=\dimen140
+\epsfframethickness=\dimen141
+\epsfrsize=\dimen142
+\epsftmp=\dimen143
+\epsftsize=\dimen144
+\epsfxsize=\dimen145
+\epsfysize=\dimen146
+\pspoints=\dimen147
+)
+\rptnum=\count195
+\rptloopnum=\count196
+\fncount=\count197
+\endfncount=\count198
+\c@front@matter@foot@note=\count199
+\keys@width=\skip53
+\c@lastfootnote=\count266
+\tempsectnum=\count267
+\ackbox=\box62
+\c@remember@figure@num=\count268
+\c@remember@table@num=\count269
+\bibskip=\skip54
+\bibindent=\dimen148
+\plot@width=\skip55
+\c@table@save=\count270
+\@abovenoteskip=\dimen149
+\table@note@skip=\skip56
+\deluxe@table@width=\skip57
+\@d@t@a=\skip58
+\c@deluxe@table@num=\count271
+\LTcapwidth=\dimen150
+\abovedeluxetableskip=\skip59
+\belowdeluxetableskip=\skip60
+\lastrowheight=\dimen151
+\DT@p@ftn=\toks19
+\pt@column=\count272
+\pt@ncol=\count273
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/tools/longtable.sty
+Package: longtable 2020/01/07 v4.13 Multi-page Table package (DPC)
+\LTleft=\skip61
+\LTright=\skip62
+\LTpre=\skip63
+\LTpost=\skip64
+\LTchunksize=\count274
+\LTcapwidth=\dimen152
+\LT@head=\box63
+\LT@firsthead=\box64
+\LT@foot=\box65
+\LT@lastfoot=\box66
+\LT@cols=\count275
+\LT@rows=\count276
+\c@LT@tables=\count277
+\c@LT@chunks=\count278
+\LT@p@ftn=\toks20
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2021-02-27 v7.00k Hypertext links for LaTeX
+ (/usr/local/texlive/2021/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2020-05-10 v1.25 LaTeX kernel commands for general use (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2020/03/06 v1.0d TeX engine tests
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO)
+ (/usr/local/texlive/2021/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2019/12/15 v1.18 Key value parser (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/letltxmacro/letltxmacro.sty
+Package: letltxmacro 2019/12/03 v1.6 Let assignment for LaTeX macros (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/auxhook/auxhook.sty
+Package: auxhook 2019-12-17 v1.6 Hooks for auxiliary files (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2020-10-07 v3.14 Key value format for package options (HO)
+)
+\@linkdim=\dimen153
+\Hy@linkcounter=\count279
+\Hy@pagecounter=\count280
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2021-02-27 v7.00k Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hyperref-langpatches.def
+File: hyperref-langpatches.def 2021-02-27 v7.00k Hyperref: patches for babel languages
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/etexcmds/etexcmds.sty
+Package: etexcmds 2019/12/15 v1.7 Avoid name clashes with e-TeX commands (HO)
+)
+\Hy@SavedSpaceFactor=\count281
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2021-02-27 v7.00k Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `bookmarks' set `true' on input line 4073.
+Package hyperref Info: Option `pdfnewwindow' set `true' on input line 4073.
+Package hyperref Info: Option `colorlinks' set `true' on input line 4073.
+Package hyperref Info: Option `final' set `true' on input line 4073.
+Package hyperref Info: Hyper figures OFF on input line 4192.
+Package hyperref Info: Link nesting OFF on input line 4197.
+Package hyperref Info: Hyper index ON on input line 4200.
+Package hyperref Info: Plain pages OFF on input line 4207.
+Package hyperref Info: Backreferencing OFF on input line 4212.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4445.
+LaTeX Info: Redefining \href on input line 4715.
+\c@Hy@tempcnt=\count282
+LaTeX Info: Redefining \url on input line 4804.
+\XeTeXLinkMargin=\dimen154
+ (/usr/local/texlive/2021/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+ (/usr/local/texlive/2021/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO)
+))
+\Fld@menulength=\count283
+\Field@Width=\dimen155
+\Fld@charsize=\dimen156
+Package hyperref Info: Hyper figures OFF on input line 6075.
+Package hyperref Info: Link nesting OFF on input line 6080.
+Package hyperref Info: Hyper index ON on input line 6083.
+Package hyperref Info: backreferencing OFF on input line 6090.
+Package hyperref Info: Link coloring ON on input line 6093.
+Package hyperref Info: Link coloring with OCG OFF on input line 6100.
+Package hyperref Info: PDF/A mode OFF on input line 6105.
+LaTeX Info: Redefining \ref on input line 6145.
+LaTeX Info: Redefining \pageref on input line 6149.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2020/08/17 v1.0a Emulation of the original atbegshi package
+with kernel methods
+)
+\Hy@abspage=\count284
+\c@Item=\count285
+\c@Hfootnote=\count286
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2021-02-27 v7.00k Hyperref driver for pdfTeX
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atvery package
+with kernel methods
+)
+\Fld@listcount=\count287
+\c@bookmark@seq@number=\count288
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2019/12/05 v1.9 Rerun checks for auxiliary files (HO)
+ (/usr/local/texlive/2021/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 286.
+)
+\Hy@SectionHShift=\skip65
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/tools/array.sty
+Package: array 2020/10/01 v2.5c Tabular extension package (FMi)
+\col@sep=\dimen157
+\ar@mcellbox=\box67
+\extrarowheight=\dimen158
+\NC@list=\toks21
+\extratabsurround=\skip66
+\backup@length=\skip67
+\ar@cellbox=\box68
+)
+\colcount=\count289
+\firstcolcount=\count290
+\secondcolcount=\count291
+\thirdcolcount=\count292
+\columncount=\count293
+\howmanyDs=\count294
+\firsthowmanyDs=\count295
+\secondhowmanyDs=\count296
+\PartsOfTable=\count297
+\columnoneandtwo=\count298
+\colnumsused=\count299
+\loopnum=\count300
+\totalcolumncount=\count301
+\totalcolumns=\count302
+\firsttablebox=\box69
+\secondtablebox=\box70
+\thirdtablebox=\box71
+\longtablebox=\box72
+\splitbox=\box73
+\movetabledown=\dimen159
+\maxtablewidth=\dimen160
+\savetabskip=\dimen161
+\tempcounter=\count303
+\colheadcount=\count304
+\rotatetablebox=\box74
+\colorcount=\count305
+\editnum=\count306
+\refchangenumber=\count307
+\listchangenum=\count308
+
+(/usr/local/texlive/2021/texmf-dist/tex/generic/ulem/ulem.sty
+\UL@box=\box75
+\UL@hyphenbox=\box76
+\UL@skip=\skip68
+\UL@hook=\toks22
+\UL@height=\dimen162
+\UL@pe=\count309
+\UL@pixel=\dimen163
+\ULC@box=\box77
+Package: ulem 2019/11/18
+\ULdepth=\dimen164
+)
+\entriesinthiscollab=\count310
+\allentries=\count311
+\AuthorCollaborationLimit=\count312
+\largestAffilNum=\count313
+\totalentries=\count314
+\docollabnum=\count315
+\tempauthornumber=\count316
+\countauthors=\count317
+\testnum=\count318
+\tempauthorminusone=\count319
+\affilnum=\count320
+\c@affilcount=\count321
+\numauthors=\count322
+\collabnum=\count323
+\collabnamebox=\box78
+\widetext@top=\box79
+\widetext@bot=\box80
+\currwidth=\dimen165
+\interactbox=\box81
+\movetableright=\dimen166
+) (./showyourwork.sty
+Package: showyourwork 2022/01/12 Open source science articles
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/multirow/multirow.sty
+Package: multirow 2021/03/15 v2.8 Span multiple rows of a table
+\multirow@colwidth=\skip69
+\multirow@cntb=\count324
+\multirow@dima=\skip70
+\bigstrutjot=\dimen167
+)
+Class revtex4-1 Info: Unrecognized array package. Please update this document class! (Proceeding with fingers crossed.) on input line 35.
+Class revtex4-1 Info: Patching unrecognized longtable package. (Proceeding with fingers crossed) on input line 35.
+Class revtex4-1 Info: cite was not loaded (OK!) on input line 35.
+Class revtex4-1 Info: mcite was not loaded (OK!) on input line 35.
+Class revtex4-1 Info: multicol was not loaded (OK!) on input line 35.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2021-03-18 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count325
+\l__pdf_internal_box=\box82
+) (./ms.aux)
+\openout1 = `ms.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 35.
+LaTeX Font Info:    ... okay on input line 35.
+ (/usr/local/texlive/2021/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count326
+\scratchdimen=\dimen168
+\scratchbox=\box83
+\nofMPsegments=\count327
+\nofMParguments=\count328
+\everyMPshowfont=\toks23
+\MPscratchCnt=\count329
+\MPscratchDim=\dimen169
+\MPnumerator=\count330
+\makeMPintoPDFobject=\count331
+\everyMPtoPDFconversion=\toks24
+) (/usr/local/texlive/2021/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+))
+Package hyperref Info: Link coloring ON on input line 35.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+) (/usr/local/texlive/2021/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+)
+\c@section@level=\count332
+)
+LaTeX Info: Redefining \ref on input line 35.
+LaTeX Info: Redefining \pageref on input line 35.
+LaTeX Info: Redefining \nameref on input line 35.
+ (./ms.out) (./ms.out)
+\@outlinefile=\write4
+\openout4 = `ms.out'.
+
+
+./ms.tex:63: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.63 ...ion through the programming framework \jax
+                                                   for accelerating a variet...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:64: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.64 ... (here, IMRPhenomD) can be written in \jax
+                                                   and demonstrate that the ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:64: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.64 ...ts derivative) is similar to the \lalsuite
+                                                   implementation in \CC.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:65: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.65     Moreover, \jax
+                        allows for GPU accelerated waveform calls which can ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    Trying to load font information for U+lasy on input line 67.
+(/usr/local/texlive/2021/texmf-dist/tex/latex/base/ulasy.fd
+File: ulasy.fd 1998/08/17 v2.2e LaTeX symbol font definitions
+)
+LaTeX Font Info:    Trying to load font information for U+msa on input line 67.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 67.
+ (/usr/local/texlive/2021/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+./ms.tex:72: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.72 ... propose that waveform developers use \jax
+                                                   to build new waveforms mo...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:73: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.73     Our waveform code, \ripple
+                                   , can be found at \href{https://github.co...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 84.
+./ms.tex:84: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.84 \section
+             {Introduction}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:84: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.84 \section
+             {Introduction}
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[1{/usr/local/texlive/2021/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (10.88353pt too wide) in paragraph at lines 117--117
+[][]| [] [][][]| 
+ []
+
+./ms.tex:121: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.121 Here we make use of \jax
+                              ~\citep{jax2018github} due to its easy integra...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:125: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.125 ...l suited for an AD implementation in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:126: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.126 ...nd fixed-size frequency grids make a \jax
+                                                   implementation that compl...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:127: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.127 ...are therefore tricky to implement in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:128: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.128 ...ctions which have limited support in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Underfull \hbox (badness 1348) in paragraph at lines 123--130
+\OT1/cmr/m/n/10 mon of which are: the effective-one-body (EOB),
+ []
+
+./ms.tex:132: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.132 In addition, we present \ripple
+                                     , a small GW \texttt{python} package wh...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:134: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.134 ...MRPhenomD waveform implemented in \ripple
+                                                   and perform some benchmar...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:140: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.140 The associated code can be found at \ripple
+                                                 ~\citep{ripple}.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[2]
+./ms.tex:154: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.154 ...ally-suited for AD, especially using \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:157: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.157 ...implementation of IMRPhenomD in \lalsuite
+                                                   is in C, and therefore ne...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:157: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.157 ...texttt{python} to be compatible with \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:158: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.158 ...bination of pure \texttt{python} and \jax
+                                                   derivatives.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:161: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.161 ...f IMRPhenomD is faithful to the \lalsuite
+                                                   implementation, we start ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:177: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.177 ...e implementation of IMRPhenomD in \ripple
+                                                   accurately matches the \l...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:177: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.177 ... \ripple accurately matches the \lalsuite
+                                                   implementation.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (10.88353pt too wide) in paragraph at lines 180--180
+[][]| [] [][][]| 
+ []
+
+./ms.tex:181: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.181 ...$h_{\theta_1}$ corresponds to the \ripple
+                                                   waveform implementation a...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:181: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.181 ...and $\bar{h}_{\theta_1}$ is the \lalsuite
+                                                   implementation.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:182: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.182 ...{fig:match}, it is clear that the \ripple
+                                                   waveform matches with the...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:182: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.182 ...ipple waveform matches with the \lalsuite
+                                                   waveform close to numeric...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+<figures/random_matches.pdf, id=116, 496.1235pt x 344.09648pt>
+File: figures/random_matches.pdf Graphic file (type pdf)
+<use figures/random_matches.pdf>
+Package pdftex.def Info: figures/random_matches.pdf  used on input line 188.
+(pdftex.def)             Requested size: 242.26653pt x 168.03119pt.
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:193: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.193         }
+               
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 193--193
+[]\OT1/cmr/bx/n/9 Figure 1. [] \OT1/cmr/m/n/9 Match be-tween the \OT1/cmtt/m/n/9 ripple\OT1/cmr/m/n/9 and
+ []
+
+
+Underfull \hbox (badness 5817) in paragraph at lines 193--193
+\OT1/cmtt/m/n/9 lalsuite\OT1/cmr/m/n/9 implementations of the IM-R-Phe-nomD wave-
+ []
+
+./ms.tex:203: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.203 ...cies, are not currently supported in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[3 <./figures/random_matches.pdf>]
+./ms.tex:211: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.211 Since the \lalsuite
+                          implementation of IMRPhenomD is written in \texttt...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:211: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.211 ...he waveform itself is faster than \ripple
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:212: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.212 ...kes $\sim 2-5\,\mathrm{ms}$ for \lalsuite
+                                                   (interfaced with python) ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:212: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.212 ...) and $\sim 5-8\,\mathrm{ms}$ for \ripple
+                                                  .\footnote{
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Overfull \hbox (10.88353pt too wide) in paragraph at lines 216--216
+[][]| [] [][][]| 
+ []
+
+./ms.tex:217: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.217 ... benchmark, a key advantage of using \jax
+                                                   is its native ability to ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:220: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.220 Generalizing \lalsuite
+                             waveforms to run on a GPU would be a significan...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+
+Underfull \hbox (badness 1509) in paragraph at lines 209--221
+\OT1/cmr/m/n/10 to eval-u-ate. For-tu-nately, the IM-R-Phe-nom wave-
+ []
+
+
+Overfull \hbox (10.88353pt too wide) in paragraph at lines 232--232
+[][]| [] [][][]| 
+ []
+
+./ms.tex:237: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.237 ...r implementation of IMRPhenomD in \ripple
+                                                   is accurate and quick to ...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[4]
+Underfull \hbox (badness 2119) in paragraph at lines 279--288
+[]\OT1/cmr/m/n/10 Previously in the con-struc-tion of IM-R-Phe-nomD
+ []
+
+<figures/loss_compare.pdf, id=206, 484.30937pt x 337.83089pt>
+File: figures/loss_compare.pdf Graphic file (type pdf)
+<use figures/loss_compare.pdf>
+Package pdftex.def Info: figures/loss_compare.pdf  used on input line 349.
+(pdftex.def)             Requested size: 242.26653pt x 168.99234pt.
+<figures/mismatch_hist.pdf, id=207, 459.68613pt x 339.8384pt>
+File: figures/mismatch_hist.pdf Graphic file (type pdf)
+<use figures/mismatch_hist.pdf>
+Package pdftex.def Info: figures/mismatch_hist.pdf  used on input line 362.
+(pdftex.def)             Requested size: 242.26653pt x 179.1075pt.
+[5]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 380.
+
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 380.
+
+
+Class revtex4-1 Warning: Deferred float stuck during \clearpage processing.
+
+<figures/sky_localization.pdf, id=220, 462.3994pt x 342.88101pt>
+File: figures/sky_localization.pdf Graphic file (type pdf)
+<use figures/sky_localization.pdf>
+Package pdftex.def Info: figures/sky_localization.pdf  used on input line 386.
+(pdftex.def)             Requested size: 242.26653pt x 179.64899pt.
+[6 <./figures/loss_compare.pdf> <./figures/mismatch_hist.pdf> <./figures/sky_localization.pdf>]
+./ms.tex:459: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.459     $m_1, m_2$ & $\boldsymbol
+                                   {U}[1.0, 50]\, \mathrm{M}_\odot$ \\ \hline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:464: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.464 ...nclincation Angle, $\iota$ & $\boldsymbol
+                                                  {U}[0, 1]$ \\ \hline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:465: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.465 ...Polarization Angle, $\psi$ & $\boldsymbol
+                                                  {U}[0, 1]$ \\ \hline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:466: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.466     Right Ascension, $\delta$ & $\boldsymbol
+                                                  {U}[0, 1]$ \\ \hline
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:467: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.467     Declination, $\alpha$ & $\boldsymbol
+                                              {U}[0, 1]$ \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:472: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.472 ...tween the two variables in the brackets.}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:472: Undefined control sequence.
+<recently read> \boldsymbol 
+                            
+l.472 ...tween the two variables in the brackets.}
+                                                  
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:488: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.488 ...t a single core evaluation of the \ripple
+                                                   waveform is slower than t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:488: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.488 ...ple waveform is slower than the \lalsuite
+                                                   call.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+<figures/PE.pdf, id=367, 727.11653pt x 727.11653pt>
+File: figures/PE.pdf Graphic file (type pdf)
+<use figures/PE.pdf>
+Package pdftex.def Info: figures/PE.pdf  used on input line 498.
+(pdftex.def)             Requested size: 513.11743pt x 513.14978pt.
+
+Package natbib Warning: Citation `Skilling2004' on page 7 undefined on input line 509.
+
+
+Overfull \hbox (10.88353pt too wide) in paragraph at lines 523--523
+[][]| [] [][][]| 
+ []
+
+./ms.tex:524: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.524 ...un the HMC sampler implemented in \flowMC
+                                                   for $2 \times 10^5$ steps...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[7]
+
+LaTeX Warning: A float is stuck (cannot be placed) on input line 527.
+
+[8 <./figures/PE.pdf>]
+<figures/autocorrelation.pdf, id=503, 471.22926pt x 343.09273pt>
+File: figures/autocorrelation.pdf Graphic file (type pdf)
+<use figures/autocorrelation.pdf>
+Package pdftex.def Info: figures/autocorrelation.pdf  used on input line 536.
+(pdftex.def)             Requested size: 242.26653pt x 176.38846pt.
+
+./ms.tex:555: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.555 ...\citep{PEpaper}. We therefore expect \jax
+                                                   waveforms to be crucial t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:560: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.560 ...efits of differentiable waveforms in \jax
+                                                   for GW data analysis.
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:562: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.562 ..., we showed that it matches the \lalsuite
+                                                   implementation to near ma...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:568: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.568 ...rfectly suited for implementation in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:570: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.570 ...ficult to implement EOB waveforms in \jax
+                                                  .
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:571: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.571 ...ntiate and difficult to implement in \jax
+                                                  , which requires fixed-len...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:574: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.574 ...he most commonly used waveforms into \jax
+                                                   (or pure python).
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:576: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.576 ...variety of different waveforms to \ripple
+                                                   in the near future with t...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:576: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.576 ... with the primary goal of reaching a \jax
+                                                   version of a fully preces...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+./ms.tex:577: Undefined control sequence.
+<recently read> \xspace 
+                        
+l.577 ...ented either in pure python or using \jax
+                                                   directly. \amc{if they're...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+[9 <./figures/autocorrelation.pdf>]
+Underfull \hbox (badness 1377) in paragraph at lines 582--585
+[]\OT1/cmr/m/n/10 This work was sup-ported by col-lab-o-ra-tive vis-its
+ []
+
+(./ms.bbl
+Overfull \hbox (66.67859pt too wide) in paragraph at lines 95--101
+\OT1/cmr/m/n/9 9015-[]pytorch-[]an-[]imperative-[]style-[]high-[]performance-[]deep-[]learning-[]library . 
+ []
+
+) [10]
+
+Package natbib Warning: There were undefined citations.
+
+(./ms.aux)
+Package rerunfilecheck Info: File `ms.out' has not changed.
+(rerunfilecheck)             Checksum: 4223D3F261310D60E55F285928F36019;1372.
+ ) 
 Here is how much of TeX's memory you used:
- 22 strings out of 481054
- 602 string characters out of 5909766
- 266939 words of memory out of 5000000
- 17097 multiletter control sequences out of 15000+600000
- 403430 words of font info for 27 fonts, out of 8000000 for 9000
- 81 hyphenation exceptions out of 8191
- 32i,0n,39p,110b,13s stack positions out of 5000i,500n,10000p,200000b,80000s
-c:/Users/kelvi/Desktop/ripple-paper/src/tex/ms.tex:3:  ==> Fatal error occurred, no output PDF file produced!
+ 12037 strings out of 478994
+ 169758 string characters out of 5858184
+ 540063 words of memory out of 5000000
+ 29288 multiletter control sequences out of 15000+600000
+ 414820 words of font info for 73 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 86i,9n,88p,475b,419s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc}</usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
+i8.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt9.pfb></usr/local/texlive/2021/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb>
+Output written on ms.pdf (10 pages, 1085747 bytes).
+PDF statistics:
+ 689 PDF objects out of 1000 (max. 8388607)
+ 427 compressed objects within 5 object streams
+ 63 named destinations out of 1000 (max. 500000)
+ 95 words of extra memory for PDF output out of 10000 (max. 10000000)
+
