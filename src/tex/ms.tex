@@ -166,11 +166,13 @@ Now we are ready to define the \textit{match} which is given by
 where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
+\AZ{Say what PSD was used and reference it.}
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|\bar{h}_{\theta_1})$ across the entire parameter space.\footnote{
     Specifically, we use $10^4$ points in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
 Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
+\AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
 In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ causing points to not appear in the log scale colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[t]
@@ -187,8 +189,11 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1
     \end{centering}
 \end{figure}
 
-Note that in General Relativity (GR) the total mass of the system is simply an overall scaling of the waveforms frequency evolution and is therefore not a truly independent parameter.
-If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and scale the frequency grid to correctly, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
+Note that in General Relativity (GR) the total mass $M$ of \AZ{a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
+The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.}
+\sout{the system is simply an overall scaling of the waveforms frequency evolution and is therefore not a truly independent parameter.}
+If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and \AZ{rescale the frequency grid to units of $Mf$}, \sout{correctly,} all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
+\AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
@@ -208,7 +213,7 @@ Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find th
 }
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
 Waveform calls can therefore be evaluated in parallel, massively improving performance.
-Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim 0.00005\mathrm{ms}$, nearly five orders of magnitude faster.
+Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
 The primary arguement of this paper is that waveform derivatives will also be highly vauable to data analysis tasks. 
