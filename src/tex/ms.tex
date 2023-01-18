@@ -481,12 +481,12 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix.
     % \end{center}
     \caption{Priors for the 11 dimensional parameter space used for the Fisher forecasting population analysis in Sec.~\ref{subsec:fisher}. 
     $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets.
-    \AZ{$\cos \iota \in (-1,1)$, $\psi \in (0,2 \pi)$ (or $\pi$), RA is $\alpha \in (0, 2\pi)$, Dec is $\cos \delta \in (-1,1)$ }
+    \AZ{$\cos \iota \in (-1,1)$, $\psi \in (0,2 \pi)$ (or $\pi$), RA is $\alpha \in (0, 2\pi)$, Dec is $\delta$, let $\vartheta = \pi/2 - \delta$, then $\cos (\vartheta) \in (-1,1)$ }
     }
     \label{tab:priors}
 \end{table}
 
-To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localtization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
