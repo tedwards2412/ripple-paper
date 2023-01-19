@@ -32,11 +32,14 @@
 \newcommand{\kw}[1]{{\color{rb4}[KW: #1 ]}}
 \newcommand{\AZ}[1]{{\color{Burnt}[AZ: #1]}}
 
+\definecolor{dfm}{HTML}{6C71C4}
+\newcommand{\dfm}[1]{{\color{dfm}[DFM: #1]}}
+
 % Begin!
 \begin{document}
 
 % Title
-\title{\ripple: Differentiable Waveforms for Gravitational Wave Data Analysis}
+\title{\ripple: Differentiable \dfm{and Hardware-Accelerated} Waveforms for Gravitational Wave Data Analysis}
 
 \newcommand{\JHU}{\affiliation{William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore, Maryland 21218, USA}} 
 \newcommand{\OKC}{\affiliation{The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-106 91 Stockholm, Sweden}} 
@@ -94,7 +97,7 @@ All of these tasks require significant computation.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleviating this computational demand.
 
 Derivatives are ubiquitously useful throughout data analysis tasks.
-For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent).
+For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values \dfm{This isn't correct. In HMC the gradients don't have the behavior. I'd just say something like ``gradients are used to improve performance''} (e.g.~in Hamiltonian Monte Carlo~\citealt{2017arXiv170102434B} or Gradient Descent).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
@@ -195,6 +198,7 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1
             % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
             The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
+            \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
         }
         \label{fig:match}
     \end{centering}
@@ -209,7 +213,7 @@ If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and \AZ{rescale the freq
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
-This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax.
+This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 % The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
@@ -217,7 +221,7 @@ Note however, that the differences are well below the accuracy requirements of t
 
 For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the IMRPhenom waveforms are constructed from simple closed-form expressions which are computationally efficient.
-Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple.
+Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple. \dfm{I'd soften this statement a little bit. In my own work, I often find that JAX implementations are just as fast or faster than C implementations, so I wouldn't state it that it's obvious that lalsuite should be faster! Where are these benchmarks implemented? Would it be easy for me to try them out?}
 Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 2-5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 5-8\,\mathrm{ms}$ for \ripple.\footnote{
     For this benchmark we used $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
     In addition, we used a frequency spacing of $0.0125\,\mathrm{Hz}$. 
@@ -299,7 +303,7 @@ coefficients are fitted in segments with amplitude and phase separated.
 Furthermore, IMRPhenomD is divided in three fitting segments, inspiral, merger and ringdown.
 Each of these segments has their own set of fitting coefficients.
 After obtaining the fitting coefficient for individual segments, they are then
-"stitched" together such that they are continuous in the first derivative.
+``stitched'' together such that they are continuous in the first derivative.
 The process of stitching introduces some addition
 inaccuracy in the waveform model, as the connections would affect the originally
 fitted segments.
@@ -339,7 +343,7 @@ coefficients.
 \begin{equation}
 	\lambda\leftarrow\lambda-\alpha\nabla\mathcal{M}, 
 \end{equation}
-where $\alpha$ is the learning rate. We set $\alpha$ to be a very small number, i.e. $10^{-6}$, since the initial guess already lies close to the desired optimum. We terminate the program after 30000 steps, in which $\lambda$ has converged to the optimum. 
+where $\alpha$ is the learning rate. We set $\alpha$ to be a very small number, i.e. $10^{-6}$, since the initial guess already lies close to the desired optimum. We terminate the program after 30000 steps, in which $\lambda$ has converged to the optimum.  \dfm{We can't possibly know that it has converged to ``the optimum''. I'd sat just leave it at ``We terminate the program after 30000 steps.''}
 % Add description of the optimization procedure.
 
 As a demonstration, Fig. \ref{fig:loss_compare} shows the relative error of
