@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex ms"] 1674062809 "ms.aux" "ms.bbl" "ms" 1674062809
+["bibtex ms"] 1674062899 "ms.aux" "ms.bbl" "ms" 1674062899
   "/usr/local/texlive/2021/texmf-dist/bibtex/bst/aastex/aasjournal.bst" 1565209774 36130 1e2d4614828005814bd64e3c665b8e99 ""
-  "bib.bib" 1674053782 11323 4f95a75f36667444c24db078d7076337 ""
-  "ms.aux" 1674062330 6447 cab591cbaa52336e8959e860e43ddc00 "pdflatex"
+  "bib.bib" 1674062899 11571 fd071e669fe6543cb2ace8267c8358b2 ""
+  "ms.aux" 1674062810 6447 cab591cbaa52336e8959e860e43ddc00 "pdflatex"
   (generated)
   "ms.bbl"
   "ms.blg"
-["pdflatex"] 1674062809 "ms.tex" "ms.pdf" "ms" 1674062809
+["pdflatex"] 1674062899 "ms.tex" "ms.pdf" "ms" 1674062899
   "/usr/local/texlive/2021/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/local/texlive/2021/texmf-dist/fonts/tfm/adobe/helvetic/phvr.tfm" 1136768653 2504 ba6584b616b92101c768b6c4ffb32dd0 ""
@@ -143,9 +143,9 @@
   "figures/mismatch_hist.pdf" 1674054797 19165 0df5218c60b4721eaff3582dd62e4d77 ""
   "figures/random_matches.pdf" 1674054774 252149 d4715a226bdaa4915e3948adf8c5f1b5 ""
   "figures/sky_localization.pdf" 1674054796 19469 ec30cc5da48d971208d66d940b318432 ""
-  "ms.aux" 1674062330 6447 cab591cbaa52336e8959e860e43ddc00 "pdflatex"
-  "ms.bbl" 1674062809 5472 3e5f8426966e9406a9c01a34b9deffe7 "bibtex ms"
-  "ms.out" 1674062330 1372 4223d3f261310d60e55f285928f36019 "pdflatex"
+  "ms.aux" 1674062810 6447 cab591cbaa52336e8959e860e43ddc00 "pdflatex"
+  "ms.bbl" 1674062899 5602 c0cba485fd142689859bf2b334b0ebeb "bibtex ms"
+  "ms.out" 1674062810 1372 4223d3f261310d60e55f285928f36019 "pdflatex"
   "ms.tex" 1674062809 46048 294d85d0040d722d647b00d11b486c55 ""
   "showyourwork.sty" 1674052541 340 65f3e641fefe7b6361bb46280bc9117f ""
   (generated)
