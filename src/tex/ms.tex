@@ -65,10 +65,10 @@
     Since their discovery in 2015, gravitational waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
     As more detections continue, data analysis tasks are becoming increasingly computationally demanding.
     Here, we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analysis tasks.
-    Firstly, we demonstrate that \sout{highly accurate waveforms  (IMRPhenomD)} \AZ{complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD)} can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
+    Firstly, we demonstrate that complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
     Moreover, \jax allows for GPU-accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
     We then focus on three applications where efficient and differentiable waveforms are essential.
-    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that \sout{make up the waveform} \AZ{are used to calibrate the waveform model}. 
+    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
     In particular, we demonstrate that the typical \textit{match} with numerical relatively waveforms can be improved by more than 10\% without any additional overhead.
     Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
     This increased speed makes population forecasting substantially simpler, as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
