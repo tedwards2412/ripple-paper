@@ -39,7 +39,7 @@
 \begin{document}
 
 % Title
-\title{\ripple: Differentiable \dfm{and Hardware-Accelerated} Waveforms for Gravitational Wave Data Analysis}
+\title{\ripple: Differentiable and Hardware-Accelerated Waveforms for Gravitational Wave Data Analysis}
 
 \newcommand{\JHU}{\affiliation{William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore, Maryland 21218, USA}} 
 \newcommand{\OKC}{\affiliation{The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-106 91 Stockholm, Sweden}} 
@@ -85,23 +85,25 @@ The discovery of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from i
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substantially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox, Evans:2021gyd}.
 
-\AZ{The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.}
-\sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
+The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
+% \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
-In the most minimal example \AZ{of non-precessing binaries}, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
+In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
-Beyond this simple scenario, more complex waveform models with \sout{many} additional parameters may be used to test for deviations from General Relativity~\citep{Krishnendu:2021fga, LIGOScientific:2020tif, LIGOScientific:2016lio, Yunes:2016jcc, Arun:2006yw, Agathos:2013upa}.
-\AZ{Add PPE and maybe TIGER refs..?}
+Beyond this simple scenario, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Krishnendu:2021fga, LIGOScientific:2020tif, LIGOScientific:2016lio, Yunes:2016jcc, Arun:2006yw, Agathos:2013upa}.
+% \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
 All of these tasks require significant computation.
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleviating this computational demand.
 
 Derivatives are ubiquitously useful throughout data analysis tasks.
-For instance, during PE, derivative information can be used to guide the sampling towards regions with higher likelihood values \dfm{This isn't correct. In HMC the gradients don't have the behavior. I'd just say something like ``gradients are used to improve performance''} (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent~\citep{2016arXiv160904747R}).
+For instance, during PE, gradients are used to improve performance of the samplers 
+% \dfm{This isn't correct. In HMC the gradients don't have the behavior. I'd just say something like ``gradients are used to improve performance''} 
+(e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent~\citep{2016arXiv160904747R}).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain~\citep{Keppel:2013kia}.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
-However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calculations for gravitational waveforms\AZ{, with applications to constructing template banks~\citep{Coogan:2022qxs} and computing the Fisher information for forecasting~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}}.
+However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calculations for gravitational waveforms, with applications to constructing template banks~\citep{Coogan:2022qxs} and computing the Fisher information for forecasting~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 
 
 Automatic differentiation is a family of methods used to compute machine precision derivatives with little computational overhead. 
@@ -111,17 +113,17 @@ The core idea of AD is that any mathematical function can be broken down into a 
     }
 The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
-More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited \sout{support} \AZ{use} in GW \sout{physics} \AZ{analysis software} precludes its general use.
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e.~GPUs).
 
 \AZ{Add refs here:}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate)~\citep{Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
-\AZ{Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
-Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in frequency domain using closed-form expressions.
-This makes a}
-\sout{In particular, their closed form expressions and fixed size frequency grids make a }
+Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
+Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
+This makes a
+% \sout{In particular, their closed form expressions and fixed size frequency grids make a }
 \jax implementation that complies with the constraints of JIT compilation simple.
 NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity simulations, are in principle also straightfoward to implement in \jax.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
