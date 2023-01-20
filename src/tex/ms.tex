@@ -169,16 +169,17 @@ To demonstrate our implementation of IMRPhenomD is faithful to the \lalsuite imp
     \label{eq:inner_prod}
     \left(h_1|h_2\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h^*_1(f) h_2(f)}{S_n(f)}\, ,
 \end{equation}
-where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_{\theta_1}$ is the frequency domain waveform evaluated at the intrinsic parameter point $\theta_1$.
+where $S_n$ is the (one-sided) noise power spectral density (PSD) and \AZ{$h_1$ and $h_2$ are the frequency domain waveforms which are to be compared.}
+\sout{ evaluated at the intrinsic parameter point $\theta_1$.}
 We can then normalize the inner product through
 \begin{equation}
-    \left[h_{\theta_1}|h_{\theta_2}\right] = \frac{\left(h_{\theta_1}|h_{\theta_2}\right)}{\sqrt{\left(h_{\theta_1}|h_{\theta_1}\right)\left(h_{\theta_2}|h_{\theta_2}\right)}}\, .
+    \left[h_1|h_2\right] = \frac{\left(h_1|h_2\right)}{\sqrt{\left(h_1|h_1\right)\left(h_2|h_2\right)}}\, .
 \end{equation}
 Now we are ready to define the \textit{match} which is given by 
 \begin{equation}
-    \mathrm{m}(h_{\theta_1}|h_{\theta_2}) \equiv \max_{t_c,\, \phi_c} \left[h_{\theta_1} \, \middle| \, h_{\theta_2} \right]\,
+    \mathrm{m}(h_1|h_2) \equiv \max_{\Delta t_c,\, \Delta \phi_c} \left[h_1 \, \middle| \, h_2 \right]\,
 \end{equation}
-where $t_c$ and $\phi_c$ are, respectively, the time and phase of coalesence.
+where \AZ{$\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in time and phase of coalescence between the two waveforms.}
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 \AZ{Say what PSD was used and reference it.}
