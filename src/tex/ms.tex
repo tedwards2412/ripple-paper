@@ -125,7 +125,7 @@ This makes a}
 \jax implementation that complies with the constraints of JIT compilation simple.
 NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity simulations, are in principle also straightfoward to implement in \jax.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
-For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[][e.g.]{Cotesta:2020qhw}.
+For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[e.g.][]{Cotesta:2020qhw}.
 % to produce a waveform
 %require dynamic frequency grids and are therefore tricky to implement in \jax.
 %\AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
@@ -160,8 +160,8 @@ EOB waveforms require one to model the binary system using a Hamiltonian and are
 IMRPhenom waveforms are therefore ideally suited for AD, espeically using \jax. 
 In this paper we focus on the aligned spin circular orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
 
-The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{pyhton} to be compatible with \jax.
-We have re-written IMRPhenomD from scratch using a combination of pure \texttt{pyhton} and \jax derivatives.
+The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{python} to be compatible with \jax.
+We have re-written IMRPhenomD from scratch using a combination of pure \texttt{python} and \jax derivatives.
 In addition, we have restructured the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
 
 To demonstrate our implementation of IMRPhenomD is faithful to the \lalsuite implementation, we start by defining the noise weighted inner product:
@@ -441,7 +441,7 @@ Although in practice this assumption is often violated in real GW datasets, the 
 Computing the Fisher matrix requires one to evaluate derivatives of the likelihood which in turn involves derivatives of the waveform model and detector projection functions.
 AD is therefore perfectly suited for computing Fisher matrices accurately and efficiently. 
 Forecasting with Fisher matrices for third generation detectors has already been extensively explored in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
-Here we purely want to illustrate the simplicitly and speed of AD for forecasting rather than providing new physics insights.
+Here we purely want to illustrate the simplicity and speed of AD for forecasting rather than providing new physics insights.
 We therefore consider a simple, three detector setup corresponding to the two LIGO detectors in addition to Virgo.
 
 The Fisher information matrix for a single detector is typically given by 
@@ -453,7 +453,7 @@ where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and
 \begin{equation}
     h^k(\theta) = F_+(\phi) h^k_{+}(\Xi) + F_\times(\phi) h^k_{\times}(\Xi) \, .
 \end{equation}
-Note that here we have separated out the intrinsic ($\phi$) and extrinsic ($\Xi$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
+Note that here we have separated out the extrinsic ($\phi$) and intrinsic ($\Xi$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
 Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
 \begin{equation}
     \mathcal{I}_{ij} =  \mathcal{I}^{\mathrm{Hanford}}_{ij} + \mathcal{I}^{\mathrm{Livingston}}_{ij} + \mathcal{I}^{\mathrm{Virgo}}_{ij}   \, .
@@ -524,8 +524,8 @@ A full list of the distributions used to generate the various parameters in our 
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
-We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within X percent.
-This demonstrates that AD can be used to accurately produce population level forecasts.
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within {\color{red}{X}} percent.
+This demonstrates that AD can be used to accurately produce population-level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
 In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
@@ -549,11 +549,11 @@ AD therefore represents a fast and accurate way of performing population level a
     \label{fig:corner}
 \end{figure*}
 
-After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called parameter estimation (PE).
+After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called PE.
 To do this, one typically uses a Markov Chain Monte Carlo (MCMC) or nested sampler~\citep{multinest, dynesty}.
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
-Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to faciliate follow-up electromagnetic observations.
+Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to facilitate follow-up electromagnetic observations \citep[e.g.~\texttt{BAYESTAR}][]{Singer:2015ema}.
 Nevertheless, these do not present the whole picture; fast, general parameter estimation therefore remains a primary goal of GW data analysis.
 
 A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
@@ -561,6 +561,7 @@ Derivative based samplers, on the other hand, have been shown to extrapolate wel
 Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
 % In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
 In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm.
+\AZ{Add citations to other HMC papers in GW land}
 
 For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
 More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.\footnote{
