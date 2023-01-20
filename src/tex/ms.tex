@@ -428,7 +428,7 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
     \caption{
         Distribution of Fisher information sky localization error for a population of nearby binaries.
         Automatic differentiation (AD) was used to compute the derivatives in Eq.~\ref{eq:fisher}.
-        As empahsized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
+        As emphasized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
     }
     \label{fig:sky_localization}
 \end{figure}
@@ -436,7 +436,7 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
 Forecasting the sensitivity of future experiments is an essential task in GW science.
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
-Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnotistics in evaluating sensitivities for a variety of models and detector configurations.
+Although in practice this assumption is often violated in real GW datasets, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
 
 Computing the Fisher matrix requires one to evaluate derivatives of the likelihood which in turn involves derivatives of the waveform model and detector projection functions.
 AD is therefore perfectly suited for computing Fisher matrices accurately and efficiently. 
@@ -447,18 +447,20 @@ We therefore consider a simple, three detector setup corresponding to the two LI
 The Fisher information matrix for a single detector is typically given by 
 \begin{equation}
     \label{eq:fisher}
-    \mathcal{I}^{k}_{ij} = (\partial_i h_0 | \partial_j h_0) \, ,
+    \mathcal{I}^{k}_{ij} = (\partial_i h^k | \partial_j h^k) \, ,
 \end{equation}
-where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h_0$ is the strain measured by the detector which is given by,
+where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h$ is the strain measured by the detector which is given by,
 \begin{equation}
-    h_0(\theta) = F_+(\lambda) h_{+}(\phi) + F_\times(\lambda) h_{\times}(\phi) \, .
+    h^k(\theta) = F_+(\phi) h^k_{+}(\Xi) + F_\times(\phi) h^k_{\times}(\Xi) \, .
 \end{equation}
-Note that here we have separated out the intrinsic ($\phi$) and extrinsic ($\lambda$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F_+$ and $F_\times$ respectively.
+Note that here we have separated out the intrinsic ($\phi$) and extrinsic ($\Xi$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
 Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
 \begin{equation}
     \mathcal{I}_{ij} =  \mathcal{I}^{\mathrm{Hanford}}_{ij} + \mathcal{I}^{\mathrm{Livingston}}_{ij} + \mathcal{I}^{\mathrm{Virgo}}_{ij}   \, .
 \end{equation}
-Finally, we invert the Fisher matrix to calculate the covariance matrix.
+Finally, we invert the Fisher matrix to calculate the covariance matrix,
+\AZ{which proves forecasted measurement errors and parameter covariances for a signal with parameters $\theta$ observed by the given detector network}.
+\AZ{Again we need to state and cite the PSDs we use for the three detectors.}
 
 % \begin{table*}[ht!]
 %     \begin{center}
@@ -516,7 +518,7 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix.
     \label{tab:priors}
 \end{table}
 
-To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
