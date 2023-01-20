@@ -231,7 +231,7 @@ Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find th
 }
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
 Waveform calls can therefore be evaluated in parallel, massively improving performance.
-Performing the same benchmark as above on a google colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
+Performing the same benchmark as above on a Google Colab notebook with the freely provided GPU, we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
 The primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
@@ -246,7 +246,8 @@ For reverse mode AD, one only needs two function calls to evaluate the derivativ
     We've not found this to be limiting in any of the situations tested so far.
 }
 Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
-However, this might change for waveforms in beyond GR models where many more parameters are added.
+However, this might change for waveforms in beyond-GR models, \AZ{waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
+In these cases} many more parameters \AZ{can be} added.
 
 Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
 Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quick to evaluate, especially when hardware acceleration is available.
