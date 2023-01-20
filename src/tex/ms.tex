@@ -530,8 +530,8 @@ This demonstrates that AD can be used to accurately produce population level for
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
 In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
-This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call.
-As discussed above, performance can be further improved by utilising hardware acceleration such as parallel GPU processing.
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call \AZ{used by \texttt{GWbench}}.
+As discussed above, performance can be further improved by utilizing hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
 \subsection{Derivative Based Samplers - Hamiltonian Monte Carlo}
@@ -556,7 +556,7 @@ For example, sampling the 15 dimensional parameter space for a BBH system can ta
 Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to faciliate follow-up electromagnetic observations.
 Nevertheless, these do not present the whole picture; fast, general parameter estimation therefore remains a primary goal of GW data analysis.
 
-A primary issue with both MCMC and nested sampling is that neither utlizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
+A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
 Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
 % In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
