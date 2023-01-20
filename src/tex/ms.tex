@@ -81,7 +81,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-The discovery of gravitational waves (GWs)~\cite{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
+The discovery of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
 Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substantially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox, Evans:2021gyd}.
 
@@ -101,7 +101,8 @@ For instance, during PE, derivative information can be used to guide the samplin
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain~\citep{Keppel:2013kia}.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
-However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calcuations for gravitational waveforms~\citep{Coogan:2022qxs}.
+However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calculations for gravitational waveforms\AZ{, with applications to constructing template banks~\citep{Coogan:2022qxs} and computing the Fisher information for forecasting~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}}.
+
 
 Automatic differentiation is a family of methods used to compute machine precision derivatives with little computational overhead. 
 AD's recent ascendance is primarily driven by its use in machine learning, particularly for derivative computations of neural networks which use gradient descent during training.
