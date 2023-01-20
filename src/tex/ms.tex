@@ -183,13 +183,13 @@ where \AZ{$\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
 \AZ{Say what PSD was used and reference it.}
-This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_{\theta_1}|\bar{h}_{\theta_1})$ across the entire parameter space.\footnote{
-    Specifically, we use $10^4$ points in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_1|h_2)$ across the entire parameter space.\footnote{
+    Specifically, we use $10^4$ points \AZ{varying component masses $m_1$, $m_2$ and spin parameters $\chi_1$, $\chi_2$} in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
-Here, $h_{\theta_1}$ corresponds to the \ripple waveform implementation and $\bar{h}_{\theta_1}$ is the \lalsuite implementation. 
+\AZ{Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.} 
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
 \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
-In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ causing points to not appear in the log scale colorbar.
+In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h2)=0$ causing points to not appear in the log scale colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \begin{figure}[t]
     \script{random_matches.py}
@@ -206,7 +206,7 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_{\theta_1
     \end{centering}
 \end{figure}
 
-Note that in General Relativity (GR) the total mass $M$ of \AZ{a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
+Note that in General Relativity (GR) the total mass $M = m_1 + m_2$ of \AZ{a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
 The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.}
 \sout{the system is simply an overall scaling of the waveforms} 
 \sout{frequency evolution and is therefore not a} \sout{truly independent parameter.}
