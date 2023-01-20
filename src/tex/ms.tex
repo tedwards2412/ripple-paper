@@ -64,14 +64,14 @@
 
 % Abstract with filler text
 \begin{abstract}
-    Since their discovery in 2015, gravitational waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
-    As more detections continue, data analysis tasks are becoming increasingly computationally demanding.
-    \kw{I would cut everything before out.}
-    Here, we propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of these analysis tasks.
+    % Since their discovery in 2015, gravitational waves (GWs) have developed into a unique observational probe used throughout fundamental and astro-phyics.
+    % As more detections continue, data analysis tasks are becoming increasingly computationally demanding.
+    % \kw{I would cut everything before out.}
+    We propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of analysis tasks throughout gravitational wave (GW) science.
     Firstly, we demonstrate that complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
     Moreover, \jax allows for GPU-accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
     We then focus on three applications where efficient and differentiable waveforms are essential.
-    Firstly, we demonstrate how stochastic gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
+    Firstly, we demonstrate how gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
     In particular, we demonstrate that the typical \textit{match} with numerical relatively waveforms can be improved by more than 10\% without any additional overhead.
     Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
     This increased speed makes population forecasting substantially simpler.
@@ -86,23 +86,24 @@
 \label{sec:intro}
 
 The discovery of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
-Although the data volumes from GW detectors 
-\AZ{such as Advanced LIGO~\citep{LIGOScientific:2014pky} and Virgo~\citep{VIRGO:2014yos}} 
-are relatively small, analyzing the data is a computationally demanding task.
+Although the data volumes from GW detectors such as Advanced LIGO~\citep{LIGOScientific:2014pky} and Virgo~\citep{VIRGO:2014yos} are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substantially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox, Evans:2021gyd}.
 
 The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
-In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
-\kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
-\AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
+For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on an 15 dimensional parameter space.
+More general examples can lead to a significant increase in dimension.\te{add citations}
+% In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
+% \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
+% \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
 Beyond this simple scenario, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Krishnendu:2021fga, LIGOScientific:2020tif, LIGOScientific:2016lio, Yunes:2016jcc, Arun:2006yw, Agathos:2013upa}.
 % \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
-\kw{Need more reference and some rewording}
-All of these tasks require significant computation.
-\kw{This could be triggering to some people, since population analysis could be quite cheap}
+\kw{Need more reference and some rewording}\te{added refs, happy?}
+% All of these tasks require significant computation.
+Overall, analyzing GWs therefore requires significant computation.
+% \kw{This could be triggering to some people, since population analysis could be quite cheap}
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleviating this computational demand.
 
 Derivatives are ubiquitously useful throughout data analysis tasks.
@@ -111,8 +112,9 @@ Derivatives are ubiquitously useful throughout data analysis tasks.
 % (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent~\citep{2016arXiv160904747R}).
 For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\ using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\ using Hamiltonian Monte Carlo~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
 Gradients are particularly valuable for high dimensional spaces.
-Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically been difficult to obtain~\citep{Keppel:2013kia}.
-\kw{This needs some rewording. For example, I think in IMRPhenomD they do have the analytical derivatives coded up, at least for a part of the waveforms. Instead of difficult to have the derivatives, I would rather mention it is clumpsy to get the derivatives, especially given the model complexity is growing.}
+Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically required a significant amount of work to obtain~\citep{Keppel:2013kia}.
+With waveforms only increasing in complexity, calculating analytic derivatives will become ever more tricky.
+% \kw{This needs some rewording. For example, I think in IMRPhenomD they do have the analytical derivatives coded up, at least for a part of the waveforms. Instead of difficult to have the derivatives, I would rather mention it is clumpsy to get the derivatives, especially given the model complexity is growing.}
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calculations for gravitational waveforms, with applications to constructing template banks~\citep{Coogan:2022qxs} and computing the Fisher information for forecasting~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 
@@ -127,7 +129,7 @@ There are now a variety of AD implementations, most notably in deep learning fra
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators (e.g.\ graphical processing units) and its just-in-time (JIT) compiler, which can substantially accelerate code.
 
-\AZ{Add refs here:}
+\AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate)~\citep{Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
@@ -147,9 +149,11 @@ For EOB waveforms, frequency-domain reduced-order models may be a convenient tar
 %NRsurrogate waveforms have no fundamental issue but require the user to download relatively large data files, making their use cumbersome in practice.\te{Max/Kaze, please add to/change this if you think its incorrect}
 
 In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
-\AZ{I prefer to describe what is rather than what could be; can we say what elements exist, e.g.~
-we present \ripple... which includes \jax implementations of GW antenna patterns, the IMRPhenomD waveform, and...}
-In addition, we present \ripple, a small GW \texttt{python} package which can serve as a repository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
+% \AZ{I prefer to describe what is rather than what could be; can we say what elements exist, e.g.~
+% we present \ripple... which includes \jax implementations of GW antenna patterns, the IMRPhenomD waveform, and...}
+% In addition, we present \ripple, a small GW \texttt{python} package which can serve as a repository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
+In addition, we present \ripple, a small GW \texttt{python} package which, at the time of writing, includes a \jax implementation of the IMRPhenomD waveform and will be continually updated with new waveforms as they are implemented.
+% can serve as a repository for differentiable implementations of some of the main waveforms currently used in LIGO and Virgo analyses. 
 The remainder of this paper is structured as follows. 
 In Sec.~\ref{sec:waveforms} we discuss the differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accuracy. 
 In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
@@ -289,6 +293,12 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \subsection{Fine-Tuning Waveform Coefficients}
 \label{subsec:coeffs}
 
+\te{We use in total 11 waveforms for the optimization. Original PhenomD uses 19 @Kelvin add details of where to find this.}
+\te{Fig 2, plot was made after optimizing for ALL waveforms}
+\te{536 waveforms are subset of the SXS catalogue that are not precessing or eccentric. @Kelvin add details of where to find these things}
+\te{None of the 536 are part of the training set}
+\te{Used ALIGO design sensitivity for PSD}
+
 \AZ{Broad comments: need to cite which catalog the waveforms came from if any.
 The number of waveforms used seems much larger than the number originally used
 to calibrate PhenomD. 
@@ -407,7 +417,7 @@ performance in different regions of the intrinsic parameter space.
 		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
 		\caption{
 			Relative error between the numerical relatively and IMRPhenomD waveform amplitudes. 
-            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using stochastic gradient descent.
+            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
             Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
 		}
 		\label{fig:loss_compare}
