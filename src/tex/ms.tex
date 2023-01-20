@@ -39,7 +39,7 @@
 \begin{document}
 
 % Title
-\title{\ripple: Differentiable \dfm{and Hardware-Accelerated} Waveforms for Gravitational Wave Data Analysis}
+\title{\ripple: Differentiable and Hardware-Accelerated Waveforms for Gravitational Wave Data Analysis}
 
 \newcommand{\JHU}{\affiliation{William H. Miller III Department of Physics and Astronomy, Johns Hopkins University, Baltimore, Maryland 21218, USA}} 
 \newcommand{\OKC}{\affiliation{The Oskar Klein Centre, Department of Physics, Stockholm University, AlbaNova, SE-106 91 Stockholm, Sweden}} 
@@ -113,17 +113,17 @@ The core idea of AD is that any mathematical function can be broken down into a 
     }
 The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
-More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited \sout{support} \AZ{use} in GW \sout{physics} \AZ{analysis software} precludes its general use.
+More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries and its just-in-time (JIT) compiler which allows the same code to run on a variety of hardware accelerators (i.e.~GPUs).
 
 \AZ{Add refs here:}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective-one-body (EOB), the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate).
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate)~\citep{Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
-\AZ{Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
-Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in frequency domain using closed-form expressions.
-This makes a}
-\sout{In particular, their closed form expressions and fixed size frequency grids make a }
+Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
+Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
+This makes a
+% \sout{In particular, their closed form expressions and fixed size frequency grids make a }
 \jax implementation that complies with the constraints of JIT compilation simple.
 NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity simulations, are in principle also straightfoward to implement in \jax.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
