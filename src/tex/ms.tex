@@ -82,7 +82,9 @@
 \label{sec:intro}
 
 The discovery of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
-Although the data volumes from GW detectors are relatively small, analyzing the data is a computationally demanding task.
+Although the data volumes from GW detectors 
+\AZ{such as Advanced LIGO~\citep{LIGOScientific:2014pky} and Virgo~\citep{VIRGO:2014yos}} 
+are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substantially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox, Evans:2021gyd}.
 
 The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
@@ -556,6 +558,7 @@ To do this, one typically uses a Markov Chain Monte Carlo (MCMC) or nested sampl
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
 Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to facilitate follow-up electromagnetic observations \citep[e.g.~\texttt{BAYESTAR}][]{Singer:2015ema}.
+\AZ{We should be careful here. Many new algorithms have sped this a lot. Cogwheel can do fast PE, DINGO is a normalizing flow code that is very fast when trained. There are likelihood acceleration methods like ROQ, multibanding, relative binning/heterodyning that accelerate the process compared to the numbers quoted above.}
 Nevertheless, these do not present the whole picture; fast, general parameter estimation therefore remains a primary goal of GW data analysis.
 
 A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
@@ -566,10 +569,12 @@ In particular, we will show that the autocorrelation of a Hamiltonian Monte Carl
 \AZ{Add citations to other HMC papers in GW land}
 
 For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
-More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: $M_c = 23.82\,\mathrm{M_\odot}$,  $\eta = 0.248$, $\chi_1=0.3$, $\chi_1=-0.4$, $D = 1.6\,\mathrm{Gpc}$, $t_c = 0.0$, and $\phi_c = 0.0$.\footnote{
-    The remaining parameters are set to $\pi/3$.
+\AZ{As before, say what PSD and cite.}
+More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: chirp mass $M_c = 23.82\,\mathrm{M_\odot}$,  symmetric mass ratio $\eta = 0.248$, primary spin parameter $\chi_1=0.3$, secondary spin parameter \AZ{$\chi_2=-0.4$}, luminosity distance $D = 1.6\,\mathrm{Gpc}$, coalescence time $t_c = 0.0$, and coalescence phase $\phi_c = 0.0$.\footnote{
+    The remaining parameters are set to $\pi/3$. \AZ{Can we say what they are? $\iota$, $\psi$, $\alpha$, $\delta$?}
 }
-Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for 200000 steps and the Gaussian random walk (GRW) sampler for 1500000 steps (each with four randomly initialized independent chains). 
+Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for \sout{200000} $2\times10^5$ steps and the Gaussian random walk (GRW) sampler for \sout{1500000} $1.5\times10^6$ steps (each with four randomly initialized independent chains). 
+\AZ{What implementation of GRW? Can we cite something?}
 The number of steps and and mass matrix used for each example was hand tuned to give good performance for the specific sampler.
 The additional steps for the GRW sampler were required to achieve a similarly converged posterior.
 
@@ -577,6 +582,7 @@ In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered using t
 The orange shows the true parameters of the injected signal.
 From the one dimensional histograms along the diagonal, it is clear that we consistently recover all seven parameters apart from $\phi_c$.
 This is expected since the injected binary is relatively nearby.
+\AZ{Can we give the SNR?}
 
 \begin{figure}[t]
 	\script{autocorrelation.py}
@@ -600,7 +606,8 @@ The HMC autocorrelation is substantially lower than that of the GRW.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
 In addition, we found that the effictive number of samples (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
-In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. We therefore expect \jax waveforms to be crucial to future PE efforts in GW astronomy, especially for low-latency pipelines.
+In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
+We therefore expect \jax waveforms to be \sout{crucial} \AZ{highly beneficial} to future PE efforts in GW astronomy, especially for low-latency pipelines.
 
 
 
@@ -610,27 +617,32 @@ In a follow up paper we will demonstrate that minute scale PE can be achieved by
 In this paper we introduced and discussed the various benefits of differentiable waveforms in \jax for GW data analysis.
 First, we demonstrated the speed and accuracy of our implementation of the aligned spin IMRPhenomD waveform.
 In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU.
-Parallization on a GPU provides substantial speed increases; on a free google colab GPU we found that waveform evaluations are nearly 5 orders of magnitude faster than serial CPU evaluations.
-Second, we discussed three data analysis tasks which can all be substantially improved by utlizing derivative information of the waveform.
+Parallelization on a GPU provides substantial speed increases; on a free Google Colab GPU we found that waveform evaluations are nearly 5 orders of magnitude faster than serial CPU evaluations.
+Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
 
 In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
 Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
 Some progress has been made towards the construction of a differentiable NRsurrogate, but currently it seems difficult to implement EOB waveforms in \jax.
-In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax which requires fixed length arrays for its JIT compilation.
-Since EOB waveforms are often regarded as the state-of-the-art, more work is required to see if a fast, differentiable implementation is possible.
+In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax. 
+\sout{which requires fixed length arrays for its JIT compilation.}
+Since EOB methods are used to produce state-of-the-art waveforms for many applications,
+\sout{are often regarded as the state-of-the-art,} 
+more work is required to see if a fast, differentiable implementation is possible.
 
 Currently the biggest constraint to adopting differentiable waveforms is the need to re-write the most commonly used waveforms into \jax (or pure python).
 In order to showcase the benefits of differentiable waveforms as quickly as possible, at the time of writing, we have only implemented an aligned spin GW model (IMRPhenomD).
-We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM.
+We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM~\citep{Pratten:2020ceb}.
 Ideally, future waveforms should be implemented either in pure python or using \jax directly.
 This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
 
 
 \section{Acknowledgments}
+This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation.
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
 T.E. is supported by the Horizon Postdoctoral Fellowship.
+A.Z.~is supported by NSF Grant PHY-2207594.
 
 \bibliography{bib}
 
