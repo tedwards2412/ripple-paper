@@ -71,6 +71,7 @@
     We propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of analysis tasks throughout gravitational wave (GW) science.
     Firstly, we demonstrate that complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
     Moreover, \jax allows for GPU-accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
+    \te{Check and modify}
     We then focus on three applications where efficient and differentiable waveforms are essential.
     Firstly, we demonstrate how gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
     In particular, we demonstrate that the typical \textit{match} with numerical relatively waveforms can be improved by more than 10\% without any additional overhead.
@@ -251,6 +252,7 @@ Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find th
 Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
 Waveform calls can therefore be evaluated in parallel, massively improving performance.
 Performing the same benchmark as above on a Google Colab notebook with a freely-provided NVIDIA Tesla T4 GPU (far from the current state-of-the-art), we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
+\te{Check and modify}
 \kw{We should add some more detail related to this comparison. We should be clear that each individual waveform sample evaluation doesn't get us the performance by putting it on GPU (Jitting helps with that, not the GPU part). The GPU comes into play by allowing parallel evaluation of waveform sample, so for a tiny amount of time/frequency samples, we should expect GPU to lose to a CPU, but on any reasonable amount of time/frequency samples, GPU win a lot.}
 \amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
