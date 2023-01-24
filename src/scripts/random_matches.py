@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import paths
 import matplotlib as mpl
+import matplotlib.cm as cm
+from matplotlib import colors
+from scipy.spatial import Voronoi, voronoi_plot_2d
 
 params = {
     "font.size": 18,
@@ -78,16 +81,35 @@ Mtot = data[:, 1] + data[:, 0]
 
 # Plot and save
 plt.figure(figsize=(7, 5))
-plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="gray", alpha=0.3)
-
+# plt.scatter(Mtot[exactmatch_indices], chieff[exactmatch_indices], color="gray", alpha=0.3)
+data[exactmatch_indices, -1] = 1.0 - 1e-16
 cm = plt.cm.get_cmap("inferno")
 sc = plt.scatter(
-    Mtot[other_indices],
-    chieff[other_indices],
-    c=np.log10(1.0 - data[other_indices, -1]),
+    Mtot[:],
+    chieff[:],
+    c=np.log10(1.0 - data[:, -1]),
     cmap=cm,
+    vmin=-16,
+    vmax=-12,
+    s=20
 )
 plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
+
+# thetas = np.array([Mtot,chieff]).T
+# vor = Voronoi(thetas)
+# norm = colors.Normalize(-16, -12.5)
+# cmap = cm.ScalarMappable(norm=norm)
+# voronoi_plot_2d(vor, show_vertices=False, line_width=0.1, point_size=0.1)
+# for r in range(len(vor.point_region)):
+#     region = vor.regions[vor.point_region[r]]
+#     if -1 not in region:
+#         polygon = [vor.vertices[i] for i in region]
+#         plt.fill(*zip(*polygon), color=cmap.to_rgba(np.log10(1.0 - data[r, -1])))
+
+# plt.colorbar(
+#     cmap,
+#     label=r"Temp",
+# )
 
 # plt.xlabel(r"Total Mass, $M$")
 # plt.ylabel(r"Mass Ratio, $q$")

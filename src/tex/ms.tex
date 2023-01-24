@@ -69,12 +69,11 @@
     % As more detections continue, data analysis tasks are becoming increasingly computationally demanding.
     % \kw{I would cut everything before out.}
     We propose the use of automatic differentiation through the programming framework \jax for accelerating a variety of analysis tasks throughout gravitational wave (GW) science.
-    Firstly, we demonstrate that complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \CC.
-    Moreover, \jax allows for GPU-accelerated waveform calls which can be over five orders of magnitude faster than serial evaluation on a CPU.
-    \te{Check and modify}
+    Firstly, we demonstrate that complete waveforms which cover the inspiral, merger, and ringdown of binary black holes (i.e.~IMRPhenomD) can be written in \jax and demonstrate that the serial evaluation speed of the waveform (and its derivative) is similar to the \lalsuite implementation in \texttt{C}.
+    Moreover, \jax allows for GPU-accelerated waveform calls which can be over an order of magnitude faster than serial evaluation on a CPU.
     We then focus on three applications where efficient and differentiable waveforms are essential.
     Firstly, we demonstrate how gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
-    In particular, we demonstrate that the typical \textit{match} with numerical relatively waveforms can be improved by more than 10\% without any additional overhead.
+    In particular, we demonstrate that the typical \textit{match} with numerical relativity waveforms can be improved by more than 10\% without any additional overhead.
     Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
     This increased speed makes population forecasting substantially simpler.
     % , as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
@@ -95,16 +94,16 @@ The complexity begins even before data taking, since GW searches using the match
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
 For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
-More general examples can lead to a significant increase in dimension.\te{add citations}  \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
+More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.\te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
 % In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 % \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
 % \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
-Beyond this simple scenario, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}.
+Beyond these simple scenarios, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}.
 % \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
 \kw{Need more reference and some rewording}\te{added refs, happy?}
 % All of these tasks require significant computation.
-Overall, analyzing GWs therefore requires significant computation.
+Overall, GW data analysis therefore requires significant computation.
 % \kw{This could be triggering to some people, since population analysis could be quite cheap}
 In this paper, we will argue that differentiable waveforms (and more generally differentiable pipelines) can play a significant role in alleviating this computational demand.
 
@@ -140,7 +139,7 @@ Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied her
 This makes a
 % \sout{In particular, their closed form expressions and fixed size frequency grids make a }
 \jax implementation that complies with the constraints of JIT compilation simple.
-NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity simulations, are in principle also straightfoward to implement in \jax.
+NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity (NR) simulations, are in principle also straightfoward to implement in \jax.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
 For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[e.g.][]{Cotesta:2020qhw}.
 % to produce a waveform
@@ -170,12 +169,12 @@ The associated code can be found at \ripple~\citep{ripple}.
 
 A variety of waveform families have been developed to accurately model the GW emission from COs~\citep{Schmidtreview}. 
 When the COs are relatively well separated, the dynamics of the system can be well approximated by a post-Newtonian expansion.
-However, close to merger, numerical relatively (NR) simulations are required to accurately model the binary.
+However, close to merger, NR simulations are required to accurately model the binary.
 Unfortunately, these numerical simulations are computationally expensive and cannot be run in conjunction with data analysis.
 Approximate, phenomenological waveforms have therefore been constructed to enable relatively fast waveform generation at sufficient accuracy.
 
 As mentioned in the previous section, the three major waveform families that have been developed to date are:  EOB,  NRsurrogate, and IMRPhenom.
-Note that unlike NRsurrogate, both the EOB and IMRPhenom waveforms must be calibrated to numerical relativity waveforms.
+Note that unlike NRsurrogate, both the EOB and IMRPhenom waveforms must be calibrated to NR waveforms.
 \mi{I think this is weird to say: the surrogate is fully trained on (``calibrated to'') NR}
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate, whereas IMRPhenom waveforms are constructed with simple closed-form expressions.
 IMRPhenom waveforms are therefore ideally-suited for AD, especially using \jax. 
@@ -190,8 +189,8 @@ To demonstrate our implementation of IMRPhenomD is faithful to the \lalsuite imp
     \label{eq:inner_prod}
     \left(h_1|h_2\right) \equiv 4 \, \mathrm{Re} \int^{\infty}_{0} \mathrm{d} f \, \frac{ h^*_1(f) h_2(f)}{S_n(f)}\, ,
 \end{equation}
-where $S_n$ is the (one-sided) noise power spectral density (PSD) and \AZ{$h_1$ and $h_2$ are the frequency domain waveforms which are to be compared.}
-\sout{ evaluated at the intrinsic parameter point $\theta_1$.}
+where $S_n$ is the (one-sided) noise power spectral density (PSD) and $h_1$ and $h_2$ are the frequency domain waveforms which are to be compared.
+% \sout{ evaluated at the intrinsic parameter point $\theta_1$.}
 We can then normalize the inner product through
 \begin{equation}
     \left[h_1|h_2\right] = \frac{\left(h_1|h_2\right)}{\sqrt{\left(h_1|h_1\right)\left(h_2|h_2\right)}}\, .
@@ -200,18 +199,19 @@ Now we are ready to define the \textit{match} which is given by
 \begin{equation}
     \mathrm{m}(h_1|h_2) \equiv \max_{\Delta t_c,\, \Delta \phi_c} \left[h_1 \, \middle| \, h_2 \right]\,
 \end{equation}
-where \AZ{$\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in time and phase of coalescence between the two waveforms.}
+where $\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in time and phase of coalescence between the two waveforms.
 \mi{I think it'd be good to define the mismatch $\mathcal{M} \equiv 1- \mathrm{m}$, since it's the standard quantity to discuss, and it's what we plot}
 
-Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation.
-\AZ{Say what PSD was used and reference it.}
+Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation. For this comparison, we use the $S_n$  presented in GWTC-2~\citep{LIGOScientific:2020ibl} from the Livingston detector (the most sensitive of the detectors).\footnote{
+    \url{https://dcc.ligo.org/LIGO-P2000251/public}.
+    }
 This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(h_1|h_2)$ across the entire parameter space.\footnote{
-    Specifically, we use $10^4$ points \AZ{varying component masses $m_1$, $m_2$ and spin parameters $\chi_1$, $\chi_2$} in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
+    Specifically, we use $10^4$ points varying component masses $m_1$, $m_2$ and spin parameters $\chi_1$, $\chi_2$ in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
-\AZ{Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.} 
+Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
 \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
-In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h2)=0$ causing points to not appear in the log scale colorbar.
+In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$ causing points to not appear in the log scale colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 \mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
 
@@ -224,6 +224,7 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h2)=0$ 
             % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
             The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
+            \te{Current plot looking better?}
             \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
             \mi{I agree. Furthermore, it looks like there's a subpopulation of darker points hiding under the brighter ones up to and around $M \sim 100$? is there a dependence on the mass ratio? it'd be good to comment on this, and maybe show a corner plot adding $q$ to the mix. Also, $M$ is lacking units (I assume $M_\odot$, but it should be shown in the label)}
         }
@@ -231,17 +232,18 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h2)=0$ 
     \end{centering}
 \end{figure}
 
-Note that in General Relativity (GR) the total mass $M = m_1 + m_2$ of \AZ{a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
-The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.}
-\sout{the system is simply an overall scaling of the waveforms} 
-\sout{frequency evolution and is therefore not a} \sout{truly independent parameter.}
-If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and \AZ{rescale the frequency grid to units of $Mf$}, \sout{correctly,} all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
-\AZ{Revisit this after defining PSD above:} 
+Note that in General Relativity (GR) the total mass $M = m_1 + m_2$ of a binary black hole simply serves as an overall scale for the system, so that the frequency evolution can be trivially rescaled.
+The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.
+% \sout{the system is simply an overall scaling of the waveforms} 
+% \sout{frequency evolution and is therefore not a} \sout{truly independent parameter.}
+If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequency grid to units of $Mf$, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
+% \AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 \mi{it's important to say what PSD was used}
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
 This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
+\te{Its just one dimension, so is pretty easy. I tried the one from the cosmoJAX people and found that the match did slightly increase but it was a decent chunk slower (maybe a factor of 2 or so). So I just left it out. Would be happy to code up something and put it in if you think its necessary!}
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 % The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
@@ -249,21 +251,28 @@ Note however, that the differences are well below the accuracy requirements of t
 
 For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the IMRPhenom waveforms are constructed from simple closed-form expressions which are computationally efficient.
-Since the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the evaluation of the waveform itself is faster than \ripple. \dfm{I'd soften this statement a little bit. In my own work, I often find that JAX implementations are just as fast or faster than C implementations, so I wouldn't state it that it's obvious that lalsuite should be faster! Where are these benchmarks implemented? Would it be easy for me to try them out?}
-Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 2-5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 5-8\,\mathrm{ms}$ for \ripple.\footnote{
-    For this benchmark we used $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
-    In addition, we used a frequency spacing of $0.0125\,\mathrm{Hz}$. 
-    We performed this benchmark by evaluating the waveform $5000$ times and taking the average evaluation time.
+Even though the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the serial evaluation of the waveform in \ripple is comparably fast. 
+% \dfm{I'd soften this statement a little bit. In my own work, I often find that JAX implementations are just as fast or faster than C implementations, so I wouldn't state it that it's obvious that lalsuite should be faster! Where are these benchmarks implemented? Would it be easy for me to try them out?}
+Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 0.5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 0.4\,\mathrm{ms}$ for \ripple.\footnote{
+    For this benchmark we used $24\,\mathrm{Hz}$ and $512\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
+    In addition, we used a frequency spacing of $0.2\,\mathrm{Hz}$. 
+    We performed this benchmark by evaluating the waveform $10^{4}$ times and taking the average evaluation time.
 }
-Although slower on a CPU benchmark, a key advantage of using \jax is its native ability to run on a GPU.
-Waveform calls can therefore be evaluated in parallel, massively improving performance.
-Performing the same benchmark as above on a Google Colab notebook with a freely-provided NVIDIA Tesla T4 GPU (far from the current state-of-the-art), we find that on average waveform evaluations take $\sim \sout{0.00005} 5 \times 10^{-5}\mathrm{ms}$, nearly five orders of magnitude faster.
-\te{Check and modify}
-\kw{We should add some more detail related to this comparison. We should be clear that each individual waveform sample evaluation doesn't get us the performance by putting it on GPU (Jitting helps with that, not the GPU part). The GPU comes into play by allowing parallel evaluation of waveform sample, so for a tiny amount of time/frequency samples, we should expect GPU to lose to a CPU, but on any reasonable amount of time/frequency samples, GPU win a lot.}
-\amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
+Although similar on a CPU benchmark, \jax has a few key advantages. 
+First, its ability to JIT compile allows for significant performace gains (the above benchmark is already JIT compiled).
+Second, automatic vectorization can be achieved using the \texttt{vmap} function.
+Using \texttt{vmap} and performing the same benchmark as described above reduces the average evaluation speed to $\sim 0.14\,\mathrm{ms}$.
+Finally, \jax can natively on a GPU which allows for highly parallellized waveform evaluations.
+
+% Waveform calls can therefore be evaluated in parallel, massively improving performance.
+
+Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find that on average waveform evaluations take $\sim 0.02$, over an of magnitude faster than serial CPU evaluation.
+% \te{Check and modify}
+% \kw{We should add some more detail related to this comparison. We should be clear that each individual waveform sample evaluation doesn't get us the performance by putting it on GPU (Jitting helps with that, not the GPU part). The GPU comes into play by allowing parallel evaluation of waveform sample, so for a tiny amount of time/frequency samples, we should expect GPU to lose to a CPU, but on any reasonable amount of time/frequency samples, GPU win a lot.}
+% \amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
-The primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
+One of the primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
 First, the accuracy of derivatives from AD are significantly more stable than finite-difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
@@ -276,8 +285,8 @@ For reverse-mode AD, one only needs two function calls to evaluate the derivativ
 }
 \kw{Maybe a bit more background on AD, the way we phrase it here sounds a bit too magical too me now.}
 Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
-However, this might change for waveforms in beyond-GR models, \AZ{waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
-In these cases} many more parameters \AZ{can be} added.
+However, this might change for waveforms in beyond-GR models, waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
+In these cases many more parameters can be added.
 
 Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
 Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quick to evaluate, especially when hardware acceleration is available.
@@ -320,13 +329,13 @@ from.}
 \mi{this paragraph is redundant, I'd remove it}
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
-While waveforms generated using numerical relativity simulations are \sout{commonly
+While waveforms generated using NR simulations are \sout{commonly
 regarded as the most accurate,} 
 \AZ{in principle the highest fidelity signal model,}
 they are too computationally expensive to be used
 in any practical data analysis tasks. To create waveform models that can be used
 in data analysis, there are a number of groups creating ``approximants'' of the
-full numerical relativity waveforms, which are essentially simpler ansatzes that
+full NR waveforms, which are essentially simpler ansatzes that
 \sout{are only approximations but} can be evaluated much faster \AZ{and in regions not
 covered by numerical simulations, such as extremes of parameter space or earlier 
 phases of the binary inspiral}. 
@@ -391,7 +400,7 @@ to be the mismatch between the NR waveform and the approximant waveform:
 \end{equation}
 where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
 the waveform generated by the IMRPhenomD and $h_{\mathrm{NR}}$ is the waveform
-generated by the numerical relativity simulation. 
+generated by the NR simulation. 
 \mi{I think the mismatch should be defined above, right after the match is defined. We should also state what PSD and sampling parameters are used}
 Given the loss function, we use gradient descent to find the optimal fitting
 coefficients.
@@ -431,7 +440,7 @@ performance in different regions of the intrinsic parameter space.
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
 		\caption{
-			Relative error between the numerical relatively and IMRPhenomD waveform amplitudes. 
+			Relative error between the numerical relativity and IMRPhenomD waveform amplitudes. 
             The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
             Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
 		}
@@ -668,7 +677,7 @@ We therefore expect \jax waveforms to be \sout{crucial} \AZ{highly beneficial} t
 In this paper we introduced and discussed the various benefits of differentiable waveforms in \jax for GW data analysis.
 First, we demonstrated the speed and accuracy of our implementation of the aligned spin IMRPhenomD waveform.
 In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU.
-Parallelization on a GPU provides substantial speed increases; on a free Google Colab GPU \mi{shouldn't we just say the name of the GPU (Tesla whatever)? why does it matter that it's accessed through google here?} we found that waveform evaluations are nearly 5 orders of magnitude faster than serial CPU evaluations.
+Parallelization on a GPU provides substantial speed increases; on a NVIDIA Quadro 6000 GPU we found that waveform evaluations are over an order of magnitude faster than serial CPU evaluations.
 Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial advancement to perform efficient GW science.
@@ -677,16 +686,13 @@ In this paper, we have primarily focussed on the IMRPhenom family of waveforms a
 Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
 Some progress has been made towards the construction of a differentiable NRsurrogate \mi{cite our paper in prep?}, but currently it seems difficult to implement EOB waveforms in \jax.
 In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax. 
-\sout{which requires fixed length arrays for its JIT compilation.}
-Since EOB methods are used to produce state-of-the-art waveforms for many applications,
-\sout{are often regarded as the state-of-the-art,} 
-more work is required to see if a fast, differentiable implementation is possible.
+Since EOB methods are used to produce state-of-the-art waveforms for many applications, more work is required to see if a fast, differentiable implementation is possible.
 
 Currently the biggest constraint to adopting differentiable waveforms is the need to rewrite the most commonly used waveforms into \jax (or pure python).
 In order to showcase the benefits of differentiable waveforms as quickly as possible, at the time of writing, we have only implemented an aligned spin GW model (IMRPhenomD).
 We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM~\citep{Pratten:2020ceb}.
-Ideally, future waveforms should be implemented either in pure python or using \jax directly.
-\amc{if they're pure python, some translation will be required due to jax's restrictions.}
+Ideally, future waveforms should be implemented either in \jax compatible python directly.
+% \amc{if they're pure python, some translation will be required due to jax's restrictions.}
 \mi{we could just say ``directly implemented under an autodifferentiation framework'' to be generic}
 This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
 
