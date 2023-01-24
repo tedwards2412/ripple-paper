@@ -31,6 +31,7 @@
 \definecolor{rb4}{HTML}{27408B}
 \newcommand{\kw}[1]{{\color{rb4}[KW: #1 ]}}
 \newcommand{\AZ}[1]{{\color{Burnt}[AZ: #1]}}
+\newcommand{\mi}[1]{\textbf{\color{teal}(MI: #1)}}
 
 \definecolor{dfm}{HTML}{6C71C4}
 \newcommand{\dfm}[1]{{\color{dfm}[DFM: #1]}}
@@ -77,7 +78,7 @@
     This increased speed makes population forecasting substantially simpler.
     % , as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
     Finally, we show that gradient-based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to traditional Monte Carlo methods.
-    Since differentiable waveforms appear to have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
+    Since differentiable waveforms have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
     Our waveform code, \ripple, can be found at \href{https://github.com/tedwards2412/ripple}{github.com/tedwards2412/ripple}, and will continue to be updated with new waveforms as they are implemented.
 
 \end{abstract}
@@ -93,11 +94,11 @@ The complexity begins even before data taking, since GW searches using the match
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
 For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
-More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.\te{add citations}
+More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.\te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
 % In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 % \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
 % \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
-Beyond these simple scenarios, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Krishnendu:2021fga, LIGOScientific:2020tif, LIGOScientific:2016lio, Yunes:2016jcc, Arun:2006yw, Agathos:2013upa}.
+Beyond these simple scenarios, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}.
 % \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
 \kw{Need more reference and some rewording}\te{added refs, happy?}
@@ -131,7 +132,7 @@ Here we make use of \jax~\citep{jax2018github} due to its easy integration with 
 
 \AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom), and numerical relativity surrogate (NRsurrogate)~\citep{Varma:2018mmi,Varma:2019csw}.
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
 Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
 Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
@@ -174,6 +175,7 @@ Approximate, phenomenological waveforms have therefore been constructed to enabl
 
 As mentioned in the previous section, the three major waveform families that have been developed to date are:  EOB,  NRsurrogate, and IMRPhenom.
 Note that unlike NRsurrogate, both the EOB and IMRPhenom waveforms must be calibrated to NR waveforms.
+\mi{I think this is weird to say: the surrogate is fully trained on (``calibrated to'') NR}
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate, whereas IMRPhenom waveforms are constructed with simple closed-form expressions.
 IMRPhenom waveforms are therefore ideally-suited for AD, especially using \jax. 
 In this paper we focus on the aligned-spin, circular-orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
@@ -198,6 +200,7 @@ Now we are ready to define the \textit{match} which is given by
     \mathrm{m}(h_1|h_2) \equiv \max_{\Delta t_c,\, \Delta \phi_c} \left[h_1 \, \middle| \, h_2 \right]\,
 \end{equation}
 where $\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in time and phase of coalescence between the two waveforms.
+\mi{I think it'd be good to define the mismatch $\mathcal{M} \equiv 1- \mathrm{m}$, since it's the standard quantity to discuss, and it's what we plot}
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation. For this comparison, we use the $S_n$  presented in GWTC-2~\citep{LIGOScientific:2020ibl} from the Livingston detector (the most sensitive of the detectors).\footnote{
     \url{https://dcc.ligo.org/LIGO-P2000251/public}.
@@ -210,6 +213,8 @@ From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with th
 \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
 In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$ causing points to not appear in the log scale colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
+\mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
+
 \begin{figure}[t]
     \script{random_matches.py}
     \begin{centering}
@@ -221,6 +226,7 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
             \te{Current plot looking better?}
             \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
+            \mi{I agree. Furthermore, it looks like there's a subpopulation of darker points hiding under the brighter ones up to and around $M \sim 100$? is there a dependence on the mass ratio? it'd be good to comment on this, and maybe show a corner plot adding $q$ to the mix. Also, $M$ is lacking units (I assume $M_\odot$, but it should be shown in the label)}
         }
         \label{fig:match}
     \end{centering}
@@ -233,6 +239,7 @@ The total mass only impacts the match because the chosen PSD and frequency limit
 If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequency grid to units of $Mf$, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
 % \AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
+\mi{it's important to say what PSD was used}
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
 This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
@@ -271,7 +278,7 @@ First, the accuracy of derivatives from AD are significantly more stable than fi
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
 On the other hand, AD produces machine-precision derivatives with no tuning.
 Second, AD scales favorably with the dimensionality of the function.
-In particular, for every input dimension, $D$, added one would need to evaluate the function at least $2D$ times to calculate finite difference derivatives for all input parameters.
+In particular, for every input dimension added, $D$, one would need to evaluate the function at least $2D$ times to calculate finite difference derivatives for all input parameters.
 For reverse-mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimension.\footnote{
     Note that although the number of function calls is small, reverse-mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
@@ -319,6 +326,7 @@ performance.
 Say how many waveforms we use to optimize, how many we compare to, where they came
 from.}
 
+\mi{this paragraph is redundant, I'd remove it}
 Having an accurate waveform model is essential for many data analysis tasks in
 GW, such as searching for signals and estimating source parameters given data.
 While waveforms generated using NR simulations are \sout{commonly
@@ -351,6 +359,7 @@ in the case of PE.
 
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
 coefficients were fitted in segments with amplitude and phase separated.
+\mi{this previous sentence sounds odd: do we mean that amplitude and phase were fitted independently?}
 Furthermore, IMRPhenomD is divided in three fitting segments, inspiral, merger and ringdown.
 Each of these segments has their own set of fitting coefficients.
 After obtaining the fitting coefficient for individual segments, they are then ``stitched'' together such that they are continuous in the first derivative.
@@ -370,6 +379,8 @@ potential improvement of the accuracy by fitting all coefficients at once.
 \AZ{Maybe comment on optimization method used for EOB waveforms?
 I think they do interesting Monte Carlo etc. Check what method is used 
 for IMRPhenomXPHM?}
+\mi{I agree. it'd be good to comment on whether this is still done like this in
+modern waveforms.}
 
 In general, optimization problems in a high dimensional space benefit from
 having access to the gradient of the objective function. Since we can
@@ -390,6 +401,7 @@ to be the mismatch between the NR waveform and the approximant waveform:
 where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
 the waveform generated by the IMRPhenomD and $h_{\mathrm{NR}}$ is the waveform
 generated by the NR simulation. 
+\mi{I think the mismatch should be defined above, right after the match is defined. We should also state what PSD and sampling parameters are used}
 Given the loss function, we use gradient descent to find the optimal fitting
 coefficients.
 \begin{equation}
@@ -400,11 +412,12 @@ where $\alpha$ is the learning rate. We set $\alpha$ to be a very small number, 
 % Add description of the optimization procedure.
 
 As a demonstration, Fig. \ref{fig:loss_compare} shows the relative error of
-original and optimized waveform at different frequencies. In this optimization
+the original and optimized waveforms at different frequencies \mi{for a particular set of parameters?}. In this optimization
 procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa}
-as training waveforms to fit waveform coefficients. \amc{how many are there?}
-We can see the error of optimized waveform is lower than that of the original waveform for most of the domain.
+as training data to fit waveform coefficients. \amc{how many are there?}
+We can see the error of the optimized waveform is lower than that of the original waveform for most of the domain.
 In particular, the error in the early inspiral region is decreased by half while other regions also show good improvement in accuracy. \amc{so this is a waveform in the training set? And I don't follow exactly what you did. Is this just fitting a single waveform?}
+\mi{I was also confused by this}
 
 We can generalize the fitting procedure described above to a collection of waveforms.
 In that case, the loss function is defined as the average of the mismatch of
@@ -417,7 +430,7 @@ where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$
 is the total number of training waveforms used in optimization. This
 optimization is more difficult since we are applying the same set of
 coefficients to waveforms with different intrinsic parameters, such as mass
-ratio and spins. From Eq. \ref{eq:multi_loss}, we can see the averaging between
+ratio and spins. From Eq.~\eqref{eq:multi_loss}, we can see the averaging between
 waveforms with different intrinsic parameters implies there are trade-offs in
 performance in different regions of the intrinsic parameter space.
 \amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
@@ -449,10 +462,11 @@ performance in different regions of the intrinsic parameter space.
 \end{figure}
  
 In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches.
-One can see the distribution of mismatch after optimization has smaller mismatch compared to before optimization,
-showing the optimization improves the accuracy of the waveform model.
+\mi{for all parameters in the training set?}
+One can see the distribution of mismatch \mi{mean?} after optimization has smaller mismatch compared to before optimization,
+showing the optimization improves the accuracy of the waveform model \mi{on average?}.
 % However, it is not improving for every waveforms. Say why briefly, and say there is another paper coming out.
-While many waveforms improved their accuracy, some retain similar mismatches. 
+While many waveforms improved their accuracy, some retain similar mismatches \mi{``waveforms'' is overused and obfuscates this discussion: it's indistinctly used to refer to the NR data, the approximants in general, and specific sets of parameters---I think some rewriting is needed, e.g., here we could say ``While the mismatch generally improves for several parameter choices after training, it remains the same for others.''}. 
 \AZ{I don't understand this claim. The spin degeneracy is present in the physics of the waveform; $\chi_{\rm eff}$ is just one way of parametrizing the spins that tries to reduce the degeneracy.}
 This phenomenon is mainly due to the reduced spin approximation used in IMRPhenomD, where spin degeneracy is introduced, hence restricting further improvements. 
 In an upcoming paper, we will give a detailed discussion of how such an approximation scheme affects the optimization procedure. 
@@ -474,8 +488,8 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
     \label{fig:sky_localization}
 \end{figure}
 
-Forecasting the sensitivity of future experiments is an essential task in GW science. \kw{LOL I won't say it is essential.}
-Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters can be measured.
+Forecasting the sensitivity of future experiments is an essential task in GW science. \kw{LOL I won't say it is essential.} \mi{routine?}
+Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters could be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
 
@@ -501,6 +515,7 @@ Since we are considering a three detector setup we simply add the Fisher matrice
 \end{equation}
 Finally, we invert the Fisher matrix to calculate the covariance matrix,
 \AZ{which proves forecasted measurement errors and parameter covariances for a signal with parameters $\theta$ observed by the given detector network}.
+\mi{I think Aaron means ``provides'' not ``proves''; also, we might add ``in the high SNR limit''}
 \AZ{Again we need to state and cite the PSDs we use for the three detectors.}
 
 % \begin{table*}[ht!]
@@ -560,6 +575,7 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix,
 \end{table}
 
 To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+\mi{should we say a word about computing FMs with multiple detectors?}
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
@@ -621,6 +637,7 @@ The additional steps for the GRW sampler were required to achieve a similarly co
 \amc{Why not plot its posterior?}
 
 In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered using the best chain (i.e. one that reached the highest log-likelihood values).
+\mi{why show a single chain?}
 The orange shows the true parameters of the injected signal.
 From the one dimensional histograms along the diagonal, it is clear that we consistently recover all seven parameters apart from $\phi_c$.
 This is expected since the injected binary is relatively nearby.
@@ -663,11 +680,11 @@ In particular, we showed that it matches the \lalsuite implementation to near ma
 Parallelization on a GPU provides substantial speed increases; on a NVIDIA Quadro 6000 GPU we found that waveform evaluations are over an order of magnitude faster than serial CPU evaluations.
 Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
-Differentiable waveforms therefore represent a crucial tool to perform efficient GW science.
+Differentiable waveforms therefore represent a crucial advancement to perform efficient GW science.
 
 In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
 Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
-Some progress has been made towards the construction of a differentiable NRsurrogate, but currently it seems difficult to implement EOB waveforms in \jax.
+Some progress has been made towards the construction of a differentiable NRsurrogate \mi{cite our paper in prep?}, but currently it seems difficult to implement EOB waveforms in \jax.
 In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax. 
 Since EOB methods are used to produce state-of-the-art waveforms for many applications, more work is required to see if a fast, differentiable implementation is possible.
 
@@ -676,6 +693,7 @@ In order to showcase the benefits of differentiable waveforms as quickly as poss
 We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM~\citep{Pratten:2020ceb}.
 Ideally, future waveforms should be implemented either in \jax compatible python directly.
 % \amc{if they're pure python, some translation will be required due to jax's restrictions.}
+\mi{we could just say ``directly implemented under an autodifferentiation framework'' to be generic}
 This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
 
 
