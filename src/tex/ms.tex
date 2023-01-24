@@ -79,7 +79,7 @@
     This increased speed makes population forecasting substantially simpler.
     % , as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
     Finally, we show that gradient-based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to traditional Monte Carlo methods.
-    Since differentiable waveforms appear to have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
+    Since differentiable waveforms have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
     Our waveform code, \ripple, can be found at \href{https://github.com/tedwards2412/ripple}{github.com/tedwards2412/ripple}, and will continue to be updated with new waveforms as they are implemented.
 
 \end{abstract}
@@ -94,8 +94,8 @@ In addition, this computational cost will substantially increase when next gener
 The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
-For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on an 15 dimensional parameter space.
-More general examples can lead to a significant increase in dimension.\te{add citations}
+For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
+More general examples can lead to a significant increase in dimension.\te{add citations}  \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
 % In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 % \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
 % \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
