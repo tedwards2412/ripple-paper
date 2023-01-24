@@ -316,65 +316,52 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \te{536 waveforms are subset of the SXS catalogue that are not precessing or eccentric. @Kelvin add details of where to find these things}
 \te{None of the 536 are part of the training set}
 \te{Used ALIGO design sensitivity for PSD}
+\te{@Kelvin, can you please add a citation to the 11 waveforms used for training as well as a citation to the 536 waveforms used from the SXS catalogue. I've indicated in the text where these should be added}
+\te{@Kelvin can you please also add a citation to the particular PSD used (again, its indicated in the text where to do this.)}
+\te{The thing we really want to compare is the mismatch with the rescaled frequency grid and a fixed flat PSD.}
+\te{Need to understand how the mass scale was introduced into the NR waveforms.}
 
-\AZ{Broad comments: need to cite which catalog the waveforms came from if any.
-The number of waveforms used seems much larger than the number originally used
-to calibrate PhenomD. 
-If that is true, we can't make a big deal about having a better mismatch compared to
-the original version, because of course optimizing over another set will improve 
-performance.
-Say how many waveforms we use to optimize, how many we compare to, where they came
-from.}
+% \AZ{Broad comments: need to cite which catalog the waveforms came from if any.
+% The number of waveforms used seems much larger than the number originally used
+% to calibrate PhenomD. 
+% If that is true, we can't make a big deal about having a better mismatch compared to
+% the original version, because of course optimizing over another set will improve 
+% performance.
+% Say how many waveforms we use to optimize, how many we compare to, where they came
+% from.}
 
-\mi{this paragraph is redundant, I'd remove it}
-Having an accurate waveform model is essential for many data analysis tasks in
-GW, such as searching for signals and estimating source parameters given data.
-While waveforms generated using NR simulations are \sout{commonly
-regarded as the most accurate,} 
-\AZ{in principle the highest fidelity signal model,}
-they are too computationally expensive to be used
-in any practical data analysis tasks. To create waveform models that can be used
-in data analysis, there are a number of groups creating ``approximants'' of the
-full NR waveforms, which are essentially simpler ansatzes that
-\sout{are only approximations but} can be evaluated much faster \AZ{and in regions not
-covered by numerical simulations, such as extremes of parameter space or earlier 
-phases of the binary inspiral}. 
-\amc{redundant -- remove or merge with earlier material.}
+Having an accurate waveform model is essential for many data analysis tasks throughout
+GW science.
+While waveforms generated using NR simulations are in principle the highest fidelity signal model, they are too computationally expensive to be used in any practical data analysis tasks.
+The community therefore utilizes waveform ``approximants'' (such as those discussed in the introduction) which can be evaluated much faster and in regions not covered by numerical simulations, such as extremes of parameter space or earlier phases of the binary inspiral.
+% \amc{redundant -- remove or merge with earlier material.}
 
 %\sout{Every waveform approximant has some}
-\AZ{Waveform approximants generally have free coefficients which are calibrated
-to NR waveforms to achieve high accuracy.}
-\sout{ fitting coefficients that are tuned during
-the process of calibrating the ansatz to NR waveforms.} In the case of
-IMRPhenomD, there are 209 fitting coefficients used to capture the separate
-behavior of the amplitude and phase as a function of the mass ratio and spins.
-\sout{The accuracy of fitting coefficients determines how well the approximant
-reproduces the NR waveform. 
-The}
-\AZ{Any} inaccuracy in obtaining the fitting coefficients
-means misrepresentation of the NR waveform, which can translate to systematic
-error in downstream data analysis task. For example, sufficiently large
+Waveform approximants generally have free coefficients which are calibrated
+to NR waveforms to achieve high accuracy.
+% \sout{ fitting coefficients that are tuned during
+% the process of calibrating the ansatz to NR waveforms.
+In the case of IMRPhenomD, there are 209 fitting coefficients used to capture the separate behavior of the amplitude and phase as a function of the mass ratio and spins.
+
+% \sout{The accuracy of fitting coefficients determines how well the approximant
+% reproduces the NR waveform. 
+% The}
+Any inaccuracy in obtaining the fitting coefficients
+leads to a misrepresentation of the NR waveform, which can translate to systematic
+error in downstream data analysis tasks. For example, sufficiently large
 systematic errors in the waveform would cause the recovered source parameters to be biased
 in the case of PE.
 
 Previously in the construction of IMRPhenomD \citep{Khan:2015jqa}, waveform
-coefficients were fitted in segments with amplitude and phase separated.
-\mi{this previous sentence sounds odd: do we mean that amplitude and phase were fitted independently?}
-Furthermore, IMRPhenomD is divided in three fitting segments, inspiral, merger and ringdown.
+coefficients for the amplitude and phase were fitted independently.
+Furthermore, IMRPhenomD is divided into three fitting segments: inspiral; merger; and ringdown.
 Each of these segments has their own set of fitting coefficients.
-After obtaining the fitting coefficient for individual segments, they are then ``stitched'' together such that they are continuous in the first derivative.
-The process of stitching introduces some additional
-inaccuracy in the waveform model, as the connections would affect the originally
-fitted segments.
+After obtaining the fitting coefficient for individual segments, they are then ``stitched'' together such that both the phase and amplitude are continuous in the first derivative.
+The process of stitching introduces some additional inaccuracy in the waveform model, as the connections affect the originally fitted segments.
 
-The coefficients of the current IMRPhenomD implementation are tuned in subsets
-of parameters instead of all together. This means the tuning process ignores the
-correlation between different subsets of parameters, so the best-fit
-solution obtained by fitting subsets of parameters may not be the global
-optimum compared to fitting all coefficients at once. By jointly
-fitting all coefficients, the correlation in fitting individual and connecting
-different segments can be accounted for during the optimization. Therefore, there is
-potential improvement of the accuracy by fitting all coefficients at once.
+The coefficients of the original IMRPhenomD implementation are tuned in subsets of parameters instead of all together. 
+This means the tuning process ignores the correlation between different subsets of parameters, so the provided best-fit solution may not be the global optimum. 
+We therefore aim to improve of the accuracy of the waveform by jointly fitting all coefficients at once.
 
 \AZ{Maybe comment on optimization method used for EOB waveforms?
 I think they do interesting Monte Carlo etc. Check what method is used 
@@ -382,58 +369,54 @@ for IMRPhenomXPHM?}
 \mi{I agree. it'd be good to comment on whether this is still done like this in
 modern waveforms.}
 
-In general, optimization problems in a high dimensional space benefit from
-having access to the gradient of the objective function. Since we can
-differentiate through the entire waveform model against the fitting parameters,
-one can use gradient descent to find the optimal fitting parameters all at once
-instead of fitting them in subsets.
+In general, optimization problems in a high dimensional space benefit from having access to the gradient of the objective function. 
+Since we can differentiate through the entire waveform model against the fitting parameters, one can use gradient descent to more efficiently find the local best fitting parameters.
 
-
-
-
-The first step in fitting all coefficients is to define a loss function that
-measures the goodness-of-fit of the optimization procedure, which we choose it
-to be the mismatch between the NR waveform and the approximant waveform:
+The first step is to define a loss function that measures the goodness-of-fit of the current waveform coefficients.
+Here, we choose it to be the mismatch between the NR waveform and the approximant waveform:
 \begin{equation}
     \label{eq:mismatch}
-	\mathcal{M}(\lambda)=1-\mathrm{m}(h_{\mathrm{IMR}}(\lambda)|h_{\mathrm{NR}}(\lambda)),
+	\mathcal{M}(\lambda)=1-\mathrm{m}(h_{\mathrm{IMR}}(\lambda)|h_{\mathrm{NR}}(\lambda))\,,
 \end{equation}
 where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
-the waveform generated by the IMRPhenomD and $h_{\mathrm{NR}}$ is the waveform
+the waveform generated by IMRPhenomD, and $h_{\mathrm{NR}}$ is the waveform
 generated by the NR simulation. 
 \mi{I think the mismatch should be defined above, right after the match is defined. We should also state what PSD and sampling parameters are used}
-Given the loss function, we use gradient descent to find the optimal fitting
-coefficients.
+\te{I think it makes it easier to define here cause we only now introduce the fitting coefficient $\lambda$.}
+Given the loss function, we use gradient descent to update the fitting
+coefficients:
 \begin{equation}
-	\lambda\leftarrow\lambda-\alpha\nabla\mathcal{M}, 
+	\lambda\leftarrow\lambda-\alpha\nabla\mathcal{M}\,, 
 \end{equation}
-where $\alpha$ is the learning rate. We set $\alpha$ to be a very small number, i.e. $10^{-6}$, since the initial guess already lies close to the desired optimum. We terminate the program after 30000 steps, in which $\lambda$ has converged to the optimum.  \dfm{We can't possibly know that it has converged to ``the optimum''. I'd sat just leave it at ``We terminate the program after 30000 steps.''}
-\amc{say something to explain why this is working. I.e.: does the loss initially drop and then plateau?}
+where $\alpha$ is the learning rate. We set $\alpha$ to be a very small number, i.e. $10^{-6}$, since the initial guess already lies close to the desired optimum. 
+%   \dfm{We can't possibly know that it has converged to ``the optimum''. I'd sat just leave it at ``We terminate the program after 30000 steps.''}
+% \amc{say something to explain why this is working. I.e.: does the loss initially drop and then plateau?}
 % Add description of the optimization procedure.
 
-As a demonstration, Fig. \ref{fig:loss_compare} shows the relative error of
-the original and optimized waveforms at different frequencies \mi{for a particular set of parameters?}. In this optimization
-procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa}
-as training data to fit waveform coefficients. \amc{how many are there?}
-We can see the error of the optimized waveform is lower than that of the original waveform for most of the domain.
-In particular, the error in the early inspiral region is decreased by half while other regions also show good improvement in accuracy. \amc{so this is a waveform in the training set? And I don't follow exactly what you did. Is this just fitting a single waveform?}
-\mi{I was also confused by this}
-
-We can generalize the fitting procedure described above to a collection of waveforms.
-In that case, the loss function is defined as the average of the mismatch of
-individual waveforms, given by
+To generalize the loss function to a collection of waveforms we use the average of the mismatch of individual waveforms, given by
 \begin{equation}
 	\mathcal{L}=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i,
     \label{eq:multi_loss}
 \end{equation}
-where $\mathcal{M}_i$ is the mismatch of individual training waveforms and $N$
-is the total number of training waveforms used in optimization. This
-optimization is more difficult since we are applying the same set of
-coefficients to waveforms with different intrinsic parameters, such as mass
-ratio and spins. From Eq.~\eqref{eq:multi_loss}, we can see the averaging between
-waveforms with different intrinsic parameters implies there are trade-offs in
-performance in different regions of the intrinsic parameter space.
-\amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
+where $\mathcal{M}_i$ is the mismatch of an individual training waveform and $N$ is the total number of training waveforms used in optimization.
+This optimization is more difficult since we are now applying the same set of coefficients to waveforms with different intrinsic parameters, such as mass ratio and spins. 
+From Eq.~\ref{eq:multi_loss}, we can see the averaging between waveforms with different intrinsic parameters implies there are trade-offs in performance for different regions of the intrinsic parameter space. 
+Additionally, this means our best-fit points will generally depend on the distribution of training waveforms across the parameter space.
+% \amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
+
+For training, we use the publically available subset of the 19 waveforms used in the original IMRPhenomD paper (11 in total)\te{@kelvin add citation to waveforms here}. 
+We then run gradient descent, as described above, for $3\times 10^4$ steps. 
+Figure~\ref{fig:loss_compare} shows the relative error (against a particular NR waveform) of the original and optimized waveform at different frequencies.
+\te{@Kelvin is the NR waveform here part of the training set?}
+The vertical dashed lines indicate the stitching points for the phase i.e. when the inspiral is joined onto the merger.
+% In this optimization
+% procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa}
+% as training waveforms to fit waveform coefficients. \amc{how many are there?}
+We can see the error of optimized waveform is lower than that of the original waveform for most of the domain.
+In particular, the error in the merger region is decreased by half while other regions also show good improvement in accuracy. 
+% \amc{so this is a waveform in the training set? And I don't follow exactly what you did. Is this just fitting a single waveform?}
+
+% \te{We terminate the program after 30000 steps.}
 
 \begin{figure}[t]
 	\script{loss_compare.py}
@@ -461,14 +444,14 @@ performance in different regions of the intrinsic parameter space.
 	\end{centering}
 \end{figure}
  
-In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches.
-\mi{for all parameters in the training set?}
-One can see the distribution of mismatch \mi{mean?} after optimization has smaller mismatch compared to before optimization,
-showing the optimization improves the accuracy of the waveform model \mi{on average?}.
+In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches for 536 test waveforms.
+For testing we use 536 waveforms from the SXS catalogue (we simply choose all waveforms with aligned spins and eccentricity close to 0 \te{kelvin, please add specific eccentricity cut here})~\citep{Boyle:2019kee}.
+One can see that the distribution of mismatches after optimization is generally shifted to lower mismatch compared to the original waveform.
+% showing the optimization improves the accuracy of the waveform model.
 % However, it is not improving for every waveforms. Say why briefly, and say there is another paper coming out.
-While many waveforms improved their accuracy, some retain similar mismatches \mi{``waveforms'' is overused and obfuscates this discussion: it's indistinctly used to refer to the NR data, the approximants in general, and specific sets of parameters---I think some rewriting is needed, e.g., here we could say ``While the mismatch generally improves for several parameter choices after training, it remains the same for others.''}. 
-\AZ{I don't understand this claim. The spin degeneracy is present in the physics of the waveform; $\chi_{\rm eff}$ is just one way of parametrizing the spins that tries to reduce the degeneracy.}
-This phenomenon is mainly due to the reduced spin approximation used in IMRPhenomD, where spin degeneracy is introduced, hence restricting further improvements. 
+% While many waveforms improved their accuracy, some retain similar mismatches. 
+% \AZ{I don't understand this claim. The spin degeneracy is present in the physics of the waveform; $\chi_{\rm eff}$ is just one way of parametrizing the spins that tries to reduce the degeneracy.}
+% This phenomenon is mainly due to the reduced spin approximation used in IMRPhenomD, where spin degeneracy is introduced, hence restricting further improvements. 
 In an upcoming paper, we will give a detailed discussion of how such an approximation scheme affects the optimization procedure. 
 Nevertheless, the peak of the original waveform distribution has moved to the left end of the distribution, indicating that \sout{the} \AZ{our AD-assisted} optimization procedure \AZ{provides an improved implementation of the model}. 
 \sout{Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. }
@@ -488,7 +471,7 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
     \label{fig:sky_localization}
 \end{figure}
 
-Forecasting the sensitivity of future experiments is an essential task in GW science. \kw{LOL I won't say it is essential.} \mi{routine?}
+Forecasting the sensitivity of future experiments is an routine task in GW science. 
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters could be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
