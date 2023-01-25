@@ -225,7 +225,7 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$
             % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
             The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
-            \te{Current plot looking better?}
+            \te{Ok so some of the remaining error was coming from a weird thing at the cutoff of the waveform. I've now fixed this, so error is further down. Let me know if you still think it needs editing.}
             \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
             \mi{I agree. Furthermore, it looks like there's a subpopulation of darker points hiding under the brighter ones up to and around $M \sim 100$? is there a dependence on the mass ratio? it'd be good to comment on this, and maybe show a corner plot adding $q$ to the mix. Also, $M$ is lacking units (I assume $M_\odot$, but it should be shown in the label)}
         }
@@ -315,9 +315,8 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \te{Fig 2, plot was made after optimizing for ALL waveforms}
 \te{536 waveforms are subset of the SXS catalogue that are not precessing or eccentric. @Kelvin add details of where to find these things}
 \te{None of the 536 are part of the training set}
-\te{Used ALIGO design sensitivity for PSD}
+\te{Used flat PSD}
 \te{@Kelvin, can you please add a citation to the 11 waveforms used for training as well as a citation to the 536 waveforms used from the SXS catalogue. I've indicated in the text where these should be added}
-\te{@Kelvin can you please also add a citation to the particular PSD used (again, its indicated in the text where to do this.)}
 \te{The thing we really want to compare is the mismatch with the rescaled frequency grid and a fixed flat PSD.}
 \te{Need to understand how the mass scale was introduced into the NR waveforms.}
 
@@ -405,10 +404,14 @@ From Eq.~\ref{eq:multi_loss}, we can see the averaging between waveforms with di
 Additionally, this means our best-fit points will generally depend on the distribution of training waveforms across the parameter space.
 % \amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
 
+To evaluate Eq.~\ref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
+    In particular, we use $M f_l = $, $M f_u = $, and $M\Delta f_l = $ for the dimensionless lower, upper, and frequency spacing respectively. We fix M to be $50\,[\mathrm{M}_\odot]$ throughout this section.\te{@Kelvin to fill in.}
+}
+Since the NR waveforms do not have a total mass associated with them, we use assign a fixed total mass to compare with the \ripple waveform.
+
 For training, we use the publically available subset of the 19 waveforms used in the original IMRPhenomD paper (11 in total)\te{@kelvin add citation to waveforms here}. 
 We then run gradient descent, as described above, for $3\times 10^4$ steps. 
-Figure~\ref{fig:loss_compare} shows the relative error (against a particular NR waveform) of the original and optimized waveform at different frequencies.
-\te{@Kelvin is the NR waveform here part of the training set?}
+Figure~\ref{fig:loss_compare} shows the relative error (against a test NR waveform; see below) of the original and optimized waveform as a function of dimensionless frequency.
 The vertical dashed lines indicate the stitching points for the phase i.e. when the inspiral is joined onto the merger.
 % In this optimization
 % procedure, we took NR waveforms $h_{\mathrm{NR}}$ stated in \citep{Khan:2015jqa}
@@ -426,7 +429,7 @@ In particular, the error in the merger region is decreased by half while other r
 		\caption{
 			Relative error between the numerical relativity and IMRPhenomD waveform amplitudes. 
             The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
-            Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
+            Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform. \te{@Kelvin, change data to flat PSD.}
 		}
 		\label{fig:loss_compare}
 	\end{centering}
@@ -439,7 +442,7 @@ In particular, the error in the merger region is decreased by half while other r
 		\caption{
 			Distribution of 536 log mismatches (see Eq.~\ref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
             Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
-            More quantitatively, the mean mismatch (shown as vertical dashed lines) is reduced by $\sim11$\%.
+            More quantitatively, the mean mismatch (shown as vertical dashed lines) is reduced by $\sim11$\%. \te{@Kelvin, change data to flat PSD.}
 		}
 		\label{fig:mismatch_hist}
 	\end{centering}
