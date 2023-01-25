@@ -132,7 +132,7 @@ Here we make use of \jax~\citep{jax2018github} due to its easy integration with 
 
 \AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we,Ossokine:2020kjp,Nagar:2021gss,Ramos-Buades:2021adz,Albertini:2021tbt}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
 Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
 Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
@@ -477,7 +477,7 @@ Although in practice this assumption is often violated for realistic detector no
 
 Computing the Fisher matrix requires one to evaluate derivatives of the likelihood, which in turn involves derivatives of the waveform model and detector projection functions.
 AD is therefore perfectly suited for computing Fisher matrices accurately and efficiently. 
-Forecasting with Fisher matrices for third generation detectors has already been extensively explored in \citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+Forecasting with Fisher matrices for third generation detectors has already been extensively explored in~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Here we purely want to illustrate the simplicity and speed of AD for forecasting rather than providing new physics insights.
 We therefore consider a simple, three-detector setup corresponding to the two LIGO detectors in addition to Virgo.
 
