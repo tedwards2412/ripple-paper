@@ -69,8 +69,8 @@ params = {
 mpl.rcParams.update(params)
 
 data = np.loadtxt(paths.data / "ripple_phenomD_matches.txt")
-data = data[data[:, -1].argsort()]
-data = data[::-1]
+# data = data[data[:, -1].argsort()]
+# data = data[::-1]
 
 exactmatch_indices = (1.0 - data[:, -1]) <= 0.0
 other_indices = (1.0 - data[:, -1]) > 0.0

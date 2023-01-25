@@ -94,14 +94,15 @@ The complexity begins even before data taking, since GW searches using the match
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
 Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
 For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
-More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.\te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
+More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.
+% \te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
 % In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 % \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
 % \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
-Beyond these simple scenarios, more complex waveform models with additional parameters may be used to test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}.
+Beyond these simple scenarios, more complex waveform models with additional parameters may be used to include calibration errors~\citep{Farr:2014,Vitale:2020gvb}, model the tides of neutron stars~\citep{LIGOScientific:2018hze}, and test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}..
 % \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
-\kw{Need more reference and some rewording}\te{added refs, happy?}
+% \kw{Need more reference and some rewording}\te{added refs, happy?}
 % All of these tasks require significant computation.
 Overall, GW data analysis therefore requires significant computation.
 % \kw{This could be triggering to some people, since population analysis could be quite cheap}
@@ -130,7 +131,7 @@ There are now a variety of AD implementations, most notably in deep learning fra
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
 Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators,such as graphical processing units (GPUs), and its just-in-time (JIT) compiler, which can substantially accelerate code.
 
-\AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
+% \AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
 They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we,Ossokine:2020kjp,Nagar:2021gss,Ramos-Buades:2021adz,Albertini:2021tbt}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
@@ -174,8 +175,8 @@ Unfortunately, these numerical simulations are computationally expensive and can
 Approximate, phenomenological waveforms have therefore been constructed to enable relatively fast waveform generation at sufficient accuracy.
 
 As mentioned in the previous section, the three major waveform families that have been developed to date are:  EOB,  NRsurrogate, and IMRPhenom.
-Note that unlike NRsurrogate, both the EOB and IMRPhenom waveforms must be calibrated to NR waveforms.
-\mi{I think this is weird to say: the surrogate is fully trained on (``calibrated to'') NR}
+% Note that unlike NRsurrogate, both the EOB and IMRPhenom waveforms must be calibrated to NR waveforms.
+% \mi{I think this is weird to say: the surrogate is fully trained on (``calibrated to'') NR}
 EOB waveforms require one to model the binary system using a Hamiltonian and are typically slow to evaluate, whereas IMRPhenom waveforms are constructed with simple closed-form expressions.
 IMRPhenom waveforms are therefore ideally-suited for AD, especially using \jax. 
 In this paper we focus on the aligned-spin, circular-orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
@@ -210,10 +211,10 @@ This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(
 }
 Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
-\AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
-In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$ causing points to not appear in the log scale colorbar.
+% \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
+In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$ (up to numerical precision) causing points to not appear in the log scale colorbar.\te{Edit according to updated plot.}
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
-\mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
+% \mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
 
 \begin{figure}[t]
     \script{random_matches.py}
@@ -499,7 +500,6 @@ Since we are considering a three detector setup we simply add the Fisher matrice
 Finally, we invert the Fisher matrix to calculate the covariance matrix,
 which provides forecasted measurement errors and parameter covariances for a signal with parameters $\theta$ observed by the given detector network in the high signal-to-noise limit.
 % \mi{I think Aaron means ``provides'' not ``proves''; also, we might add ``in the high SNR limit''}
-\AZ{Again we need to state and cite the PSDs we use for the three detectors.}
 
 % \begin{table*}[ht!]
 %     \begin{center}
@@ -541,13 +541,13 @@ which provides forecasted measurement errors and parameter covariances for a sig
 
     $m_1, m_2$ & $\boldsymbol{U}[20, 60]\, \mathrm{M}_\odot$ \\ \hline
     $\chi_1, \chi_2$ & $\boldsymbol{U}[-0.8, 0.8]$ \\ \hline
-    $D$ & $\left(400 (\boldsymbol{U}[0,1]^{1/3}) + 600\right)$\, Mpc \\ \hline
+    $D$ (Uniform in volume) & $[600, 900]$\,Mpc \\ \hline
     $t_c$ & 0.0 \\ \hline
     $\phi_c$ & 0.0 \\ \hline
-    Inclincation Angle, $\iota$ & $\cos^{-1}(\boldsymbol{U}[-1, 1])$ \\ \hline
+    Inclincation Angle, $\cos(\iota)$ & $\boldsymbol{U}[-1, 1]$ \\ \hline
     Polarization Angle, $\psi$ & $\boldsymbol{U}[0, 2\pi]$ \\ \hline
     Right Ascension, $\alpha$ & $\boldsymbol{U}[0, 2\pi]$ \\ \hline
-    Declination, $\delta$ & $\pi/2 - \cos^{-1}(\boldsymbol{U}[-1, 1])$ \\ 
+    Declination, $\sin(\delta)$ & $\boldsymbol{U}[-1, 1]$ \\ 
     \hline\hline
     \end{tabular}
     % \end{center}
@@ -560,18 +560,20 @@ which provides forecasted measurement errors and parameter covariances for a sig
 
 To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
-A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
+A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}. 
+Additionally, we use $20\,$Hz, $1024\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
+Our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston (\textsc{SimNoisePSDaLIGOZeroDetHighPower}) and Virgo (\textsc{SimNoisePSDAdvVirgo}).\footnote{\url{https://lscsoft.docs.ligo.org/lalsuite/lalinspiral/psds_8py_source.html}.}
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
-We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within 20 percent.\te{Check number}
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within 20\%.\te{Check number}
 This demonstrates that AD can be used to accurately produce population-level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
 In particular, we find that after compilation, each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
 This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is similar to \lalsuite which is used by \texttt{GWbench}.
-On a MacBook Pro with an M1 Max Apple Silicon processor, JIT compilation takes $\sim 270\,s$ and the full population analysis takes less $\sim 8$ minutes.
+On a MacBook Pro with an M1 Max Apple Silicon processor, JIT compilation takes $\sim 270\,s$ and the full population analysis takes less than $\sim 9$ minutes.
 % \kw{Want to pull a number on the total time it took on generating the population result? I imagine this should turn the theorists on and send them into a fishing frenzy.}
 As discussed above, performance can be further improved by utilizing hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
@@ -675,9 +677,9 @@ Since EOB methods are used to produce state-of-the-art waveforms for many applic
 Currently the biggest constraint to adopting differentiable waveforms is the need to rewrite the most commonly used waveforms into \jax (or pure python).
 In order to showcase the benefits of differentiable waveforms as quickly as possible, at the time of writing, we have only implemented an aligned spin GW model (IMRPhenomD).
 We plan on adding a variety of different waveforms to \ripple in the near future with the primary goal of reaching a \jax version of a fully precessing, higher order mode waveform such as IMRPhenomXPHM~\citep{Pratten:2020ceb}.
-Ideally, future waveforms should be implemented either in \jax compatible python directly.
+Ideally, future waveforms should be implemented under an AD framework such as \jax.
 % \amc{if they're pure python, some translation will be required due to jax's restrictions.}
-\mi{we could just say ``directly implemented under an autodifferentiation framework'' to be generic}
+% \mi{we could just say ``directly implemented under an autodifferentiation framework'' to be generic}
 This would ensure that the community can easily utilize differentiability and hardware acceleration in the future.
 
 
