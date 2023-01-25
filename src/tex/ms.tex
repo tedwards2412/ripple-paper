@@ -112,7 +112,7 @@ Derivatives are ubiquitously useful throughout data analysis tasks.
 % For instance, during PE, gradients are used to improve performance of the samplers 
 % % \dfm{This isn't correct. In HMC the gradients don't have the behavior. I'd just say something like ``gradients are used to improve performance''} 
 % (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent~\citep{2016arXiv160904747R}).
-For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\ using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\ using Hamiltonian Monte Carlo~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
+For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\ using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\ using Hamiltonian Monte Carlo (HMC)~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically required a significant amount of work to obtain~\citep{Keppel:2013kia}.
 With waveforms only increasing in complexity, calculating analytic derivatives will become ever more tricky.
@@ -363,11 +363,12 @@ The coefficients of the original IMRPhenomD implementation are tuned in subsets 
 This means the tuning process ignores the correlation between different subsets of parameters, so the provided best-fit solution may not be the global optimum. 
 We therefore aim to improve of the accuracy of the waveform by jointly fitting all coefficients at once.
 
-\AZ{Maybe comment on optimization method used for EOB waveforms?
-I think they do interesting Monte Carlo etc. Check what method is used 
-for IMRPhenomXPHM?}
-\mi{I agree. it'd be good to comment on whether this is still done like this in
-modern waveforms.}
+%AZ: Addressed below
+%\AZ{Maybe comment on optimization method used for EOB waveforms?
+%I think they do interesting Monte Carlo etc. Check what method is used 
+%for IMRPhenomXPHM?}
+%\mi{I agree. it'd be good to comment on whether this is still done like this in
+%modern waveforms.}
 
 In general, optimization problems in a high dimensional space benefit from having access to the gradient of the objective function. 
 Since we can differentiate through the entire waveform model against the fitting parameters, one can use gradient descent to more efficiently find the local best fitting parameters.
@@ -455,6 +456,10 @@ One can see that the distribution of mismatches after optimization is generally 
 % In an upcoming paper, we will give a detailed discussion of how such an approximation scheme affects the optimization procedure. 
 In particular, the peak of the original waveform distribution has moved by nearly an order of magnitude, indicating that our AD-assisted optimization procedure provides an improved implementation of the model.
 % \sout{Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. }
+
+\AZ{While we focused on \texttt{IMRPhenomD} here, the ability to apply AD to the calibration parameters may assist in other approaches to calibration, such as that used for the aligned-spin EOB model in~\citet{Bohe:2016gbl}.
+There MCMC methods were used in a two-step procedure to optimize the calibration parameters. 
+Derivative information, if implemented for EOB waveforms, could allow for the application of other sampling methods such as HMC, or possibly optimization over the entire set of NR waveforms at once.}
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
