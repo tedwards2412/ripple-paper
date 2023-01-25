@@ -204,7 +204,7 @@ where $\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in tim
 Finally, we can define the mismatch as 
 \begin{equation}
     \label{eq:mismatch_1}
-	\mathcal{M}(h_1|h_2) \equiv 1- \mathrm{m}(h_1|h_2)\,,
+	\mathcal{M}(h_1|h_2) \equiv 1- \mathrm{m}(h_1|h_2)\,.
 \end{equation}
 
 % \mi{I think it'd be good to define the mismatch $\mathcal{M} \equiv 1- \mathrm{m}$, since it's the standard quantity to discuss, and it's what we plot}
@@ -218,7 +218,7 @@ This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(
 Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
 % \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
-In fact, the scale in Fig.~\ref{fig:match} is clipped such that points which give $1-\mathrm{m}(h_1|h_2)=0$ (up to numerical precision) are plotted as the lowest value in the colorbar.
+In fact, the scale in Fig.~\ref{fig:match} is clipped such that points which give $\mathcal{M}=0$ (up to numerical precision) are plotted as the lowest value in the colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 % \mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
 
@@ -249,7 +249,8 @@ If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequenc
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
-% This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
+This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. 
+% \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
 % \te{Its just one dimension, so is pretty easy. I tried the one from the cosmoJAX people and found that the match did slightly increase but it was a decent chunk slower (maybe a factor of 2 or so). So I just left it out. Would be happy to code up something and put it in if you think its necessary!}
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
