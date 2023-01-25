@@ -128,7 +128,7 @@ The core idea of AD is that any mathematical function can be broken down into a 
 The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
-Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators (e.g.\ graphical processing units) and its just-in-time (JIT) compiler, which can substantially accelerate code.
+Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators,such as graphical processing units (GPUs), and its just-in-time (JIT) compiler, which can substantially accelerate code.
 
 \AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
@@ -141,7 +141,7 @@ This makes a
 \jax implementation that complies with the constraints of JIT compilation simple.
 NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity (NR) simulations, are in principle also straightfoward to implement in \jax.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
-For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[e.g.][]{Cotesta:2020qhw}.
+For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[e.g.]{Cotesta:2020qhw}.
 % to produce a waveform
 %require dynamic frequency grids and are therefore tricky to implement in \jax.
 %\AZ{What does this mean? I don't understand why EOB needs dynamic frequency grids. We should clarify, and we can also mention if \jax is well-suited to frequency-domain ROM implementations of EOB, and reference those.} 
@@ -239,7 +239,6 @@ The total mass only impacts the match because the chosen PSD and frequency limit
 If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequency grid to units of $Mf$, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
 % \AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
-\mi{it's important to say what PSD was used}
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
 This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
@@ -452,9 +451,9 @@ One can see that the distribution of mismatches after optimization is generally 
 % While many waveforms improved their accuracy, some retain similar mismatches. 
 % \AZ{I don't understand this claim. The spin degeneracy is present in the physics of the waveform; $\chi_{\rm eff}$ is just one way of parametrizing the spins that tries to reduce the degeneracy.}
 % This phenomenon is mainly due to the reduced spin approximation used in IMRPhenomD, where spin degeneracy is introduced, hence restricting further improvements. 
-In an upcoming paper, we will give a detailed discussion of how such an approximation scheme affects the optimization procedure. 
-Nevertheless, the peak of the original waveform distribution has moved to the left end of the distribution, indicating that \sout{the} \AZ{our AD-assisted} optimization procedure \AZ{provides an improved implementation of the model}. 
-\sout{Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. }
+% In an upcoming paper, we will give a detailed discussion of how such an approximation scheme affects the optimization procedure. 
+In particular, the peak of the original waveform distribution has moved by nearly an order of magnitude, indicating that our AD-assisted optimization procedure provides an improved implementation of the model.
+% \sout{Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. }
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
@@ -473,7 +472,7 @@ Nevertheless, the peak of the original waveform distribution has moved to the le
 
 Forecasting the sensitivity of future experiments is an routine task in GW science. 
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters could be measured.
-The Fisher matrix approach is built around the assumption of a Gaussian likelihood.
+The Fisher matrix approach is built around the assumption of a Gaussian likelihood~\citep{Vallisneri:2007ev}.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
 
 Computing the Fisher matrix requires one to evaluate derivatives of the likelihood, which in turn involves derivatives of the waveform model and detector projection functions.
@@ -482,7 +481,8 @@ Forecasting with Fisher matrices for third generation detectors has already been
 Here we purely want to illustrate the simplicity and speed of AD for forecasting rather than providing new physics insights.
 We therefore consider a simple, three-detector setup corresponding to the two LIGO detectors in addition to Virgo.
 
-The Fisher information matrix for a single detector is typically given by \amc{I'm guessing in practice you compute a Hessian, so maybe write that out?}
+The Fisher information matrix for a single detector is typically given by 
+% \amc{I'm guessing in practice you compute a Hessian, so maybe write that out?}
 \begin{equation}
     \label{eq:fisher}
     \mathcal{I}^{k}_{ij} = (\partial_i h^k | \partial_j h^k) \, ,
@@ -497,8 +497,8 @@ Since we are considering a three detector setup we simply add the Fisher matrice
     \mathcal{I}_{ij} =  \mathcal{I}^{\mathrm{Hanford}}_{ij} + \mathcal{I}^{\mathrm{Livingston}}_{ij} + \mathcal{I}^{\mathrm{Virgo}}_{ij}   \, .
 \end{equation}
 Finally, we invert the Fisher matrix to calculate the covariance matrix,
-\AZ{which proves forecasted measurement errors and parameter covariances for a signal with parameters $\theta$ observed by the given detector network}.
-\mi{I think Aaron means ``provides'' not ``proves''; also, we might add ``in the high SNR limit''}
+which provides forecasted measurement errors and parameter covariances for a signal with parameters $\theta$ observed by the given detector network in the high signal-to-noise limit.
+% \mi{I think Aaron means ``provides'' not ``proves''; also, we might add ``in the high SNR limit''}
 \AZ{Again we need to state and cite the PSDs we use for the three detectors.}
 
 % \begin{table*}[ht!]
@@ -538,40 +538,41 @@ Finally, we invert the Fisher matrix to calculate the covariance matrix,
     \centering
     \begin{tabular}{c|c}
     \hline\hline
-    $m_1, m_2$ & $\boldsymbol{U}[1.0, 50]\, \mathrm{M}_\odot$ \\ \hline
-    $\chi_1, \chi_2$ & [-0.99, 0.99] \\ \hline
-    $D$ & [500, 1000]\, Mpc \\ \hline
+
+    $m_1, m_2$ & $\boldsymbol{U}[20, 60]\, \mathrm{M}_\odot$ \\ \hline
+    $\chi_1, \chi_2$ & $\boldsymbol{U}[-0.8, 0.8]$ \\ \hline
+    $D$ & $\left(400 (\boldsymbol{U}[0,1]^{1/3}) + 600\right)$\, Mpc \\ \hline
     $t_c$ & 0.0 \\ \hline
     $\phi_c$ & 0.0 \\ \hline
-    Inclincation Angle, $\iota$ & $\boldsymbol{U}[0, 1]$ \\ \hline
-    Polarization Angle, $\psi$ & $\boldsymbol{U}[0, 1]$ \\ \hline
-    Right Ascension, $\delta$ & $\boldsymbol{U}[0, 1]$ \\ \hline
-    Declination, $\alpha$ & $\boldsymbol{U}[0, 1]$ \\ 
+    Inclincation Angle, $\iota$ & $\cos^{-1}(\boldsymbol{U}[-1, 1])$ \\ \hline
+    Polarization Angle, $\psi$ & $\boldsymbol{U}[0, 2\pi]$ \\ \hline
+    Right Ascension, $\alpha$ & $\boldsymbol{U}[0, 2\pi]$ \\ \hline
+    Declination, $\delta$ & $\pi/2 - \cos^{-1}(\boldsymbol{U}[-1, 1])$ \\ 
     \hline\hline
     \end{tabular}
     % \end{center}
     \caption{Priors for the 11 dimensional parameter space used for the Fisher forecasting population analysis in Sec.~\ref{subsec:fisher}. 
-    $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets.
-    \AZ{$\cos \iota \in (-1,1)$, $\psi \in (0,2 \pi)$ (or $\pi$), RA is $\alpha \in (0, 2\pi)$, Dec is $\delta$, let $\vartheta = \pi/2 - \delta$, then $\cos (\vartheta) \in (-1,1)$ }
+    $\boldsymbol{U}$ indicates a uniform distribution between the two variables in the brackets. 
+    The distance prior ensures that the binaries are uniformly distirbuted in volume.
     }
     \label{tab:priors}
 \end{table}
 
 To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.
-\mi{should we say a word about computing FMs with multiple detectors?}
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}.
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
-We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within {\color{red}{X}} percent.
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within 20 percent.\te{Check number}
 This demonstrates that AD can be used to accurately produce population-level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
-In particular, we find that after compilation each error calculation takes approximately half a second on a single computing core.
+In particular, we find that after compilation, each error calculation takes approximately half a second on a single computing core.
 \texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
-This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is slower than the \lalsuite call \AZ{used by \texttt{GWbench}}.
-\kw{Want to pull a number on the total time it took on generating the population result? I imagine this should turn the theorists on and send them into a fishing frenzy.}
+This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is similar to \lalsuite which is used by \texttt{GWbench}.
+On a MacBook Pro with an M1 Max Apple Silicon processor, JIT compilation takes $\sim 270\,s$ and the full population analysis takes less $\sim 8$ minutes.
+% \kw{Want to pull a number on the total time it took on generating the population result? I imagine this should turn the theorists on and send them into a fishing frenzy.}
 As discussed above, performance can be further improved by utilizing hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 

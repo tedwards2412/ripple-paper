@@ -113,7 +113,7 @@ plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
 
 # plt.xlabel(r"Total Mass, $M$")
 # plt.ylabel(r"Mass Ratio, $q$")
-plt.xlabel(r"Total Mass, $M$")
+plt.xlabel(r"Total Mass, $M\,[\mathrm{M}_\odot]$ ")
 plt.ylabel(r"Effective Spin, $\chi_{\rm eff}$")
 plt.xlim(0, 200)
 plt.ylim(-1, 1.)
