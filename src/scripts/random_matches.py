@@ -93,7 +93,7 @@ sc = plt.scatter(
     vmax=-12,
     s=20
 )
-plt.colorbar(sc, label=r"$\log_{10}(1-\mathrm{Match})$")
+plt.colorbar(sc, label=r"Mismatch, $\log_{10}(\mathcal{M})$")
 
 # thetas = np.array([Mtot,chieff]).T
 # vor = Voronoi(thetas)

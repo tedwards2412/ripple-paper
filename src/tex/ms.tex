@@ -201,7 +201,13 @@ Now we are ready to define the \textit{match} which is given by
     \mathrm{m}(h_1|h_2) \equiv \max_{\Delta t_c,\, \Delta \phi_c} \left[h_1 \, \middle| \, h_2 \right]\,
 \end{equation}
 where $\Delta t_c$ and $\Delta \phi_c$ are, respectively, the differences in time and phase of coalescence between the two waveforms.
-\mi{I think it'd be good to define the mismatch $\mathcal{M} \equiv 1- \mathrm{m}$, since it's the standard quantity to discuss, and it's what we plot}
+Finally, we can define the mismatch as 
+\begin{equation}
+    \label{eq:mismatch_1}
+	\mathcal{M}(h_1|h_2) \equiv 1- \mathrm{m}(h_1|h_2)\,,
+\end{equation}
+
+% \mi{I think it'd be good to define the mismatch $\mathcal{M} \equiv 1- \mathrm{m}$, since it's the standard quantity to discuss, and it's what we plot}
 
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation. For this comparison, we use the $S_n$  presented in GWTC-2~\citep{LIGOScientific:2020ibl} from the Livingston detector (the most sensitive of the detectors).\footnote{
     \url{https://dcc.ligo.org/LIGO-P2000251/public}.
@@ -212,7 +218,7 @@ This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathrm{m}(
 Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.
 From Fig.~\ref{fig:match}, it is clear that the \ripple waveform matches with the \lalsuite waveform close to numerical precision across the entire parameter space.
 % \AZ{strictly $=0$? That seems impossible. Fmla has wrong labels for $h$'s}
-In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$ (up to numerical precision) causing points to not appear in the log scale colorbar.\te{Edit according to updated plot.}
+In fact, the scale in Fig.~\ref{fig:match} is clipped such that points which give $1-\mathrm{m}(h_1|h_2)=0$ (up to numerical precision) are plotted as the lowest value in the colorbar.
 % In particular, the blue points indicate parameter points where the $1-\mathrm{m}(h_{\theta_1}|h^{*}_{\theta_1})=0$ and would therefore not appear in the log scale colorbar.
 % \mi{to Aaron's point, maybe say ``0 up to numerical precision''?}
 
@@ -223,7 +229,8 @@ In particular, the gray points at low masses are where $1-\mathrm{m}(h_1|h_2)=0$
         \caption{
             Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin. 
             % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
-            The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
+            % The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
+            Points which give $\mathcal{M}=0$ (up to numerical precision) are plotted as the lowest value in the colorbar
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
             \te{Ok so some of the remaining error was coming from a weird thing at the cutoff of the waveform. I've now fixed this, so error is further down. Let me know if you still think it needs editing.}
             \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
@@ -242,8 +249,8 @@ If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequenc
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 
 There remains some slight deviation between the two waveform implementations at high total mass. 
-This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
-\te{Its just one dimension, so is pretty easy. I tried the one from the cosmoJAX people and found that the match did slightly increase but it was a decent chunk slower (maybe a factor of 2 or so). So I just left it out. Would be happy to code up something and put it in if you think its necessary!}
+% This is partly due to the fact that cubic interpolators, which are used within IMRPhenomD to calculate the ringdown and damping frequencies, are not currently supported in \jax. \dfm{What dimension of interpolation do you need? Maybe this is something we could implement...}
+% \te{Its just one dimension, so is pretty easy. I tried the one from the cosmoJAX people and found that the match did slightly increase but it was a decent chunk slower (maybe a factor of 2 or so). So I just left it out. Would be happy to code up something and put it in if you think its necessary!}
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 % The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
@@ -283,7 +290,8 @@ For reverse-mode AD, one only needs two function calls to evaluate the derivativ
     Note that although the number of function calls is small, reverse-mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
 }
-\kw{Maybe a bit more background on AD, the way we phrase it here sounds a bit too magical too me now.}
+For a review of AD methods see~\cite{2018arXiv181105031M}.
+% \kw{Maybe a bit more background on AD, the way we phrase it here sounds a bit too magical too me now.}
 Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond-GR models, waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
 In these cases many more parameters can be added.
@@ -381,8 +389,8 @@ Here, we choose it to be the mismatch between the NR waveform and the approximan
 where $\lambda$ is a vector of the fitting coefficients, $h_{\mathrm{IMR}}$ is
 the waveform generated by IMRPhenomD, and $h_{\mathrm{NR}}$ is the waveform
 generated by the NR simulation. 
-\mi{I think the mismatch should be defined above, right after the match is defined. We should also state what PSD and sampling parameters are used}
-\te{I think it makes it easier to define here cause we only now introduce the fitting coefficient $\lambda$.}
+% \mi{I think the mismatch should be defined above, right after the match is defined. We should also state what PSD and sampling parameters are used}
+% \te{I think it makes it easier to define here cause we only now introduce the fitting coefficient $\lambda$.}
 Given the loss function, we use gradient descent to update the fitting
 coefficients:
 \begin{equation}
@@ -460,9 +468,9 @@ One can see that the distribution of mismatches after optimization is generally 
 In particular, the peak of the original waveform distribution has moved by nearly an order of magnitude, indicating that our AD-assisted optimization procedure provides an improved implementation of the model.
 % \sout{Therefore, the new set of waveform coefficients can produce better waveforms for GW analyses. }
 
-\AZ{While we focused on \texttt{IMRPhenomD} here, the ability to apply AD to the calibration parameters may assist in other approaches to calibration, such as that used for the aligned-spin EOB model in~\citet{Bohe:2016gbl}.
-There MCMC methods were used in a two-step procedure to optimize the calibration parameters. 
-Derivative information, if implemented for EOB waveforms, could allow for the application of other sampling methods such as HMC, or possibly optimization over the entire set of NR waveforms at once.}
+While we focused on \texttt{IMRPhenomD} here, the ability to apply AD to the calibration parameters may assist in other approaches to calibration, such as that used for the aligned-spin EOB model in~\citet{Bohe:2016gbl}.
+There, MCMC methods were used in a two-step procedure to optimize the calibration parameters. 
+Derivative information, if implemented for EOB waveforms, could allow for the application of other sampling methods such as HMC, or possibly optimization over the entire set of NR waveforms at once.
 
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
@@ -549,7 +557,7 @@ which provides forecasted measurement errors and parameter covariances for a sig
 
     $m_1, m_2$ & $\boldsymbol{U}[20, 60]\, \mathrm{M}_\odot$ \\ \hline
     $\chi_1, \chi_2$ & $\boldsymbol{U}[-0.8, 0.8]$ \\ \hline
-    $D$ (Uniform in volume) & $[600, 900]$\,Mpc \\ \hline
+    $D$ (Uniform in Volume) & $[600, 900]$\,Mpc \\ \hline
     $t_c$ & 0.0 \\ \hline
     $\phi_c$ & 0.0 \\ \hline
     Inclincation Angle, $\cos(\iota)$ & $\boldsymbol{U}[-1, 1]$ \\ \hline
