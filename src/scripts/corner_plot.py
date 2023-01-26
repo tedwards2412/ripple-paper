@@ -40,6 +40,11 @@ mpl.rcParams.update(params)
 data_HMC = np.load(paths.data / "chains_HMC.npz")
 HMC_bestchain = data_HMC["chains"][np.argmax(data_HMC["log_prob"][:, -1])]
 
+data_gaussian = np.load(paths.data / "chains_gaussian.npz")
+gaussian_bestchain = data_gaussian["chains"][
+    np.argmax(data_gaussian["log_prob"][:, -1])
+]
+
 
 def ms_to_Mc_eta(m):
     r"""
@@ -67,24 +72,28 @@ true_params = np.array(
 )
 
 # Plot all chains
-figure = corner.corner(HMC_bestchain, labels=labels, labelpad=0.1)
+# figure = corner.corner(gaussian_bestchain, labels=labels, labelpad=0.1, smooth=True, color="C1", alpha=0.3, label="GRW")
+
+figure = corner.corner(HMC_bestchain, labels=labels, labelpad=0.1, smooth=True, truths=[Mc, eta, 0.3, -0.4, distance, 0.0, 0.0])
+
 
 # Extract the axes
-axes = np.array(figure.axes).reshape((n_dim, n_dim))
+# axes = np.array(figure.axes).reshape((n_dim, n_dim))
 
 # Loop over the diagonal
-for i in range(n_dim):
-    ax = axes[i, i]
-    ax.axvline(true_params[i], color="C1", alpha=0.8)
+# for i in range(n_dim):
+#     ax = axes[i, i]
+#     ax.axvline(true_params[i], color="C1", alpha=0.8)
 
-# Loop over the histograms
-for yi in range(n_dim):
-    for xi in range(yi):
-        ax = axes[yi, xi]
-        ax.axvline(true_params[xi], color="C1", alpha=0.8)
-        ax.axhline(true_params[yi], color="C1", alpha=0.8)
-        ax.plot(true_params[xi], true_params[yi], "s", color="C1", alpha=0.8)
+# # Loop over the histograms
+# for yi in range(n_dim):
+#     for xi in range(yi):
+#         ax = axes[yi, xi]
+#         ax.axvline(true_params[xi], color="C1", alpha=0.8)
+#         ax.axhline(true_params[yi], color="C1", alpha=0.8)
+#         ax.plot(true_params[xi], true_params[yi], "s", color="C1", alpha=0.8)
 
 figure.set_size_inches(10, 10)
+plt.legend()
 plt.savefig(paths.figures / "PE.pdf", bbox_inches="tight")
 

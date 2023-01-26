@@ -232,9 +232,9 @@ In fact, the scale in Fig.~\ref{fig:match} is clipped such that points which giv
             % The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
             Points which give $\mathcal{M}=0$ (up to numerical precision) are plotted as the lowest value in the colorbar
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
-            \te{Ok so some of the remaining error was coming from a weird thing at the cutoff of the waveform. I've now fixed this, so error is further down. Let me know if you still think it needs editing.}
-            \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
-            \mi{I agree. Furthermore, it looks like there's a subpopulation of darker points hiding under the brighter ones up to and around $M \sim 100$? is there a dependence on the mass ratio? it'd be good to comment on this, and maybe show a corner plot adding $q$ to the mix. Also, $M$ is lacking units (I assume $M_\odot$, but it should be shown in the label)}
+            % \te{Ok so some of the remaining error was coming from a weird thing at the cutoff of the waveform. I've now fixed this, so error is further down. Let me know if you still think it needs editing.}
+            % \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
+            % \mi{I agree. Furthermore, it looks like there's a subpopulation of darker points hiding under the brighter ones up to and around $M \sim 100$? is there a dependence on the mass ratio? it'd be good to comment on this, and maybe show a corner plot adding $q$ to the mix. Also, $M$ is lacking units (I assume $M_\odot$, but it should be shown in the label)}
         }
         \label{fig:match}
     \end{centering}
@@ -606,7 +606,9 @@ AD therefore represents a fast and accurate way of performing population level a
     \caption{
         Corner plot for the posteriors from an HMC (see text for details) on simulated noise with injected signal. 
         Orange lines indicate the true values of the injection. 
-        Although not fully converged, it is clear that we find posteriors consistent with the injected parameters. \amc{could apply a mild Gaussian kernel to smooth this for the sake of presentation. Are the parameter ranges due to your priors? How did you handle the boundaries in the HMC?}
+        Although not fully converged, it is clear that we find posteriors consistent with the injected parameters. 
+        % \amc{could apply a mild Gaussian kernel to smooth this for the sake of presentation. 
+        % \amc{Are the parameter ranges due to your priors? How did you handle the boundaries in the HMC?}
     }
     \label{fig:corner}
 \end{figure*}
@@ -627,26 +629,35 @@ Here we simply aim to demonstrate the utility of a derivative based sampler and 
 % In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
 In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm~\citep{Bouffanais:2018hoz, 2014CQGra..31n5004P}.
 
-For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
-Again, our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston (\textsc{SimNoisePSDaLIGOZeroDetHighPower}), and Virgo (\textsc{SimNoisePSDAdvVirgo})
+For our basic example we perform an injection recovery test on a seven dimensional parameter space with the two LIGO detectors in our network.
+Our noise curves correspond to the design PSDs for LIGO Hanford and Livingston (\textsc{SimNoisePSDaLIGOZeroDetHighPower}).
 We use $20\,$Hz, $1024\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
 More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: chirp mass $M_c = 23.82\,\mathrm{M_\odot}$,  symmetric mass ratio $\eta = 0.248$, primary spin parameter $\chi_1=0.3$, secondary spin parameter $\chi_2=-0.4$, luminosity distance $D = 1.6\,\mathrm{Gpc}$, coalescence time $t_c = 0.0$, and coalescence phase $\phi_c = 0.0$.\footnote{
     The remaining parameters (inclination angle $\iota$, polarization angle $\psi$, right ascension $\alpha$, declination $\delta$) are set to $\pi/3$.
 }
-Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for \sout{200000} $2\times10^5$ steps and the Gaussian random walk (GRW) sampler for \sout{1500000} $1.5\times10^6$ steps (each with four randomly initialized independent chains). 
-\AZ{What implementation of GRW? Can we cite something?}
-\amc{briefly summarize and give refs for flowMC and GRW. Is GRW Metropolis-Hastings with a Gaussian transition kernel? How'd you tune this? Why not use NUTS for HMC?}
+Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC~\citep{2022arXiv221106397W} for $2\times10^5$ steps and the random walk Metropolis Hastings (RWMH) sampler~\citep{1953JChPh..21.1087M} for $1.5\times10^6$ steps (each with four randomly initialized independent chains). 
+% \AZ{What implementation of GRW? Can we cite something?}
+% \amc{briefly summarize and give refs for flowMC and GRW. Is GRW Metropolis-Hastings with a Gaussian transition kernel? How'd you tune this? Why not use NUTS for HMC?}
 The number of steps and and mass matrix used for each example was hand tuned to give good performance for the specific sampler.
-\amc{not a huge deal, but why hand tune? There are automated ways to do this in e.g.\ numpyro with a warm-up adaptation phase.}
+% \amc{not a huge deal, but why hand tune? There are automated ways to do this in e.g.\ numpyro with a warm-up adaptation phase.}
 The additional steps for the GRW sampler were required to achieve a similarly converged posterior.
-\amc{Why not plot its posterior?}
+% \amc{Why not plot its posterior?}
+
+We note at this point that neither pure HMC nor RWMH are the most modern versions of gradient and non-gradient based samplers.
+For example, for gradient based samplers one could use a No-U-Turn sampler~\citep{2011arXiv1111.4246H} or the Metropolis-adjusted Langevin algorithm~\citep{2013arXiv1309.2983X}.
+Traditional MCMC methods such as nested sampling~\citep{Skilling2004, multinest, dynesty} or the Affine Invariant MCMC Ensemble sampler implemented in \texttt{emcee}~\citep{2013PASP..125..306F} will also lead to more efficient sampling of the posterior than basic RWMH.
+Here we instead seek to demonstrate the simplicity with which HMC can be implemented within a differentiable pipeline.
+In addition, as we discuss below, we find that a basic HMC algorithm will produce significantly more efficient sampling that RWMH, motivating further exploration of gradient-based samplers for GW PE~\citep{PEpaper}.
+
+% \te{Add paragraph with caveats.}
+% \te{Change GRW to random walk metrpolis hastings (RWMH)}
 
 In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered using the best chain (i.e. one that reached the highest log-likelihood values).
-\mi{why show a single chain?}
+% \mi{why show a single chain?}
 The orange shows the true parameters of the injected signal.
 From the one dimensional histograms along the diagonal, it is clear that we consistently recover all seven parameters apart from $\phi_c$.
-This is expected since the injected binary is relatively nearby.
-\AZ{Can we give the SNR?}
+This is expected since the injected binary is relatively nearby with an SNR of $\sim13$.
+% \AZ{Can we give the SNR?}
 
 \begin{figure}[t]
 	\script{autocorrelation.py}

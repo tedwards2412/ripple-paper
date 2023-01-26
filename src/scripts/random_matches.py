@@ -75,7 +75,7 @@ data = np.loadtxt(paths.data / "ripple_phenomD_matches.txt")
 exactmatch_indices = (1.0 - data[:, -1]) <= 0.0
 other_indices = (1.0 - data[:, -1]) > 0.0
 
-q = data[:, 1] / data[:, 0]
+# q = data[:, 1] / data[:, 0]
 chieff = (data[:, 0] * data[:, 2] + data[:, 1] * data[:, 3]) / (data[:, 0] + data[:, 1])
 Mtot = data[:, 1] + data[:, 0]
 
@@ -91,7 +91,7 @@ sc = plt.scatter(
     cmap=cm,
     vmin=-16,
     vmax=-12,
-    s=20
+    s=5
 )
 plt.colorbar(sc, label=r"Mismatch, $\log_{10}(\mathcal{M})$")
 
