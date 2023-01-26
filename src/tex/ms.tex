@@ -274,7 +274,7 @@ Finally, \jax can natively on a GPU which allows for highly parallellized wavefo
 
 % Waveform calls can therefore be evaluated in parallel, massively improving performance.
 
-Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find that on average waveform evaluations take $\sim 0.02$, over an of magnitude faster than serial CPU evaluation.
+Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find that on average waveform evaluations take $\sim 0.02\,\mathrm{ms}$, over an of magnitude faster than serial CPU evaluation.
 % \te{Check and modify}
 % \kw{We should add some more detail related to this comparison. We should be clear that each individual waveform sample evaluation doesn't get us the performance by putting it on GPU (Jitting helps with that, not the GPU part). The GPU comes into play by allowing parallel evaluation of waveform sample, so for a tiny amount of time/frequency samples, we should expect GPU to lose to a CPU, but on any reasonable amount of time/frequency samples, GPU win a lot.}
 % \amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
@@ -321,13 +321,13 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \label{subsec:coeffs}
 
 % \te{We use in total 11 waveforms for the optimization. Original PhenomD uses 19 @Kelvin add details of where to find this.}
-\te{Fig 2, plot was made after optimizing for ALL waveforms}
+% \te{Fig 2, plot was made after optimizing for ALL waveforms}
 % \te{536 waveforms are subset of the SXS catalogue that are not precessing or eccentric. @Kelvin add details of where to find these things}
-\te{None of the 536 are part of the training set}
-\te{Used flat PSD}
+% \te{None of the 536 are part of the training set}
+% \te{Used flat PSD}
 % \te{@Kelvin, can you please add a citation to the 11 waveforms used for training as well as a citation to the 536 waveforms used from the SXS catalogue. I've indicated in the text where these should be added}
-\te{The thing we really want to compare is the mismatch with the rescaled frequency grid and a fixed flat PSD.}
-\te{Need to understand how the mass scale was introduced into the NR waveforms.}
+% \te{The thing we really want to compare is the mismatch with the rescaled frequency grid and a fixed flat PSD.}
+% \te{Need to understand how the mass scale was introduced into the NR waveforms.}
 
 % \AZ{Broad comments: need to cite which catalog the waveforms came from if any.
 % The number of waveforms used seems much larger than the number originally used
@@ -414,7 +414,7 @@ Additionally, this means our best-fit points will generally depend on the distri
 % \amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
 
 To evaluate Eq.~\ref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
-    In particular, we use $M f_l = 2.5 \times 10^{-3}$, $M f_u = 0.2$, and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,[\mathrm{M}_\odot]$ throughout this section.
+    In particular, we use $M f_l = 2.5 \times 10^{-3}$, $M f_u = 0.2$, and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,\mathrm{M}_\odot$ throughout this section.
 }
 Since the NR waveforms do not have a total mass associated with them, we use assign a fixed total mass to compare with the \ripple waveform.
 
@@ -452,7 +452,7 @@ In particular, the error in the merger region is decreased by half while other r
 		\caption{
 			Distribution of 536 log mismatches (see Eq.~\ref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
             Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
-            More quantitatively, the mean mismatch (shown as vertical dashed lines) is reduced by $\sim36$\%. 
+            More quantitatively, the median mismatch (shown as vertical dashed lines) is reduced by $\sim50$\%. 
 		}
 		\label{fig:mismatch_hist}
 	\end{centering}
