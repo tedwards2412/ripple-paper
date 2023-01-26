@@ -112,7 +112,7 @@ Derivatives are ubiquitously useful throughout data analysis tasks.
 % For instance, during PE, gradients are used to improve performance of the samplers 
 % % \dfm{This isn't correct. In HMC the gradients don't have the behavior. I'd just say something like ``gradients are used to improve performance''} 
 % (e.g.~in Hamiltonian Monte Carlo~\citep{2017arXiv170102434B} or Gradient Descent~\citep{2016arXiv160904747R}).
-For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\ using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\ using Hamiltonian Monte Carlo (HMC)~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
+For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\,using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\, using Hamiltonian Monte Carlo (HMC)~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically required a significant amount of work to obtain~\citep{Keppel:2013kia}.
 With waveforms only increasing in complexity, calculating analytic derivatives will become ever more tricky.
@@ -584,7 +584,7 @@ Our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
-We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within 20\%.\te{Check number}
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within ~30\%.
 This demonstrates that AD can be used to accurately produce population-level forecasts.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
@@ -611,26 +611,27 @@ AD therefore represents a fast and accurate way of performing population level a
     \label{fig:corner}
 \end{figure*}
 
-\amc{most acronyms were already introduced.}
+% \amc{most acronyms were already introduced.}
 After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called PE.
-To do this, one typically uses a Markov Chain Monte Carlo (MCMC) or nested sampler~\citep{Skilling2004, multinest, dynesty}.
+To do this, one typically uses an MCMC or nested sampler~\citep{Skilling2004, multinest, dynesty}.
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
-Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to facilitate follow-up electromagnetic observations \citep[e.g.~\texttt{BAYESTAR}][]{Singer:2015ema}.
-\AZ{We should be careful here. Many new algorithms have sped this a lot. Cogwheel can do fast PE, DINGO is a normalizing flow code that is very fast when trained. There are likelihood acceleration methods like ROQ, multibanding, relative binning/heterodyning that accelerate the process compared to the numbers quoted above.}
+Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to facilitate follow-up electromagnetic observations \citep[e.g.~\texttt{BAYESTAR}][]{Singer:2015ema}. 
+Moreover, a number of methods have been developed to speed up PE well below the numbers quoted above~\citep{Dax:2021tsq, Islam:2022afg,Roulet:2022kot, Zackay:2018qdy, Cornish:2021lje, Canizares:2013ywa}.
+% \AZ{We should be careful here. Many new algorithms have sped this a lot. Cogwheel can do fast PE, DINGO is a normalizing flow code that is very fast when trained. There are likelihood acceleration methods like ROQ, multibanding, relative binning/heterodyning that accelerate the process compared to the numbers quoted above.}
 Nevertheless, these do not present the whole picture; fast, general PE therefore remains a key aim of GW data analysis
 
 A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
 Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
 % In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
-In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm.
-\AZ{Add citations to other HMC papers in GW land}
+In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm~\citep{Bouffanais:2018hoz, 2014CQGra..31n5004P}.
 
 For our basic example we perform an injection recovery test on a seven dimensional parameter space with the same three detector network setup considered in \S~\ref{subsec:fisher}.
-\AZ{As before, say what PSD and cite.}
-More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: chirp mass $M_c = 23.82\,\mathrm{M_\odot}$,  symmetric mass ratio $\eta = 0.248$, primary spin parameter $\chi_1=0.3$, secondary spin parameter \AZ{$\chi_2=-0.4$}, luminosity distance $D = 1.6\,\mathrm{Gpc}$, coalescence time $t_c = 0.0$, and coalescence phase $\phi_c = 0.0$.\footnote{
-    The remaining parameters are set to $\pi/3$. \AZ{Can we say what they are? $\iota$, $\psi$, $\alpha$, $\delta$?}
+Again, our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston (\textsc{SimNoisePSDaLIGOZeroDetHighPower}), and Virgo (\textsc{SimNoisePSDAdvVirgo})
+We use $20\,$Hz, $1024\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
+More specifically, we generate Gaussian noise consistent with the measured PSDs for each detector and then inject a BBH signal with parameters: chirp mass $M_c = 23.82\,\mathrm{M_\odot}$,  symmetric mass ratio $\eta = 0.248$, primary spin parameter $\chi_1=0.3$, secondary spin parameter $\chi_2=-0.4$, luminosity distance $D = 1.6\,\mathrm{Gpc}$, coalescence time $t_c = 0.0$, and coalescence phase $\phi_c = 0.0$.\footnote{
+    The remaining parameters (inclination angle $\iota$, polarization angle $\psi$, right ascension $\alpha$, declination $\delta$) are set to $\pi/3$.
 }
 Using a standard Gaussian likelihood, we then run the HMC sampler implemented in \flowMC for \sout{200000} $2\times10^5$ steps and the Gaussian random walk (GRW) sampler for \sout{1500000} $1.5\times10^6$ steps (each with four randomly initialized independent chains). 
 \AZ{What implementation of GRW? Can we cite something?}
@@ -667,13 +668,14 @@ Although further steps would be required to achieve a fully-converged posterior,
 To further illustrate this, in Fig.~\ref{fig:autocorrelation} we plot the autocorrelation as a function of lag for both the HMC and GRW samplers.
 The HMC autocorrelation is substantially lower than that of the GRW.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
-In addition, we found that the effictive number of samples 
-\amc{provide ref?} 
+In addition, we found that the effictive number of samples~\citep{arviz_2019},\footnote{
+    Computed using \textsc{arviz}~\url{https://python.arviz.org/en/stable/api/generated/arviz.ess.html}
+    }
 (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
 In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
-We therefore expect \jax waveforms to be \sout{crucial} \AZ{highly beneficial} to future PE efforts in GW astronomy, especially for low-latency pipelines.
-\kw{Not just low latency, but also high dimensional analysis, such as testing GR and lensing.}
+We therefore expect \jax waveforms to be highly beneficial to future PE efforts in GW astronomy, particular for low-latency pipelines and higher dimensional analysese.
+% \kw{Not just low latency, but also high dimensional analysis, such as testing GR and lensing.}
 
 \section{Discussion and Conclusion}
 \label{subsec:discussion}
