@@ -41,6 +41,10 @@ mpl.rcParams.update(params)
 )
 bins = np.arange(-5, -1, 0.1)
 
+print(np.mean(ori_loss))
+print(np.mean(opt_loss))
+# print((np.mean(ori_loss) - np.mean(opt_loss))*100/np.mean(ori_loss))
+
 # print(stats.mode(np.log10(ori_loss)[:]))
 # print(np.mean(np.log10(ori_loss)) / np.mean(np.log10(opt_loss)))
 # print(stats.mode(np.log10(ori_loss))[0] / stats.mode(np.log10(opt_loss))[0])
