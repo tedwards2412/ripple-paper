@@ -88,7 +88,7 @@ plt.hist(sky_error_list, bins=bins, density=True, alpha=0.3, color="C0")
 plt.hist(sky_error_list, bins=bins, density=True, histtype="step", color="C0")
 
 plt.xscale("log")
-plt.xlim(0.1, 300)
+plt.xlim(0.1, 301)
 plt.xlabel("Sky Localization Error [deg$^2$]")
 plt.ylabel("Probability")
 plt.savefig(paths.figures / "sky_localization.pdf", bbox_inches="tight")
