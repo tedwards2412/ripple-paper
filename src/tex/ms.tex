@@ -73,7 +73,7 @@
     Moreover, \jax allows for GPU-accelerated waveform calls which can be over an order of magnitude faster than serial evaluation on a CPU.
     We then focus on three applications where efficient and differentiable waveforms are essential.
     Firstly, we demonstrate how gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
-    In particular, we demonstrate that the typical \textit{match} with numerical relativity waveforms can be improved by more than 10\% without any additional overhead.
+    In particular, we demonstrate that the typical \textit{match} with numerical relativity waveforms can be improved by more than 50\% without any additional overhead.
     Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
     This increased speed makes population forecasting substantially simpler.
     % , as discussed extensively in \citet{Iacovelli:2022bbs, Iacovelli:2022mbg}.
@@ -92,14 +92,14 @@ In addition, this computational cost will substantially increase when next gener
 
 The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
-Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg}.
+Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg, kombine}.
 For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
 More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.
 % \te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
 % In the most minimal example of non-precessing binaries, this requires a Markov Chain Monte Carlo (MCMC) on an 11 dimensional parameter space for each event.
 % \kw{This is not quite true. You can always marginalize over more parameters if you want, such as time of coalescence and phase. I would just mention the typical case of 15 parameters GR PE instead.}
 % \AZ{Maybe modify; some other points are precessing PE requires 15 params, tidal prec 17 params, plus calibration marge and EoS inferences can incorporate even more}
-Beyond these simple scenarios, more complex waveform models with additional parameters may be used to include calibration errors~\citep{Farr:2014,Vitale:2020gvb}, model the tides of neutron stars~\citep{LIGOScientific:2018hze}, and test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}..
+Beyond these simple scenarios, more complex waveform models with additional parameters may be used to include calibration errors~\citep{Farr:2014,Vitale:2020gvb}, model the tides of neutron stars~\citep{LIGOScientific:2018hze}, and test for deviations from General Relativity~\citep{Arun:2006yw, Agathos:2013upa, Yunes:2016jcc, LIGOScientific:2016lio, LIGOScientific:2020tif, Krishnendu:2021fga}.
 % \AZ{Add PPE and maybe TIGER refs..?}
 Finally, using the results of PE, population synthesis models constrain the progenitors systems from which the black holes we see merging today began their journey~\citep{LIGOScientific:2020kqk, LIGOScientific:2021psn, Wong:2022flg}.
 % \kw{Need more reference and some rewording}\te{added refs, happy?}
@@ -129,11 +129,11 @@ The core idea of AD is that any mathematical function can be broken down into a 
 The full derivative can then be constructed using the chain rule.
 There are now a variety of AD implementations, most notably in deep learning frameworks such as \texttt{pytorch}~\citep{pytorch} and \texttt{tensorflow}~\citep{tensorflow2015-whitepaper}.
 More general frameworks exist in \texttt{julia}~\citep{zygote, forwarddiff}, although \texttt{julia}'s limited use in GW analysis software precludes its general use.
-Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators,such as graphical processing units (GPUs), and its just-in-time (JIT) compiler, which can substantially accelerate code.
+Here we make use of \jax~\citep{jax2018github} due to its easy integration with \texttt{python} libraries, seamless support for running code on different hardware accelerators, such as graphical processing units (GPUs), and its just-in-time (JIT) compiler, which can substantially accelerate code.
 
 % \AZ{Add refs here:}\te{Added a bunch, let me know if more are needed!}
 There are a variety of gravitational waveforms currently used in analysis pipelines.
-They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we,Ossokine:2020kjp,Nagar:2021gss,Ramos-Buades:2021adz,Albertini:2021tbt}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
+They are generally structured into different families, the most common of which are: the effective-one-body (EOB)~\citep{Damour:2008yg,Buonanno:2005xu, Buonanno:2000ef, Buonanno:1998gg, Damour:2000we,Ossokine:2020kjp,Nagar:2021gss,Ramos-Buades:2021adz,Albertini:2021tbt, Cotesta:2020qhw, Bohe:2016gbl}, the phenomenological inspiral-merger-ringerdown (IMRPhenom) \citep{Husa:2015iqa,Khan:2015jqa,Hannam:2013oca,Pratten:2020ceb, Smith:2016qas, Pratten:2020fqn, Garcia-Quiros:2020qpx}, and numerical relativity surrogate (NRsurrogate)~\citep{Blackman:2017pcm,Varma:2018mmi,Varma:2019csw}.
 %Of these, the IMRPhenom family is most well suited for an AD implementation in \jax.
 Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
 Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
@@ -280,7 +280,7 @@ Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find t
 % \amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
-One of the primary argument of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
+One of the primary s of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
 First, the accuracy of derivatives from AD are significantly more stable than finite-difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
@@ -490,7 +490,7 @@ Derivative information, if implemented for EOB waveforms, could allow for the ap
 \end{figure}
 
 Forecasting the sensitivity of future experiments is an routine task in GW science. 
-Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism is commonly deployed to estimate how well a binary system's parameters could be measured.
+Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism~\citep{Cornish:2010kf} is commonly deployed to estimate how well a binary system's parameters could be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood~\citep{Vallisneri:2007ev}.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
 
@@ -619,9 +619,9 @@ To do this, one typically uses an MCMC or nested sampler~\citep{Skilling2004, mu
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
 Dedicated fast samplers have been designed to get approximate posteriors on the sky localization to facilitate follow-up electromagnetic observations \citep[e.g.~\texttt{BAYESTAR}][]{Singer:2015ema}. 
-Moreover, a number of methods have been developed to speed up PE well below the numbers quoted above~\citep{Dax:2021tsq, Islam:2022afg,Roulet:2022kot, Zackay:2018qdy, Cornish:2021lje, Canizares:2013ywa}.
+Moreover, a number of methods have been developed to speed up PE well below the numbers quoted above~\citep{Dax:2021tsq, Islam:2022afg,Roulet:2022kot, Zackay:2018qdy, Cornish:2021lje, Canizares:2013ywa, Leslie:2021ssu}.
 % \AZ{We should be careful here. Many new algorithms have sped this a lot. Cogwheel can do fast PE, DINGO is a normalizing flow code that is very fast when trained. There are likelihood acceleration methods like ROQ, multibanding, relative binning/heterodyning that accelerate the process compared to the numbers quoted above.}
-Nevertheless, these do not present the whole picture; fast, general PE therefore remains a key aim of GW data analysis
+Nevertheless, these do not present the whole picture; fast, general PE therefore remains a key aim of GW data analysis.
 
 A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
