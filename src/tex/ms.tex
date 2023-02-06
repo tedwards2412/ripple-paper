@@ -92,7 +92,7 @@ In addition, this computational cost will substantially increase when next gener
 
 The complexity begins even before data taking, since GW searches using the matched-filtering technique~\citep{Owen:1998dk, Owen:1995tm} require the generation of large banks of template waveforms.
 % \sout{The complexity begins before data gathering where one is required to generate banks of template waveforms which will be used for a matched-filter search~\citep{Owen:1998dk, Owen:1995tm}. }
-Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg, kombine}.
+Once potential candidates are found, parameter estimation (PE) is performed to extract the detailed source properties of each event~\citep{Christensen:2022bxb, 2020MNRAS.493.3132S, Ashton:2018jfp, Romero-Shaw:2020owr, Veitch:2014wba, Biwer:2018osg, kombine, 10.1093/mnras/stv2422}.
 For binary black holes with non-aligned spins, this requires a Markov Chain Monte Carlo (MCMC) on a 15 dimensional parameter space.
 More general binary inspirals, such as those involving neutron stars, can lead to a significant increase in dimension.
 % \te{add citations} \mi{assuming you don't mean TGR, since it's mentioned below, do you mean calibration and tides?: for cal we can cite \cite{Farr:2014,Vitale:2020gvb}, and for tides maybe the BNS properties paper \cite{LIGOScientific:2018hze}, unless you want to cite a bunch of tidal waveform papers.}
@@ -697,11 +697,11 @@ In particular, we showed that it matches the \lalsuite implementation to near ma
 Parallelization on a GPU provides substantial speed increases; on a NVIDIA Quadro 6000 GPU we found that waveform evaluations are over an order of magnitude faster than serial CPU evaluations.
 Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
-Differentiable waveforms therefore represent a crucial advancement to perform efficient GW science.
+Differentiable waveforms therefore represent a crucial advancement towards efficient GW science.
 
-In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for implementation in \jax.
+In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for a \jax implementation.
 Two other waveform families are commonly used in GW data analysis: the effective-one-body (EOB) and numerical relativity surrogate (NRSurrogate). 
-A differentiable NRsurrogate implementation is currently under development \citep{NRSurAD}, but currently it seems difficult to implement EOB waveforms in \jax.
+A differentiable NRsurrogate implementation is under development~\citep{NRSurAD}, but it currently seems difficult to implement EOB waveforms in \jax.
 In particular, the evolution of the Hamiltonian required to evaluate an EOB waveform is both inherently slow to differentiate and difficult to implement in \jax. 
 Since EOB methods are used to produce state-of-the-art waveforms for many applications, more work is required to see if a fast, differentiable implementation is possible.
 

@@ -378,6 +378,23 @@
     year = "2010"
 }
 
+@article{10.1093/mnras/stv2422,
+    author = {Vousden, W. D. and Farr, W. M. and Mandel, I.},
+    title = "{Dynamic temperature selection for parallel tempering in Markov chain Monte Carlo simulations}",
+    journal = {Monthly Notices of the Royal Astronomical Society},
+    volume = {455},
+    number = {2},
+    pages = {1919-1937},
+    year = {2015},
+    month = {11},
+    abstract = "{Modern problems in astronomical Bayesian inference require efficient methods for sampling from complex, high-dimensional, often multimodal probability distributions. Most popular methods, such as MCMC sampling, perform poorly on strongly multimodal probability distributions, rarely jumping between modes or settling on just one mode without finding others. Parallel tempering addresses this problem by sampling simultaneously with separate Markov chains from tempered versions of the target distribution with reduced contrast levels. Gaps between modes can be traversed at higher temperatures, while individual modes can be efficiently explored at lower temperatures. In this paper, we investigate how one might choose the ladder of temperatures to achieve more efficient sampling, as measured by the autocorrelation time of the sampler. In particular, we present a simple, easily implemented algorithm for dynamically adapting the temperature configuration of a sampler while sampling. This algorithm dynamically adjusts the temperature spacing to achieve a uniform rate of exchanges between chains at neighbouring temperatures. We compare the algorithm to conventional geometric temperature configurations on a number of test distributions and on an astrophysical inference problem, reporting efficiency gains by a factor of 1.2–2.5 over a well-chosen geometric temperature configuration and by a factor of 1.5–5 over a poorly chosen configuration. On all of these problems, a sampler using the dynamical adaptations to achieve uniform acceptance ratios between neighbouring chains outperforms one that does not.}",
+    issn = {0035-8711},
+    doi = {10.1093/mnras/stv2422},
+    url = {https://doi.org/10.1093/mnras/stv2422},
+    eprint = {https://academic.oup.com/mnras/article-pdf/455/2/1919/18514064/stv2422.pdf},
+}
+
+
 @article{kombine,
    author = {{Farr}, B. and {Farr}, W.~M.},
     title = {kombine: a kernel-density-based, embarrassingly parallel ensemble sampler},
