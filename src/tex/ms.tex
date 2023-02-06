@@ -314,7 +314,7 @@ In the next section, we will discuss a variety of potential use cases of differe
 \label{sec:applications}
 
 Here, we illustrate how three core tasks in GW science can be substantially improved through the use of differentiable waveforms.
-In the paper we primarily look at toy examples, leaving a more careful analyses to future work. 
+In this paper we primarily look at toy examples, leaving more careful analyses to future work. 
 The three tasks discussed here cover a wide range of GW science, starting with waveform development all the way to Fisher forecasting and PE.
 
 \subsection{Fine-Tuning Waveform Coefficients}
@@ -407,7 +407,7 @@ To generalize the loss function to a collection of waveforms we use the average 
 	\mathcal{L}=\frac{1}{N}\sum_{i=1}^{N}\mathcal{M}_i,
     \label{eq:multi_loss}
 \end{equation}
-where $\mathcal{M}_i$ is the mismatch of an individual training waveform and $N$ is the total number of training waveforms used in optimization.
+where $\mathcal{M}_i$ is the mismatch of an individual training waveform and $N$ is the total number of training waveforms used in the optimization.
 This optimization is more difficult since we are now applying the same set of coefficients to waveforms with different intrinsic parameters, such as mass ratio and spins. 
 From Eq.~\ref{eq:multi_loss}, we can see the averaging between waveforms with different intrinsic parameters implies there are trade-offs in performance for different regions of the intrinsic parameter space. 
 Additionally, this means our best-fit points will generally depend on the distribution of training waveforms across the parameter space.
@@ -416,7 +416,7 @@ Additionally, this means our best-fit points will generally depend on the distri
 To evaluate Eq.~\ref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
     In particular, we use $M f_l = 2.5 \times 10^{-3}$, $M f_u = 0.2$, and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,\mathrm{M}_\odot$ throughout this section.
 }
-Since the NR waveforms do not have a total mass associated with them, we use assign a fixed total mass to compare with the \ripple waveform.
+Since the NR waveforms do not have a total mass associated with them, we assign a fixed total mass to compare with the \ripple waveform.
 
 For training, we use the publically available subset (11 waveforms) of the 19 waveforms used in the original IMRPhenomD paper~\citep{Khan:2015jqa}. 
 These 11 waveforms are taken from the SXS catalog~\citep{Boyle:2019kee}.
@@ -458,8 +458,8 @@ In particular, the error in the merger region is decreased by half while other r
 	\end{centering}
 \end{figure}
  
-In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches for 536 test waveforms.
-For testing, we use 536 waveforms from the SXS catalog (we simply choose all waveforms with aligned spins, $\chi_{x,y}<5\times 10^{-3}$, and eccentricity $<2\times 10^{-3}$)~\citep{Boyle:2019kee}.
+In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches for a set of test waveforms.
+In particular, we use 536 waveforms from the SXS catalog (we simply choose all waveforms with aligned spins, $\chi_{x,y}<5\times 10^{-3}$, and eccentricity $<2\times 10^{-3}$)~\citep{Boyle:2019kee}.
 One can see that the distribution of mismatches after optimization is generally shifted to lower mismatch compared to the original waveform.
 % showing the optimization improves the accuracy of the waveform model.
 % However, it is not improving for every waveforms. Say why briefly, and say there is another paper coming out.
@@ -489,7 +489,7 @@ Derivative information, if implemented for EOB waveforms, could allow for the ap
     \label{fig:sky_localization}
 \end{figure}
 
-Forecasting the sensitivity of future experiments is an routine task in GW science. 
+Forecasting the sensitivity of future experiments is a routine task in GW science. 
 Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism~\citep{Cornish:2010kf} is commonly deployed to estimate how well a binary system's parameters could be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood~\citep{Vallisneri:2007ev}.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
@@ -614,7 +614,7 @@ AD therefore represents a fast and accurate way of performing population level a
 \end{figure*}
 
 % \amc{most acronyms were already introduced.}
-After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameters - so called PE.
+After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameter's - so called PE.
 To do this, one typically uses an MCMC or nested sampler~\citep{Skilling2004, multinest, dynesty}.
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
@@ -625,7 +625,7 @@ Nevertheless, these do not present the whole picture; fast, general PE therefore
 
 A primary issue with both MCMC and nested sampling is that neither utilizes information about the likelihood's derivative and must therefore randomly walk towards areas of highest likelihood.
 Derivative based samplers, on the other hand, have been shown to extrapolate well to higher dimensions although they sometimes come with their own drawbacks.
-Here we simply aim to demonstrate the utility of a derivative based sampler and their efficiency on a small test problem.
+Here we simply aim to demonstrate the utility of a derivative based sampler and its efficiency on a small test problem.
 % In particular, we will show that proposals made using an Hamiltonian Monte Carlo (MC) sampler are accepted at a much higher rate than a traditional MCMC algorithm.
 In particular, we will show that the autocorrelation of a Hamiltonian Monte Carlo (HMC) sampler is significantly lower than a traditional MCMC algorithm~\citep{Bouffanais:2018hoz, 2014CQGra..31n5004P}.
 
@@ -685,7 +685,7 @@ In addition, we found that the effictive number of samples~\citep{arviz_2019},\f
 (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
 In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
-We therefore expect \jax waveforms to be highly beneficial to future PE efforts in GW astronomy, particular for low-latency pipelines and higher dimensional analysese.
+We therefore expect \jax waveforms to be highly beneficial to future PE efforts in GW astronomy, particular for low-latency pipelines and higher dimensional analyses.
 % \kw{Not just low latency, but also high dimensional analysis, such as testing GR and lensing.}
 
 \section{Discussion and Conclusion}
