@@ -245,7 +245,7 @@ Note that in General Relativity (GR) the total mass $M = m_1 + m_2$ of a binary 
 The total mass only impacts the match because the chosen PSD and frequency limits fix a reference scale.
 % \sout{the system is simply an overall scaling of the waveforms} 
 % \sout{frequency evolution and is therefore not a} \sout{truly independent parameter.}
-If we instead use a flat PSD in Eq.~\ref{eq:inner_prod} and rescale the frequency grid to units of $Mf$, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
+If we instead use a flat PSD in Eq.~\eqref{eq:inner_prod} and rescale the frequency grid to units of $Mf$, all dependence with $M$ seen in Fig.~\ref{fig:match} vanishes. 
 % \AZ{Revisit this after defining PSD above:} 
 This figure instead illustrates a more realistic PSD where at low masses the waveform signal-to-noise is dominated by the inspiral but at high masses it is dominated by the merger.
 
@@ -410,11 +410,11 @@ To generalize the loss function to a collection of waveforms we use the average 
 \end{equation}
 where $\mathcal{M}_i$ is the mismatch of an individual training waveform and $N$ is the total number of training waveforms used in the optimization.
 This optimization is more difficult since we are now applying the same set of coefficients to waveforms with different intrinsic parameters, such as mass ratio and spins. 
-From Eq.~\ref{eq:multi_loss}, we can see the averaging between waveforms with different intrinsic parameters implies there are trade-offs in performance for different regions of the intrinsic parameter space. 
+From Eq.~\eqref{eq:multi_loss}, we can see the averaging between waveforms with different intrinsic parameters implies there are trade-offs in performance for different regions of the intrinsic parameter space. 
 Additionally, this means our best-fit points will generally depend on the distribution of training waveforms across the parameter space.
 % \amc{this means your fit generally will depend on how the training waveforms are distributed over parameter space.}
 
-To evaluate Eq.~\ref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
+To evaluate Eq.~\eqref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
     In particular, we use $M f_l = 2.5 \times 10^{-3}$, $M f_u = 0.2$, and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,\mathrm{M}_\odot$ throughout this section.
 }
 Since the NR waveforms do not have a total mass associated with them, we assign a fixed total mass to compare with the \ripple waveform.
@@ -451,7 +451,7 @@ In particular, the error in the merger region is decreased by half while other r
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
 		\caption{
-			Distribution of 536 log mismatches (see Eq.~\ref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
+			Distribution of 536 log mismatches (see Eq.~\eqref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
             Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
             More quantitatively, the median mismatch (shown as vertical dashed lines) is reduced by $\sim50$\%. 
 		}
@@ -484,7 +484,7 @@ Derivative information, if implemented for EOB waveforms, could allow for the ap
     \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
     \caption{
         Distribution of Fisher information sky localization error for a population of nearby binaries.
-        Automatic differentiation (AD) was used to compute the derivatives in Eq.~\ref{eq:fisher}.
+        Automatic differentiation (AD) was used to compute the derivatives in Eq.~\eqref{eq:fisher}.
         As emphasized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
     }
     \label{fig:sky_localization}
