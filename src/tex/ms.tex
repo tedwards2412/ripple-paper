@@ -49,6 +49,7 @@
 \newcommand{\Ciela}{\affiliation{Ciela -- Computation and Astrophysical Data Analysis Institute, Montréal, Quebec, Canada}}
 \newcommand{\UdeM}{\affiliation{Département de Physique, Université de Montréal, 1375 Avenue Thérèse-Lavoie-Roux, Montréal, QC H2V 0B3, Canada}} 
 \newcommand{\Mila}{\affiliation{Mila -- Quebec AI Institute, 6666 St-Urbain, \#200, Montreal, QC, H2S 3H1}} 
+\newcommand{\WI}{\affiliation{Weinberg Institute, University of Texas at Austin, Austin, TX 78712, USA}}
 \newcommand{\CGP}{\affiliation{Center for Gravitational Physics, University of Texas at Austin, Austin, TX 78712, USA}}
 \newcommand{\CCA}{\affiliation{Center for Computational Astrophysics, Flatiron Institute, New York, NY 10010, USA}}
 \newcommand{\CUHK}{\affiliation{Department of Physics, The Chinese University of Hong Kong, Shatin, N.T., Hong Kong}}
@@ -61,7 +62,7 @@
 \author{Adam Coogan} \Ciela \UdeM \Mila
 \author{Daniel Foreman-Mackey} \CCA
 \author{Maximiliano Isi} \CCA
-\author{Aaron Zimmerman} \CGP
+\author{Aaron Zimmerman} \WI
 
 % Abstract with filler text
 \begin{abstract}
@@ -230,7 +231,7 @@ In fact, the scale in Fig.~\ref{fig:match} is clipped such that points which giv
             Match between the \ripple and \lalsuite implementations of the IMRPhenomD waveform as a function of total mass and effective spin. 
             % The lower density of points at low masses is caused by the match being exactly 1.0 and therefore not appearing in the log scale. 
             % The gray points are where the match is exactly 1.0 and therefore would not appear in the log scale.
-            Points which give $\mathcal{M}=0$ (up to numerical precision) are plotted as the lowest value in the colorbar
+            Points which give $\mathcal{M}=0$ (up to numerical precision) are plotted as the lowest value in the colorbar.
             It is clear that the \ripple waveform matches the \lalsuite implementation many of orders of magnitude more than necessary for all data analysis tasks across the entire parameter space.
             % \te{Ok so some of the remaining error was coming from a weird thing at the cutoff of the waveform. I've now fixed this, so error is further down. Let me know if you still think it needs editing.}
             % \dfm{I think this figure could use some work. Maybe the points could be smaller to make them easier to resolve. And it could be interesting to clip the mismatch to something like $10^{-16}$ so that we don't lose the points with zero mismatch. Right now it looks less impressive!}
@@ -280,7 +281,7 @@ Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find t
 % \amc{mention \texttt{vmap} and/or \texttt{pmap} -- super trivial to parallelize! More work in C.}
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 
-One of the primary s of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
+One of the primary aims of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
 First, the accuracy of derivatives from AD are significantly more stable than finite-difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
@@ -720,6 +721,7 @@ This work was supported by collaborative visits funded by the Cosmology and Astr
 T.E.\ is supported by the Horizon Postdoctoral Fellowship.
 A.Z.~is supported by NSF Grant PHY-2207594.
 A.~C.\ acknowledges funding from the Schmidt Futures Foundation.
+This document has been assigned preprint numbers UTWI-4-2023 and LIGO-P2300025.
 
 \bibliography{bib}
 
