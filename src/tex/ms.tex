@@ -507,9 +507,9 @@ The Fisher information matrix for a single detector is typically given by
     \label{eq:fisher}
     \mathcal{I}^{k}_{ij} = (\partial_i h^k | \partial_j h^k) \, ,
 \end{equation}
-where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h$ is the strain measured by the detector which is given by,
+where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and $h^k$ is the strain measured by the detector which is given by,
 \begin{equation}
-    h^k(\theta) = F_+(\phi) h^k_{+}(\Xi) + F_\times(\phi) h^k_{\times}(\Xi) \, .
+    h^k(\theta) = F^k_+(\phi) h_{+}(\Xi) + F^k_\times(\phi) h_{\times}(\Xi) \, .
 \end{equation}
 Note that here we have separated out the extrinsic ($\phi$) and intrinsic ($\Xi$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
 Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
