@@ -256,6 +256,8 @@ This is partly due to the fact that cubic interpolators, which are used within I
 Instead, we initially use \texttt{scipy}'s cubic interpolator to create a fine grid of $5\times10^5$ values, which we then linearly interpolate during waveform generation.
 Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine as this would add additional computational overhead when loading the data during waveform evaluation.
 % The remaining error in the waveform at high masses is therefore primarily down to the coarseness in this interpolation.
+Additionally, we use a Fourier transform to efficiently maximize over $\Delta t_c$ which will inherently come with some inaccuracy.
+This inaccuracy will primarily affect the mismatch at higher total masses where the waveform is dominated by the merger.
 Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable effect for realistic data analysis tasks.
 
 For maximum utility, a waveform needs to be fast to evaluate.
