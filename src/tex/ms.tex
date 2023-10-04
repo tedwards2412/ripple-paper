@@ -1,4 +1,4 @@
-% Define document class
+git a% Define document class
 \documentclass[twocolumn]{aastex631}
 \usepackage{showyourwork}
 
@@ -75,7 +75,7 @@
 \section{Introduction}
 \label{sec:intro}
 
-The discovery of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
+The first detection of gravitational waves (GWs)~\citep{LIGOScientific:2016aoc} from inspiraling and merging compact objects (COs) has revolutionized our understanding of both fundamental physics and astronomy~\citep[e.g.][]{LIGOScientific:2021djp,LIGOScientific:2021sio,LIGOScientific:2021psn}.
 Although the data volumes from GW detectors such as Advanced LIGO~\citep{LIGOScientific:2014pky} and Virgo~\citep{VIRGO:2014yos} are relatively small, analyzing the data is a computationally demanding task.
 In addition, this computational cost will substantially increase when next generation detectors come online~\citep{Maggiore:2019uih, Reitze:2019iox, Evans:2021gyd}.
 
@@ -92,7 +92,7 @@ Derivatives are ubiquitously useful throughout data analysis tasks.
 For instance, during PE, derivative information can be used to guide an optimizer towards higher-likelihood values (e.g.\,using gradient descent~\citep{2016arXiv160904747R}) or allow a sampler to rapidly explore parameter space (e.g.\, using Hamiltonian Monte Carlo (HMC)~\citep{2011hmcm.book..113N,2017arXiv170102434B}).
 Gradients are particularly valuable for high dimensional spaces.
 Unfortunately, in the field of GW data analysis, analytic derivatives of the necessary quantities (such as the likelihood) have historically required a significant amount of work to obtain~\citep{Keppel:2013kia}.
-With waveforms only increasing in complexity, calculating analytic derivatives will become ever more tricky.
+With waveforms only increasing in complexity, calculating analytic derivatives will become even trickier.
 Numerical derivatives also suffer from accuracy issues stemming from rounding or truncation errors.
 However, recent progress in automatic differentiation (AD) has shown promise in allowing general, fast derivative calculations for gravitational waveforms, with applications to constructing template banks~\citep{Coogan:2022qxs} and computing the Fisher information for forecasting~\citep{Iacovelli:2022bbs, Iacovelli:2022mbg}.
 
@@ -116,18 +116,18 @@ NRsurrogate models, which interpolate directly over waveforms produced by numeri
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.
 For EOB waveforms, frequency-domain reduced-order models may be a convenient target~\citep[e.g.]{Cotesta:2020qhw}.
 
-In this paper we argue that differentiable waveforms will be a vital component for the future of GW data analysis.
+In this paper we argue that automatically differentiable waveforms may be a useful tool for the future of GW data analysis.
 In addition, we present \ripple, a small GW \texttt{python} package which, at the time of writing, includes a \jax implementation of the IMRPhenomD waveform and will be continually updated with new waveforms as they are implemented.
 The remainder of this paper is structured as follows. 
-In Sec.~\ref{sec:waveforms} we discuss the differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accuracy. 
+In Sec.~\ref{sec:waveforms} we discuss the automatically differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accuracy. 
 In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
-Firstly, we illustrate how the fit coefficients that form part of the IMRPhenom waveform models could be improved by high dimensional fitting enabled by a differentiable waveform. 
+Firstly, we illustrate how the coefficients that form part of the IMRPhenomD waveform model could be improved by high dimensional fitting enabled by a automatically differentiable waveform. 
 Secondly, we implement differentiable detector response functions and show that the speed of Fisher matrix calculations can be substantially accelerated using AD.
-Finally, we run an illustrative injection example using Hamiltonian Monte Carlo to demonstrate that the autocorrelation of derivative samplers is substantially smaller than that of traditional MCMCs.
-Practically, this translates into much faster PE with no sacrifice in accuracy.
+Finally, we run an illustrative injection example using HMC to demonstrate that the autocorrelation of derivative samplers is substantially smaller than that of traditional MCMCs.
+% Practically, this translates into much faster PE with no sacrifice in accuracy.
 The associated code can be found at \ripple~\citep{ripple}.
 
-\section{Differentiable Waveforms}
+\section{Implementation and Benchmarking}
 \label{sec:waveforms}
 
 A variety of waveform families have been developed to accurately model the GW emission from COs~\citep{Schmidtreview}. 
@@ -141,7 +141,7 @@ EOB waveforms require one to model the binary system using a Hamiltonian and are
 IMRPhenom waveforms are therefore ideally-suited for AD, especially using \jax. 
 In this paper we focus on the aligned-spin, circular-orbit model IMRPhenomD~\citep{Husa:2015iqa, Khan:2015jqa}.
 
-The implementation of IMRPhenomD in \lalsuite is in C, and therefore needs to be rewritten natively into \texttt{python} to be compatible with \jax.
+The implementation of IMRPhenomD in \lalsuite~\citep{lalsuite} is in C, and therefore needs to be rewritten natively into \texttt{python} to be compatible with \jax.
 We have re-written IMRPhenomD from scratch using a combination of pure \texttt{python} and \jax derivatives.
 In addition, we have restructured the code for readability and evaluation speed as well as exposing the internal fitting coefficients to the user (which we will use later in Sec.~\ref{sec:applications}).
 
