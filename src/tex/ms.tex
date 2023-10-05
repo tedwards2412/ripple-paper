@@ -202,6 +202,7 @@ Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine a
 Additionally, we use a Fourier transform to efficiently maximize over $\Delta t_c$ which will inherently come with some inaccuracy.
 This inaccuracy will primarily affect the mismatch at higher total masses where the waveform is dominated by the merger.
 Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable effect for realistic data analysis tasks.
+This is demonstrated in Fig.~\ref{fig:mismatch_hist} where the mismatch between NR waveforms and IMRPhenomD is always above $10^-5$.
 
 For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the IMRPhenom waveforms are constructed from simple closed-form expressions which are computationally efficient.
@@ -215,10 +216,12 @@ Although similar on a CPU benchmark, \jax has a few key advantages.
 First, its ability to JIT compile allows for significant performace gains (the above benchmark is already JIT compiled).
 Second, automatic vectorization can be achieved using the \texttt{vmap} function.
 Using \texttt{vmap} and performing the same benchmark as described above reduces the average evaluation speed to $\sim 0.14\,\mathrm{ms}$.
-Finally, \jax can natively on a GPU which allows for highly parallellized waveform evaluations.
+Finally, \jax can natively run on a GPU which allows for highly parallellized waveform evaluations.
 
 Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find that on average waveform evaluations take $\sim 0.02\,\mathrm{ms}$, over an of magnitude faster than serial CPU evaluation.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
+Note that jit for both CPU and GPU evaluation adds an additional overhead to the first evaluation of the waveform which is not included in the above benchmarks. 
+Note also that the GPU benchmark does not include the time taken to move the evaluated waveform from the GPU to the CPU.
 
 One of the primary aims of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
@@ -227,18 +230,20 @@ In particular, finite differences suffer from both rounding and truncation error
 On the other hand, AD produces machine-precision derivatives with no tuning.
 Second, AD scales favorably with the dimensionality of the function.
 In particular, for every input dimension added, $D$, one would need to evaluate the function at least $2D$ times to calculate finite difference derivatives for all input parameters.
-For reverse-mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of dimension.\footnote{
+For reverse-mode AD, one only needs two function calls to evaluate the derivative of all input parameters, regardless of the number of dimensions.\footnote{
     Note that although the number of function calls is small, reverse-mode AD does add memory overhead.
     We've not found this to be limiting in any of the situations tested so far.
 }
+In gravitational wave physics one typically wants to compute derivatives of a scalar quantity (e.g., the likelihood) with respect to the intrinsic parameters of the binary (e.g., the masses and spins).
+Reverse mode AD is therefore ideal for this task.
 For a review of AD methods see~\cite{2018arXiv181105031M}.
 Since the parameter space of GWs in GR has $\mathcal{O}(10)$ dimensions, the speed of derivative evaluation is less crucial than the stability.
 However, this might change for waveforms in beyond-GR models, waveforms involving equation of state parameters for neutron stars, and models which account for calibration and waveform uncertainties.
 In these cases many more parameters can be added.
 
-Overall, we have demonstrated that the IMRPhenom waveform family is ideally suited for AD.
+Overall, we argued that the IMRPhenom waveform family is well suited for AD, showing it explicity for IMRPhenomD.
 Moreover, we have shown that our implementation of IMRPhenomD in \ripple is accurate and quick to evaluate, especially when hardware acceleration is available.
-In the next section, we will discuss a variety of potential use cases of differentiable waveforms.
+In the next section, we will discuss a variety of potential use cases of automatically differentiable waveforms.
 
 \section{Applications}
 \label{sec:applications}
