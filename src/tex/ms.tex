@@ -202,26 +202,43 @@ Unfortunately, we cannot make the initial cubic interpolation arbitrarily fine a
 Additionally, we use a Fourier transform to efficiently maximize over $\Delta t_c$ which will inherently come with some inaccuracy.
 This inaccuracy will primarily affect the mismatch at higher total masses where the waveform is dominated by the merger.
 Note however, that the differences are well below the accuracy requirements of the waveforms and will have no noticeable effect for realistic data analysis tasks.
-This is demonstrated in Fig.~\ref{fig:mismatch_hist} where the mismatch between NR waveforms and IMRPhenomD is always above $10^-5$.
+This is demonstrated in Fig.~\ref{fig:mismatch_hist} where the mismatch between NR waveforms and IMRPhenomD is always above $10^{-5}$.
 
 For maximum utility, a waveform needs to be fast to evaluate.
 Fortunately, the IMRPhenom waveforms are constructed from simple closed-form expressions which are computationally efficient.
 Even though the \lalsuite implementation of IMRPhenomD is written in \texttt{C}, the serial evaluation of the waveform in \ripple is comparably fast. 
-Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 0.5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 0.4\,\mathrm{ms}$ for \ripple.\footnote{
-    For this benchmark we used $24\,\mathrm{Hz}$ and $512\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
-    In addition, we used a frequency spacing of $0.2\,\mathrm{Hz}$. 
-    We performed this benchmark by evaluating the waveform $10^{4}$ times and taking the average evaluation time.
-}
+The evaluation time of a single waveform (averaged over $10^3$ calls) is shown in Fig.~\ref{fig:timing} as a function of the total mass. 
+In particular, we use $16\,\mathrm{Hz}$ and $1024\,\mathrm{Hz}$ for the lowest and highest frequencies respectively.
+To calculate the frequency spacing, we first estimate the length of time taken for the binary to merge using Eq.~(29) from~\cite{Yu:2023lml}. 
+Following LIGO convention, we take the closest factor of two higher than this time estimate as $T$. 
+The frequency spacing is then given as $\Delta f = 1/T$.
+
+% Benchmarking on a MacBook Pro with an M1 Max Apple Silicon processor, we find that a single waveform evaluation takes $\sim 0.5\,\mathrm{ms}$ for \lalsuite (interfaced with python) and $\sim 0.4\,\mathrm{ms}$ for \ripple.\footnote{
+%     For this benchmark we used $24\,\mathrm{Hz}$ and $512\,\mathrm{Hz}$ for the lowest and highest frequencies respectively. 
+%     In addition, we used a frequency spacing of $0.2\,\mathrm{Hz}$. 
+%     We performed this benchmark by evaluating the waveform $10^{4}$ times and taking the average evaluation time.
+% }
+For the CPU benchmarks we use a MacBook Pro with an M1 Max Apple Silicon processor. 
 Although similar on a CPU benchmark, \jax has a few key advantages. 
 First, its ability to JIT compile allows for significant performace gains (the above benchmark is already JIT compiled).
-Second, automatic vectorization can be achieved using the \texttt{vmap} function.
-Using \texttt{vmap} and performing the same benchmark as described above reduces the average evaluation speed to $\sim 0.14\,\mathrm{ms}$.
+Second, automatic vectorization can be achieved using the \texttt{vmap} function which leads to a noticeable speedup when evaluating a batch of waveforms.
 Finally, \jax can natively run on a GPU which allows for highly parallellized waveform evaluations.
 
-Again, performing the same benchmark as above on a NVIDIA Quadro 6000, we find that on average waveform evaluations take $\sim 0.02\,\mathrm{ms}$, over an of magnitude faster than serial CPU evaluation.
+Again, performing the same benchmark as above on an NVIDIA A100 with 40GB of memory, we find that waveform evaluations are over an of magnitude faster than serial CPU evaluation.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 Note that jit for both CPU and GPU evaluation adds an additional overhead to the first evaluation of the waveform which is not included in the above benchmarks. 
 Note also that the GPU benchmark does not include the time taken to move the evaluated waveform from the GPU to the CPU.
+
+\begin{figure}[t]
+	\script{timing.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/timing.pdf}
+		\caption{
+			Benchmarking the evaluation time of a single IMRPhenomD waveform as a function of the total mass. As the total mass increases, the time to merger decreases leading to a coarser frequency grid and shorter evaluation times. The details of the benchmarks are given in the text.
+        }
+		\label{fig:timing}
+	\end{centering}
+\end{figure}
 
 One of the primary aims of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
