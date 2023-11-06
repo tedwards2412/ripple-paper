@@ -468,7 +468,7 @@ AD therefore represents a fast and accurate way of performing population level a
     \includegraphics[width=\linewidth]{figures/PE.pdf}
     \caption{
         Corner plot for the posteriors from an HMC (see text for details) on simulated noise with injected signal. 
-        Orange lines indicate the true values of the injection. 
+        Blue lines indicate the true values of the injection. 
         Although not fully converged, it is clear that we find posteriors consistent with the injected parameters. 
     }
     \label{fig:corner}
@@ -505,7 +505,7 @@ In addition, as we discuss below, we find that a basic HMC algorithm will produc
 
 
 In Fig.~\ref{fig:corner}, the grey contours show the posterior recovered using the best chain (i.e.~one that reached the highest log-likelihood values).
-The orange shows the true parameters of the injected signal.
+The blue shows the true parameters of the injected signal.
 From the one dimensional histograms along the diagonal, it is clear that we consistently recover all seven parameters apart from $\phi_c$.
 This is expected since the injected binary is relatively nearby with an SNR of $\sim13$.
 
@@ -530,7 +530,7 @@ In addition, we found that the effictive number of samples~\citep{arviz_2019},\f
     }
 (a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
-In a follow up paper we will demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
+In our companion paper we demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
 We therefore expect \jax waveforms to be highly beneficial to future PE efforts in GW astronomy, particular for low-latency pipelines and higher dimensional analyses.
 
 \section{Discussion and Conclusion}
@@ -541,7 +541,7 @@ First, we demonstrated the speed and accuracy of our implementation of the align
 In particular, we showed that it matches the \lalsuite implementation to near machine precision and can be easily parallelized on a GPU.
 Parallelization on a GPU provides substantial speed increases; on an A100 40GB GPU we found that waveform evaluations are over an order of magnitude faster than serial CPU evaluations.
 Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
-\te{Add a couple of sentences}
+In particular, we showed that AD can be used to fine-tune waveform coefficients, perform efficient and accurate Fisher forecasting, and enhance the efficiency of sampling algorithms during parameter estimation.
 
 Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
 Differentiable waveforms therefore represent a crucial advancement towards efficient GW science.
