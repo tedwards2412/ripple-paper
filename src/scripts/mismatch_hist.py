@@ -5,16 +5,16 @@ import paths
 from scipy import stats
 
 params = {
-    "font.size": 18,
-    "legend.fontsize": 18,
+    "font.size": 15,
+    "legend.fontsize": 12,
     "legend.frameon": False,
-    "axes.labelsize": 18,
-    "axes.titlesize": 18,
-    "xtick.labelsize": 18,
-    "ytick.labelsize": 18,
-    "figure.figsize": (7, 5),
-    "xtick.top": True,
+    "axes.labelsize": 15,
+    "axes.titlesize": 15,
+    "xtick.labelsize": 15,
+    "ytick.labelsize": 15,
     "axes.unicode_minus": False,
+    "figure.figsize": (6, 5),
+    "xtick.top": True,
     "ytick.right": True,
     "xtick.bottom": True,
     "ytick.left": True,
@@ -36,26 +36,62 @@ params = {
 
 mpl.rcParams.update(params)
 
-(catalog_num, ori_loss, opt_loss) = np.loadtxt(
-    paths.data / "mismatch_hist.txt", unpack=True
+# (catalog_num, ori_loss, opt_loss) = np.loadtxt(
+#     paths.data / "mismatch_hist.txt", unpack=True
+# )
+q148 = np.loadtxt(paths.data / "q148.dat")
+
+
+c1 = "#102F68"
+c2 = "#B02423"
+
+print("Median Change is:", (np.median(q148[:, 5]) - np.median(q148[:, 4]))*100/np.median(q148[:, 4]))
+
+q148 = np.loadtxt(paths.data / "q148.dat")
+bins = np.linspace(-5, -1, 15)
+
+plt.hist(np.log10(q148[:, 4]), bins=bins, alpha=0.2, color=c1)
+plt.hist(
+    np.log10(q148[:, 4]),
+    bins=bins,
+    color=c1,
+    histtype="step",
+    linewidth=2,
+    label="Original",
+)
+plt.axvline(
+    x=np.log10(np.median(q148[:, 4])),
+    color=c1,
+    zorder=-20,
+    alpha=1.0,
+    lw=2,
+    linestyle=(0, (1, 1.3)),
 )
 
-print("Median Change is:", (np.median(opt_loss) - np.median(ori_loss))*100/np.median(ori_loss))
+plt.hist(
+    np.log10(q148[:, 5]),
+    bins=bins,
+    histtype="step",
+    label="Optimized $(\mathcal{L}_{\mathrm{ave}})$",
+    color=c2,
+    linewidth=2,
+)
+plt.hist(
+    np.log10(q148[:, 5]),
+    bins=bins,
+    color=c2,
+    alpha=0.2,
+)
+plt.axvline(
+    x=np.log10(np.median(q148[:, 5])),
+    color=c2,
+    # zorder=-20,
+    lw=2,
+    alpha=1.0,
+    linestyle=(0, (1, 1.3)),
+)
 
-bins = np.arange(-5, -1, 0.1)
-# print(stats.mode(np.log10(ori_loss)[:]))
-# print(np.mean(np.log10(ori_loss)) / np.mean(np.log10(opt_loss)))
-# print(stats.mode(np.log10(ori_loss))[0] / stats.mode(np.log10(opt_loss))[0])
-
-plt.axvline(x=np.log10(np.median(ori_loss)), color="C0", ls="--")
-plt.hist(np.log10(ori_loss), bins=bins, alpha=0.3, color="C0")
-plt.hist(np.log10(ori_loss), bins=bins, label="Original", histtype="step", color="C0")
-
-plt.axvline(x=np.log10(np.median(opt_loss)), color="C1", ls="--")
-plt.hist(np.log10(opt_loss), bins=bins, alpha=0.3, color="C1")
-plt.hist(np.log10(opt_loss), bins=bins, label="Optimized", histtype="step", color="C1")
-plt.legend()
-plt.xlim(-5, -1)
-plt.xlabel("$\log_{10}(\mathcal{M})$")
+plt.legend(loc="upper left")
 plt.ylabel("Count")
+plt.xlabel("$\log_{10}(\mathcal{M})$")
 plt.savefig(paths.figures / "mismatch_hist.pdf", bbox_inches="tight")

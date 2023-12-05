@@ -55,15 +55,46 @@ G = 6.67430e-11  # m^3 / kg / s^2
 C = 299792458.0  # m / s
 gt = G * MSUN / (C ** 3.0)
 
-f2 =  149.1018563859192 * (25. + 25.) * gt
-plt.axvline(x=f2, color="k", alpha=0.4, ls="--")
+c1 = "#102F68"  # blue
+c2 = "#B02423"  # red
 
-plt.plot(freq, ori_error, label="Original")
-plt.plot(freq, opt_error, label="Optimized")
+# f2 =  149.1018563859192 * (25. + 25.) * gt
+# plt.axvline(x=f2, color="k", alpha=0.4, ls="--")
+
+f_ins = 0.018
+f_rd = 149.1018563859192 * (25.0 + 25.0) * gt
+
+data = np.loadtxt(paths.data / "0154_compare.dat")
+
+f_uniform = data[:, 0]
+NR_amp = data[:, 1]
+NR_angle = data[:, 2]
+IMR_amp = data[:, 3]
+IMR_angle = data[:, 4]
+IMR_opt_amp = data[:, 5]
+IMR_opt_angle = data[:, 6]
+
+plt.semilogx(
+    f_uniform,
+    (NR_amp - IMR_amp)/ NR_amp,
+    label="IMR original",
+    linestyle=(0, (3, 1)),
+    color=c1,
+    lw=2,
+)
+plt.semilogx(
+    f_uniform, (NR_amp - IMR_opt_amp)/ NR_amp, label="IMR optimized", color=c2, lw=2
+)
+plt.axvline(x=f_ins, color="k", alpha=0.5, linestyle=(0, (1, 1.05)))
+plt.axvline(x=f_rd, color="k", alpha=0.5, linestyle=(0, (1, 1.05)))
+
+# plt.plot(freq, ori_error, label="Original")
+# plt.plot(freq, opt_error, label="Optimized")
 plt.legend()
 plt.xlabel(r"$Mf$")
-plt.ylabel(r"$\Delta|\tilde{h}(f)|$")
+# plt.ylabel(r"$\Delta|\tilde{h}(f)|$")
+plt.ylabel(r"$(\tilde{h}-\tilde{h}_{\mathrm{NR}})/\tilde{h}_{\mathrm{NR}}$")
 # plt.xlim(0.01, 0.2)
-plt.ylim(0.0, 0.05)
+# plt.ylim(0.0, 0.05)
 plt.xscale("log")
 plt.savefig(paths.figures / "loss_compare.pdf", bbox_inches="tight")
