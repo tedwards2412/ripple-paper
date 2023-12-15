@@ -329,7 +329,7 @@ From Eq.~\eqref{eq:multi_loss}, we can see the averaging between waveforms with 
 Additionally, this means our best-fit points will generally depend on the distribution of training waveforms across the parameter space.
 
 To evaluate Eq.~\eqref{eq:multi_loss} we use a flat PSD and a frequency array which is scaled by the total mass.\footnote{
-    In particular, we use $M f_{\mathrm{l}} = 2.5 \times 10^{-3}$, $M f_{\mathrm{u}} = 0.2$, and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,\mathrm{M}_\odot$ throughout this section.
+    In particular, we use $M f_{\mathrm{l}} = 2.5 \times 10^{-3}$, $M f_{\mathrm{u}} = 1.2 f_{\textrm{RD}}$ ($f_{\textrm{RD}}$ is defined in \cite{Khan:2015jqa}), and $M\Delta f = 2.5 \times 10^{-6}$ for the dimensionless lower, upper, and frequency spacing respectively. We fix $M$ to be $50\,\mathrm{M}_\odot$ throughout this section.
 }
 Since the NR waveforms do not have a total mass associated with them, we assign a fixed total mass to compare with the \ripple waveform.
 
@@ -468,7 +468,7 @@ AD therefore represents a fast and accurate way of performing population level a
     \centering
     \includegraphics[width=\linewidth]{figures/PE.pdf}
     \caption{
-        Corner plot for the posteriors from an HMC (see text for details) on simulated noise with injected signal. 
+        Corner plot for the posteriors (see text for details) on simulated noise with injected signal using HMC (blue) and RWMH (black). 
         Blue lines indicate the true values of the injection. 
         Although not fully converged, it is clear that we find posteriors consistent with the injected parameters. 
     }
@@ -523,13 +523,16 @@ This is expected since the injected binary is relatively nearby with an SNR of $
 \end{figure}
 
 Although further steps would be required to achieve a fully-converged posterior, these chains are sufficient to show the increased efficiency associated with HMC. 
-To further illustrate this, in Fig.~\ref{fig:autocorrelation} we plot the autocorrelation as a function of lag for both the HMC and RWMH samplers.
+To further illustrate this, in Fig.~\ref{fig:autocorrelation} we plot the autocorrelation as a function of lag\footnote{
+    Lag here corresponds to the number of steps between samples.
+} for both the HMC and RWMH samplers.
 The HMC autocorrelation is substantially lower than that of the RWMH.
+In particular, we see that the autocorrelation reaches close to zero at around 300 lag, meaning that samples become efficiently uncorrelated. This is in contrast to RWHM which remains highly correlated even at 1000 lag.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
-In addition, we found that the effictive number of samples~\citep{arviz_2019},\footnote{
-    Computed using \textsc{arviz}~\url{https://python.arviz.org/en/stable/api/generated/arviz.ess.html}
+In addition, we found that the effictive number of samples~\citep{arviz_2019}, (a measure of the number of indepedent samples)\footnote{
+    Computed using \textsc{arviz}~\url{https://python.arviz.org/en/stable/api/generated/arviz.ess.html}.
     }
-(a measure of the number of indepedent samples) is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
+is between 2 and 7 times larger for HMC across the different dimensions of the parameter space.
 
 In our companion paper we demonstrate that minute scale PE can be achieved by combining normalizing flows~\citep{2022arXiv221106397W, Gabrie:2021tlu}, GPU acceleration, and a derivative based sampler~\citep{PEpaper}. 
 We therefore expect \jax waveforms to be highly beneficial to future PE efforts in GW astronomy, particular for low-latency pipelines and higher dimensional analyses.

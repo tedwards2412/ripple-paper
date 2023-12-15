@@ -74,7 +74,9 @@ true_params = np.array(
 # Plot all chains
 # figure = corner.corner(gaussian_bestchain, labels=labels, labelpad=0.1, smooth=True, color="C1", alpha=0.3, label="GRW")
 
-figure = corner.corner(HMC_bestchain, labels=labels, labelpad=0.1, smooth=True, truths=[Mc, eta, 0.3, -0.4, distance, 0.0, 0.0])
+figure = corner.corner(HMC_bestchain, labels=labels, labelpad=0.1, smooth=True, truths=[Mc, eta, 0.3, -0.4, distance, 0.0, 0.0], label="HMC", color="C0", hist_kwargs={"density": True})
+
+corner.corner(gaussian_bestchain, labels=labels, labelpad=0.1, smooth=True, color="black", fig=figure, alpha=0.1, label="RWMH", hist_kwargs={"density": True})
 
 
 # Extract the axes
