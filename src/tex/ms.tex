@@ -444,7 +444,9 @@ which provides forecasted measurement errors and parameter covariances for a sig
     \label{tab:priors}
 \end{table}
 
-To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.\footnote{
+    Note that we include all 11 parameters when computing the covariance matrix, and only plot the sky localization error for illustrative purposes.
+}
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}. 
 Additionally, we use $20\,$Hz, $1024\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
@@ -567,7 +569,7 @@ This would ensure that the community can easily utilize differentiability and ha
 
 
 \section{Acknowledgments}
-This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation.
+T.E. would like to thanks Luca Reali extensively for his help with running GWBench. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation.
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
 T.E.\ is supported by the Horizon Postdoctoral Fellowship.
 A.Z.~is supported by NSF Grant PHY-2207594.
