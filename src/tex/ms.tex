@@ -64,7 +64,7 @@
     We then focus on three applications where efficient and differentiable waveforms are essential.
     Firstly, we demonstrate how gradient descent can be used to optimize the $\sim 200$ coefficients that are used to calibrate the waveform model. 
     In particular, we demonstrate that the typical \textit{match} with numerical relativity waveforms can be improved by more than 50\%.
-    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 100\times$ (on a CPU) with no loss in accuracy.
+    Secondly, we show that Fisher forecasting calculations can be sped up by $\sim 3-5\times$ (on a CPU) with no loss in accuracy.
     This increased speed makes Fisher forecasting for a population of events substantially simpler.
     Finally, we show that gradient-based samplers like Hamiltonian Monte Carlo lead to significantly reduced autocorrelation values when compared to traditional Monte Carlo methods.
     Since differentiable waveforms have substantial advantages for a variety of tasks throughout GW science, we propose that waveform developers use \jax to build new waveforms moving forward.
@@ -303,6 +303,32 @@ We therefore aim to improve of the accuracy of the waveform by jointly fitting a
 In general, optimization problems in a high dimensional space benefit from having access to the gradient of the objective function. 
 Since we can differentiate through the entire waveform model against the fitting parameters, one can use gradient descent to more efficiently find the local best fitting parameters.
 
+\begin{figure}[t!]
+	\script{loss_compare.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
+		\caption{
+			Relative error between the numerical relativity and IMRPhenomD waveform amplitudes. 
+            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
+            Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
+        }
+		\label{fig:loss_compare}
+	\end{centering}
+\end{figure}
+
+\begin{figure}[t!]
+	\script{mismatch_hist.py}
+	\begin{centering}
+		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
+		\caption{
+			Distribution of 536 log mismatches (see Eq.~\eqref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
+            Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
+            More quantitatively, the median mismatch (shown as vertical dashed lines) is reduced by $\sim50$\%. 
+		}
+		\label{fig:mismatch_hist}
+	\end{centering}
+\end{figure}
+
 The first step is to define a loss function that measures the goodness-of-fit of the current waveform coefficients.
 Here, we choose it to be the mismatch between the NR waveform and the approximant waveform:
 \begin{equation}
@@ -343,32 +369,6 @@ Figure~\ref{fig:loss_compare} shows the relative error (against a test NR wavefo
 The vertical dashed lines indicate the stitching points for the phase i.e., when the inspiral is joined onto the merger.
 We can see the error of optimized waveform is lower than that of the original waveform for most of the domain.
 In particular, the relative error in the merger region (in between the two vertical dashed lines) is decreased by half while other regions also show good improvement in accuracy. 
-
-\begin{figure}[t]
-	\script{loss_compare.py}
-	\begin{centering}
-		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
-		\caption{
-			Relative error between the numerical relativity and IMRPhenomD waveform amplitudes. 
-            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
-            Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
-        }
-		\label{fig:loss_compare}
-	\end{centering}
-\end{figure}
-
-\begin{figure}[t]
-	\script{mismatch_hist.py}
-	\begin{centering}
-		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
-		\caption{
-			Distribution of 536 log mismatches (see Eq.~\eqref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
-            Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
-            More quantitatively, the median mismatch (shown as vertical dashed lines) is reduced by $\sim50$\%. 
-		}
-		\label{fig:mismatch_hist}
-	\end{centering}
-\end{figure}
  
 In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches for a set of test waveforms.
 In particular, we use 536 waveforms from the SXS catalog (we choose all waveforms with aligned spins, $\chi_{x,y}<5\times 10^{-3}$, and eccentricity $<2\times 10^{-3}$)~\citep{Boyle:2019kee}.
@@ -381,16 +381,28 @@ Automative derivatives, if implemented for EOB waveforms, could allow for the ap
 \subsection{Fisher Forecasting}
 \label{subsec:fisher}
 
+% \begin{figure}[t!]
+%     \script{sky_localization.py}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
+%     \caption{
+%         Distribution of Fisher information sky localization error for a population of nearby binaries.
+%         Automatic differentiation (AD) was used to compute the derivatives in Eq.~\eqref{eq:fisher}.
+%         As emphasized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
+%     }
+%     \label{fig:sky_localization}
+% \end{figure}
+
 \begin{figure}[t!]
-    \script{sky_localization.py}
+    \script{chirp_mass_error.py}
     \centering
-    \includegraphics[width=\linewidth]{figures/sky_localization.pdf}
+    \includegraphics[width=\linewidth]{figures/chirp_mass_error.pdf}
     \caption{
-        Distribution of Fisher information sky localization error for a population of nearby binaries.
+        Distribution of Fisher information chirp mass error for a population of nearby binaries.
         Automatic differentiation (AD) was used to compute the derivatives in Eq.~\eqref{eq:fisher}.
-        As emphasized in the text, after JIT compilation, each error calculation was around 100 times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
+        As emphasized in the text, after JIT compilation, each error calculation was between three and five times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
     }
-    \label{fig:sky_localization}
+    \label{fig:chirp_mass_error}
 \end{figure}
 
 Forecasting the sensitivity of future experiments is a routine task in GW science. 
@@ -444,24 +456,24 @@ which provides forecasted measurement errors and parameter covariances for a sig
     \label{tab:priors}
 \end{table}
 
-To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the sky localization error following Eq.~(28) in \cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.\footnote{
-    Note that we include all 11 parameters when computing the covariance matrix, and only plot the sky localization error for illustrative purposes.
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the $1\,\sigma$ chirp mass error\cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.\footnote{
+    Note that we include all 11 parameters when computing the covariance matrix, and only plot the chirp mass error for illustrative purposes.
 }
-Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby systems.
+Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby (high SNR) systems.
 A full list of the distributions used to generate the various parameters in our population are given in Tab.~\ref{tab:priors}. 
-Additionally, we use $20\,$Hz, $1024\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
+Additionally, we use $20\,$Hz, $2048\,$Hz, and $16\,$s for the minimum frequency, sampling frequency, and sample length.
 Our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston (\textsc{SimNoisePSDaLIGOZeroDetHighPower}) and Virgo (\textsc{SimNoisePSDAdvVirgo}).\footnote{\url{https://lscsoft.docs.ligo.org/lalsuite/lalinspiral/psds_8py_source.html}.}
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
-The distribution of sky localization errors from a population of $10^3$ binaries can be seen in Fig.~\ref{fig:sky_localization}.
+The distribution of chirp mass errors from a population of $5 \times 10^3$ binaries can be seen in Fig.~\ref{fig:chirp_mass_error}.
 We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within ~30\%.
 This demonstrates that AD can be used to accurately do Fisher forecasting for a large population of events.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
-In particular, we find that after compilation, each Fisher calculation takes approximately half a second on a single computing core.
-\texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(minutes) for each Fisher calculation using the same detector setup and frequency grid.
-This factor of over 100 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is similar to \lalsuite which is used by \texttt{GWbench}.
-On a MacBook Pro with an M1 Max Apple Silicon processor, JIT compilation takes $\sim 270\,s$ and computing sky localization errors for the full population takes less than $\sim 9$ minutes.
+In particular, we find that after compilation, each Fisher calculation takes approximately one second on a single computing core.
+\texttt{GWbench}~\citep{Borhanian:2020ypi}, on the other hand, takes $\mathcal{O}$(3-5 seconds) for each Fisher calculation using the same detector setup and frequency grid.
+This factor of 3-5 speed up is substantial considering the fact that a single core evaluation of the \ripple waveform is similar to \lalsuite which is used by \texttt{GWbench}.
+On a MacBook Pro with an M1 Max Apple Silicon processor, JIT compilation takes $\sim 70\,s$ and computing chirp mass errors for the full population takes less than $\mathcal{O}$(2 hours).
 As discussed above, performance can be further improved by utilizing hardware acceleration such as parallel GPU processing.
 AD therefore represents a fast and accurate way of performing population level analyses, and should be utilized for testing the capabilities of next generation detectors.
 
