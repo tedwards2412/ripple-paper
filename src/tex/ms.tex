@@ -544,7 +544,7 @@ To further illustrate this, in Fig.~\ref{fig:autocorrelation} we plot the autoco
     Lag here corresponds to the number of steps between samples.
 } for both the HMC and RWMH samplers.
 The HMC autocorrelation is substantially lower than that of the RWMH.
-In particular, we see that the autocorrelation reaches close to zero at around 300 lag, meaning that samples become efficiently uncorrelated. This is in contrast to RWHM which remains highly correlated even at 1000 lag.
+In particular, we see that the autocorrelation reaches close to zero at around 300 lag, meaning that samples become efficiently uncorrelated. This is in contrast to RWMH which remains highly correlated even at 1000 lag.
 We therefore expect gradient based samplers to converge significantly faster than typical samplers, especially in higher dimensions.
 In addition, we found that the effictive number of samples~\citep{arviz_2019}, (a measure of the number of indepedent samples)\footnote{
     Computed using \textsc{arviz}~\url{https://python.arviz.org/en/stable/api/generated/arviz.ess.html}.
