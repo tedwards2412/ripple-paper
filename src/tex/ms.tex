@@ -112,7 +112,7 @@ They are generally structured into different families, the most common of which 
 Of these, the IMRPhenom family serves as a natural starting point for an AD implementation in \jax.
 Models like the non-precessing IMRPhenomD~\citep{Khan:2015jqa} model studied here and the precessing, higher-mode model IMRPhenomXPHM~\citep{Pratten:2020fqn, Pratten:2020ceb} are written in the frequency domain using closed-form expressions.
 This makes a \jax implementation that complies with the constraints of JIT compilation simple.
-NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity (NR) simulations, are in principle also straightfoward to implement in \jax and will be explored int he future.
+NRsurrogate models, which interpolate directly over waveforms produced by numerical relativity (NR) simulations, are in principle also straightfoward to implement in \jax and will be explored in the future.
 EOB waveforms on the other hand are produced by evolving the dynamics of an effective one body Hamiltonian, and are therefore more difficult to implement in \jax.\footnote{
     In particular, the dynamically chosen time step for solving ODEs accurately makes JIT compilation in \jax difficult. However, the \texttt{diffrax} package \citep{diffrax} has shown good performance for ODE solving in a variety of settings and could potentially be used to implement EOB waveforms in \jax.
     }
@@ -123,7 +123,7 @@ In addition, we present \ripple, a small GW \texttt{python} package which, at th
 The remainder of this paper is structured as follows. 
 In Sec.~\ref{sec:waveforms} we discuss the automatically differentiable IMRPhenomD waveform implemented in \ripple and perform some benchmarks to demonstrate its speed and accuracy. 
 In Sec.~\ref{sec:applications} we discuss three distinct applications using differentiable waveforms. 
-Firstly, we illustrate how the coefficients that form part of the IMRPhenomD waveform model could be improved by high dimensional fitting enabled by a automatically differentiable waveform. 
+Firstly, we illustrate how the coefficients that form part of the IMRPhenomD waveform model could be improved by high dimensional fitting enabled by an automatically differentiable waveform. 
 Secondly, we implement differentiable detector response functions and show that the speed of Fisher matrix calculations can be substantially accelerated using AD.
 Finally, we run an illustrative injection example using HMC to demonstrate that the autocorrelation of derivative samplers is substantially smaller than that of traditional MCMCs.
 % Practically, this translates into much faster PE with no sacrifice in accuracy.
@@ -172,7 +172,7 @@ Finally, we can define the mismatch as
 Since the match is a measure of the difference between two waveforms, we can use it to demonstrate that the implementation of IMRPhenomD in \ripple accurately matches the \lalsuite implementation. For this comparison, we use the $S_n$  presented in GWTC-2~\citep{LIGOScientific:2020ibl} from the Livingston detector (the most sensitive of the detectors).\footnote{
     \url{https://dcc.ligo.org/LIGO-P2000251/public}.
     }
-This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathcal{m}(h_1|h_2)$ across the entire parameter space.\footnote{
+This is shown in Fig.~\ref{fig:match}, where we have calculated the $\mathcal{M}(h_1|h_2)$ across the entire parameter space.\footnote{
     Specifically, we use $10^4$ points with varying component masses $m_1$, $m_2$ and spin parameters $\chi_1$, $\chi_2$ in the ranges $m_{1,2} = (1,100)\,M_{\odot}$ and $\chi_{1,2} = (-1,1)$. In addition, we evaulated the waveforms on a frequency grid from $32\,$Hz to $1024\,$Hz with frequency spacing $\Delta f = 0.0125 \,$Hz.
 }
 Here, $h_1$ corresponds to the \ripple waveform implementation and $h_2$ is the \lalsuite implementation, evaluated at the same point in parameter space.
@@ -242,7 +242,7 @@ Note also that the GPU benchmark does not include the time taken to move the eva
 	\end{centering}
 \end{figure}
 
-One of the primary aims of this paper is that waveform derivatives will also be highly valuable to data analysis tasks. 
+One of the primary aims of this paper is to show that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
 First, the accuracy of derivatives from AD are significantly more stable than finite-difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
@@ -309,7 +309,7 @@ Since we can differentiate through the entire waveform model against the fitting
 		\includegraphics[width=\linewidth]{figures/loss_compare.pdf}
 		\caption{
 			Relative error between the numerical relativity and IMRPhenomD waveform amplitudes. 
-            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the orange line uses the IMRPhenomD model after optimization using gradient descent.
+            The blue line shows the relative error of the IMRPhenomD model with the original model coefficients where as the red line uses the IMRPhenomD model after optimization using gradient descent.
             Interestingly, the error is reduced across the frequency range, demonstrating that high dimensional optimization is useful for all parts of the waveform.
         }
 		\label{fig:loss_compare}
@@ -321,7 +321,7 @@ Since we can differentiate through the entire waveform model against the fitting
 	\begin{centering}
 		\includegraphics[width=\linewidth]{figures/mismatch_hist.pdf}
 		\caption{
-			Distribution of 536 log mismatches (see Eq.~\eqref{eq:mismatch}) for the original (blue) and optimized (orange) IMRPhenomD. 
+			Distribution of 536 log mismatches (see Eq.~\eqref{eq:mismatch}) for the original (blue) and optimized (red) IMRPhenomD. 
             Overall, the optimized distribution shifts to lower mismatches and therefore a better waveform model. 
             More quantitatively, the median mismatch (shown as vertical dashed lines) is reduced by $\sim50$\%. 
 		}
@@ -456,7 +456,7 @@ which provides forecasted measurement errors and parameter covariances for a sig
     \label{tab:priors}
 \end{table}
 
-To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the $1\,\sigma$ chirp mass error\cite{Iacovelli:2022bbs, Iacovelli:2022mbg}.\footnote{
+To illustrate the computational speed of computing Fisher matrices with AD, we consider a population of binaries and compute the $1\,\sigma$ chirp mass error.\footnote{
     Note that we include all 11 parameters when computing the covariance matrix, and only plot the chirp mass error for illustrative purposes.
 }
 Since the Fisher matrix approach is known to have both theoretical issues as well as numerical instabilities for low signal-to-noise events, we restrict our population to only nearby (high SNR) systems.
@@ -581,7 +581,7 @@ This would ensure that the community can easily utilize differentiability and ha
 
 
 \section{Acknowledgments}
-T.E. would like to thanks Luca Reali extensively for his help with running GWBench. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation.
+T.E. would like to thank Luca Reali extensively for his help with running GWBench. This material is based upon work supported by NSF's LIGO Laboratory which is a major facility fully funded by the National Science Foundation.
 This work was supported by collaborative visits funded by the Cosmology and Astroparticle Student and Postdoc Exchange Network (CASPEN). 
 T.E.\ is supported by the Horizon Postdoctoral Fellowship.
 A.Z.~is supported by NSF Grant PHY-2207594.
