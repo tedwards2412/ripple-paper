@@ -227,7 +227,7 @@ First, its ability to JIT compile allows for significant performace gains (the a
 Second, automatic vectorization can be achieved using the \texttt{vmap} function which leads to a noticeable speedup when evaluating a batch of waveforms.
 Finally, \jax can natively run on a GPU which allows for highly parallellized waveform evaluations.
 
-Again, performing the same benchmark as above on an NVIDIA A100 with 40GB of memory, we find that waveform evaluations are over an of magnitude faster than serial CPU evaluation.
+Again, performing the same benchmark as above on an NVIDIA A100 with 40GB of memory, we find that waveform evaluations are over an order of magnitude faster than serial CPU evaluation.
 Generalizing \lalsuite waveforms to run on a GPU would be a significant undertaking.
 Note that jit for both CPU and GPU evaluation adds an additional overhead to the first evaluation of the waveform which is not included in the above benchmarks. 
 Note also that the GPU benchmark does not include the time taken to move the evaluated waveform from the GPU to the CPU.
@@ -245,7 +245,7 @@ Note also that the GPU benchmark does not include the time taken to move the eva
 
 One of the primary aims of this paper is to show that waveform derivatives will also be highly valuable to data analysis tasks. 
 AD provides two big advantages when it comes to evaluating derivatives compared to numerical differentiation.
-First, the accuracy of derivatives from AD are significantly more stable than finite-difference methods.
+First, the accuracy of derivatives from AD is significantly more stable than finite-difference methods.
 In particular, finite differences suffer from both rounding and truncation errors, meaning that the user is required to \textit{tune} the width over which the difference is taken.
 On the other hand, AD produces machine-precision derivatives with no tuning.
 Second, AD scales favorably with the dimensionality of the function.
@@ -275,8 +275,7 @@ The three tasks discussed here cover a wide range of GW science, starting with w
 \subsection{Fine-Tuning Waveform Coefficients}
 \label{subsec:coeffs}
 
-Having an accurate waveform model is essential for many data analysis tasks throughout
-GW science.
+Having an accurate waveform model is essential for many data analysis tasks throughout GW science.
 While waveforms generated using NR simulations are in principle the highest fidelity signal model, they are too computationally expensive to be used in any practical data analysis tasks.
 The community therefore utilizes waveform ``approximants'' (such as those discussed in the introduction) which can be evaluated much faster and in regions not covered by numerical simulations, such as extremes of parameter space or earlier phases of the binary inspiral.
 
@@ -299,7 +298,9 @@ The process of stitching introduces some additional inaccuracy in the waveform m
 
 % The coefficients of the original IMRPhenomD implementation are tuned in subsets of parameters instead of all together. 
 Since the coefficients for each segment are tuned individually, the correlation between different parameters are ignored, meaning that the provided best-fit solution may not be the global optimum. 
-We therefore aim to improve of the accuracy of the waveform by jointly fitting all coefficients at once.
+We therefore aim to improve the accuracy of the waveform by jointly fitting all coefficients at once.\footnote{
+    For a further breakdown of how the optimization changes across the parameter space, see our accompanying paper~\citep{Lam:2023oga}.
+}
 
 In general, optimization problems in a high dimensional space benefit from having access to the gradient of the objective function. 
 Since we can differentiate through the entire waveform model against the fitting parameters, one can use gradient descent to more efficiently find the local best fitting parameters.
@@ -365,16 +366,16 @@ Since the NR waveforms do not have a total mass associated with them, we assign 
 
 For training, we use the publically available subset (11 waveforms) of the 19 waveforms used in the original IMRPhenomD paper~\citep{Khan:2015jqa}. 
 These 11 waveforms are taken from the SXS catalog~\citep{Boyle:2019kee}.
-We then run gradient descent, as described above, until the validation loss stops decreasing (the validation is loss is calculated using the NR waveforms discussed below). 
+We then run gradient descent, as described above, until the validation loss stops decreasing (the validation loss is calculated using the NR waveforms discussed below). 
 Figure~\ref{fig:loss_compare} shows the relative error (against a test NR waveform; see below) of the original and optimized waveform as a function of dimensionless frequency.
 The vertical dashed lines indicate the stitching points for the phase i.e., when the inspiral is joined onto the merger.
 We can see the error of optimized waveform is lower than that of the original waveform for most of the domain.
 In particular, the relative error in the merger region (in between the two vertical dashed lines) is decreased by half while other regions also show good improvement in accuracy. 
  
 In Fig.~\ref{fig:mismatch_hist}, we show the distribution of log mismatches for a set of test waveforms.
-In particular, we use 536 waveforms from the SXS catalog (we choose all waveforms with aligned spins, $\chi_{x,y}<5\times 10^{-3}$, and eccentricity $<2\times 10^{-3}$)~\citep{Boyle:2019kee}.
+In particular, we use 536 waveforms from the SXS catalog i.e., all waveforms with aligned spins, $|\chi_{x,y}|<5\times 10^{-3}$, and eccentricity $<2\times 10^{-3}$~\citep{Boyle:2019kee}.
 One can see that the distribution of mismatches after optimization is generally shifted to lower mismatch compared to the original waveform.
-In particular, the peak of the original waveform distribution has moved by nearly an order of magnitude, indicating that our AD-assisted optimization procedure provides an improved implementation of the model.
+In particular, the median mismatch (shown as vertical dashed lines in Fig.~\ref{fig:mismatch_hist}) is reduced by $\sim50$\%, indicating that our AD-assisted optimization procedure provides an improved implementation of the model.
 
 While we focused on \texttt{IMRPhenomD} here, the ability to apply AD to the calibration parameters may assist in other approaches to calibration, such as that used for the aligned-spin EOB model in~\citet{Bohe:2016gbl}.
 Automatic derivatives, if implemented for EOB waveforms, could allow for the application of other sampling methods such as HMC, or possibly optimization over the entire set of NR waveforms at once.
@@ -401,13 +402,13 @@ Automatic derivatives, if implemented for EOB waveforms, could allow for the app
     \caption{
         Distribution of Fisher information chirp mass error for a population of nearby binaries.
         Automatic differentiation (AD) was used to compute the derivatives in Eq.~\eqref{eq:fisher}.
-        As emphasized in the text, after JIT compilation, each error calculation was between three and five times faster than a similar forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
+        As emphasized in the text, after JIT compilation, each error calculation was between three and five times faster than a numerical derivative forecasting code \texttt{GWbench}~\citep{Borhanian:2020ypi}.
     }
     \label{fig:chirp_mass_error}
 \end{figure}
 
 Forecasting the sensitivity of future experiments is a routine task in GW science. 
-Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism~\citep{Cornish:2010kf} is commonly deployed to estimate how well a binary system's parameters could be measured.
+Due to its theoretical simplicity and evaluation speed, the Fisher matrix formalism (see e.g.,~\citep{Cornish:2010kf}) is commonly deployed to estimate how well a binary system's parameters could be measured.
 The Fisher matrix approach is built around the assumption of a Gaussian likelihood~\citep{Vallisneri:2007ev}.
 Although in practice this assumption is often violated for realistic detector noise, the results obtained using a Fisher analysis can provide quick and useful diagnostics in evaluating sensitivities for a variety of models and detector configurations.
 
@@ -426,7 +427,7 @@ where $k$ indicates the detector, $\partial_i = \partial/\partial \theta_i$, and
 \begin{equation}
     h^k(\theta) = F^k_+(\phi) h_{+}(\Xi) + F^k_\times(\phi) h_{\times}(\Xi) \, .
 \end{equation}
-Note that here we have separated out the extrinsic ($\phi$) and intrinsic ($\Xi$) variables as well as introducing the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
+Note that here we have separated out the extrinsic ($\phi$) and intrinsic ($\Xi$) variables as well as introduced the detector projection functions for the plus and cross polarizations as $F^k_+$ and $F^k_\times$ respectively.
 Since we are considering a three detector setup we simply add the Fisher matrices from the individual detectors to get the combined Fisher matrix:
 \begin{equation}
     \mathcal{I}_{ij} =  \mathcal{I}^{\mathrm{Hanford}}_{ij} + \mathcal{I}^{\mathrm{Livingston}}_{ij} + \mathcal{I}^{\mathrm{Virgo}}_{ij}   \, .
@@ -467,7 +468,9 @@ Our noise curves correspond to the design PSDs for LIGO Hanford, LIGO Livingston
 The resulting population produces binaries with signal-to-noise ratios ranging from $\mathcal{O}(10-10^2)$.
 
 The distribution of chirp mass errors from a population of $5 \times 10^3$ binaries can be seen in Fig.~\ref{fig:chirp_mass_error}.
-We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within ~30\%.
+We have verified that our errors agree with a separate dedicated Fisher forecasting code~\citep{Borhanian:2020ypi} to within ~30\%.\footnote{
+    Note that since Ref.~\citep{Borhanian:2020ypi} is based on numerical derivatives, the agreement is not expected to be close to machine precision.
+}
 This demonstrates that AD can be used to accurately do Fisher forecasting for a large population of events.
 
 Moreover, each error calculation (including computing the Fisher matrices for each detector and the inversion process) is substantially faster.
@@ -493,7 +496,7 @@ AD therefore represents a fast and accurate way of performing population level a
     \label{fig:corner}
 \end{figure*}
 
-After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each sources parameter's - so called PE.
+After the search algorithms have constructed a list of confidently detected binaries, the next step is to sample from the posterior of each source parameter - so called PE.
 To do this, one typically uses an MCMC or nested sampler~\citep{Skilling2004, multinest, dynesty}.
 Although robust, both MCMC and nested sampling are slow to converge and are known to perform poorly in high dimensional parameter spaces.
 For example, sampling the 15 dimensional parameter space for a BBH system can take $\mathcal{O}(10)$ hours, while BNS systems can take up to weeks.
@@ -565,7 +568,7 @@ Parallelization on a GPU provides substantial speed increases; on an A100 40GB G
 Second, we discussed three data analysis tasks which can all be substantially improved by utilizing derivative information of the waveform.
 In particular, we showed that AD can be used to fine-tune waveform coefficients, perform efficient and accurate Fisher forecasting, and enhance the efficiency of sampling algorithms during parameter estimation.
 
-Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper}.
+Although we primarily discuss toy examples in this paper, each can be extended to the full data analysis task, some of which will be shown in upcoming papers~\citep{PEpaper, Lam:2023oga}.
 Differentiable waveforms therefore represent a useful advancement towards efficient GW science.
 
 In this paper, we have primarily focussed on the IMRPhenom family of waveforms as their closed form expression is perfectly suited for a \jax implementation.
